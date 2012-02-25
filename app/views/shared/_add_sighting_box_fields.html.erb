@@ -1,0 +1,5 @@
+			<%= text_field_tag 'species_english_name', @species_english_name, :autocomplete => 'off', :style => 'width: 300px;' %>
+			<div class="auto_complete" id="species_english_name_auto_complete"></div>
+			<%= auto_complete_field 'species_english_name', :url => { :controller => :sighting, :action => 'auto_complete_for_species_english_name' }, :min_chars => 3, :update => 'species_english_name_auto_complete', :frequency => 0.2, :indicator => 'working-species_english_name', :method => 'get' %>
+			<span id="working-species_english_name" style="display: none"><%= image_tag("loading.gif", :size => "16x16", :alt => "loading...", :title => "loading...") %></span>
+			<%= hidden_field_tag 'alternate_name_id' %>

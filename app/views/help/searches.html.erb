@@ -1,0 +1,70 @@
+	<%- @page_title = 'Working with searches and lists' -%>
+
+	<h1 id="top">Working with searches and lists</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#create">Create a list</a> | <a href="#privacy">Privacy</a> | <a href="#fields">Fields</a></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p><%= image_tag("help/searches-list.png", :alt => "list", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>In Birdstack, a "list" is a group of observations defined by a certain set of characteristics. A life list (accessible by default through <%- if logged_in? -%><%= link_to('My Lists', lists_url(:user => current_user.login)) %><%- else -%>My Lists<%- end -%>) shows the first record of each species you have observed. A 2008 year list would show the first record of each species observed during 2008.</p>
+
+	<p>So, the way that you work with lists is to set up a search or a query that returns the observations you want and displays them as a list. If you are used to thinking of lists as real physical entities (a notebook or a page in a spreadsheet), this idea may take a little bit of getting used to, but you will soon find that it is extremely powerful and very flexible.</p>
+
+	<p>Once you've set up a list, you have many options for <%= link_to 'publishing and exporting it', :action => 'output' %>.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="create">Create a list</h2>
+
+	<p>You can set up a new list by clicking "<%= link_to 'Search for observations', :controller => 'search', :action => 'index' %>" in the user navigation panel on the right side of every page. You'll be taken to a search form that lets you define the criteria for your list.</p>
+	
+	<p><%= image_tag("help/searches-select.png", :alt => "select", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Your first step is to decide which criteria your list will depend on. Do you want a year list? A list based on one or more locations? A list based on bird families? Select the criteria from the dropdown box at the top of the page, and various boxes will be added to the search form.</p>
+
+	<p>The list you build could be defined rather simply: a list of birds seen in Chile during 2007. Or, it could be significantly more complex: all records of <i>Dendroica</i> warblers observed above 1000 feet elevation in Ohio or Pennsylvania or West Virginia between 1986 and 2006.</p>
+	
+	<p><%= image_tag("help/searches-parameters.png", :alt => "parameters", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Several of the search parameter controls appear as side-by-side boxes (illustrated at right). On the left is a list of all the search terms you can choose. If the list is very long and you don't want to scroll, you can type into the text box immediately below the title to narrow the list of results. Select terms that interest you (Ctrl + click for multiple select) and click the "&gt;&gt;" button so that the search terms appear in the box on the right.</p>
+
+	<p>If you want to remove options, select them in the box on the right and then click the "&lt;&lt;" button. If you want to remove the entire box, click the "-" button at the top right corner.</p>
+
+	<p>Your final step is to set a few options at the bottom of the form (sort order, search type, etc.), and then you can click "Search" to see your list. On the page that displays the list, you will have the opportunity to change the search options, if you didn't get what you were expecting, and you can also save the list so that you can get back to it later.</p>
+
+	<p>Remember, once you save a search as a list, any new observations that meet the criteria specified in your search will automatically show up in the list the next time that it's viewed.</p>
+
+	<p>After you've saved the list (if you saved it as public), it is available in Atom, HTML, CSV, XML, and Stack (widget) formats. Read more about <%= link_to 'list output options', :action => 'output' %>.</p>	
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="privacy">Privacy</h2>
+
+	<p>If you want to, you can set a list to be private. This means that no one else will be able to see the list page and that you can't output in public formats like Stacks.</p>
+
+	<p>Please note that setting a list to private does <em>not</em> apply privacy to the individual observations in a list. If you want the observations to be private too, you must adjust their settings. <%= link_to 'More about privacy.', :controller => 'help', :action => 'privacy' %></p>
+
+	<p>If you construct a list that uses one or more private trips as paramaters, observations from those private trips will be visible to you but not to anyone else.</p>
+
+	<p>If you construct a list that uses locations as parameters, observations from private locations will be visible to you but not to anyone else. This means that if you want a Brazil list but have private locations within Brazil, the observations from private locations inside Brazil will not be publicly visible on the Brazil list.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="fields">Fields</h2>
+
+	<p>You can construct list queries using virtually any combination of the following fields:</p>
+	
+	<ul>
+		<li>Location names</li>
+		<li>Cities and towns</li>
+		<li>Counties and districts</li>
+		<li>States and provinces</li>
+		<li>Nations and territories</li>
+		<li>Dates</li>
+		<li>Trips</li>
+		<li>Ecoregions</li>
+		<li>Elevation</li>
+		<li>Tags</li>
+		<li>Orders</li>
+		<li>Families</li>
+		<li>Genera</li>
+		<li>Species</li>
+	</ul>
+
+	<p><a href="#top">[top]</a></p>

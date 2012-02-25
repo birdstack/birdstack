@@ -1,0 +1,33 @@
+	<%- @page_title = 'Confirm observations to import from "' + h(@pending_import.filename) + '"' -%>
+
+	<p class="breadcrumb"><%= link_to 'Import', :action => 'index' %> &gt; <%= h(@pending_import.filename) %></p>
+
+	<h1>Confirm observations to import from "<%= h(@pending_import.filename) %>"</h1>
+
+	<p>The following observations have passed validation checks and will be fully imported <strong>when you click "Save."</strong> If you wish to edit an observation before it is imported, simply uncheck the box beside it, and you will be able to edit it in the next step. You can view 50 results per page. (<%= link_to 'Help', :controller => 'help', :action => 'import-observations-process' %>)</p>
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('submit_top').disable()
+			$('submit_bottom').disable()
+		}
+//]]>
+	</script>
+
+	<% form_tag({}, {:onsubmit => 'greyButtons()'}) do %>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save and continue', :class => 'button', :id => 'submit_top' %><br /><br />
+		</fieldset>
+		<fieldset style="border: 0;">
+			<%- for pending_import_item in @pending_import_items -%>
+				<div class="list-report">
+					<%= check_box_tag "pending_import_items[#{pending_import_item.id}]", '1', true, :id => "pending_import_items_#{pending_import_item.id}", :style => 'vertical-align: middle;' %><label style="font-weight: bold; font-size: 115%; display: inline; margin-left: 5px;" for="pending_import_items_<%= pending_import_item.id %>">Line <%= h(pending_import_item.line) %>: <%= h(pending_import_item.english_name) %></label>
+					<%= render :partial => 'observation_report', :locals => {:pending_import_item => pending_import_item} %>
+				</div>
+			<%- end -%>
+			<%- if @pending_import_items.blank? -%><p style="text-align: center; font-style: italic; background-color: #efefef;">No results found.</p><%- end -%>
+		</fieldset>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save and continue', :class => 'button', :id => 'submit_bottom' %>
+		</fieldset>
+	<% end %>

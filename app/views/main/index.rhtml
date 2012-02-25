@@ -1,0 +1,19 @@
+	<%- @page_title = 'Create and share world bird lists online, for free.' -%>
+	<%- @meta_description = 'Birdstack is free, web-based birding software for creating lists of birds seen anywhere in the world. Share sightings with friends and contribute to conservation.' -%>
+
+	<h1 class="home">List birds.<br />Share birds.<br />Birdstack.</h1>
+
+	<table class="frontnav">
+		<tr>
+			<td class="bborder"><h2 class="small">Create and maintain bird lists, publish your data to a blog or website, and communitize with your birding mates.</h2><br /><span class="verb"><%= link_to('Tour Birdstack', main_url(:action => 'tour')) %></span></td>
+			<td class="bborder"><%= link_to(image_tag("home/tour.jpg", :size => "140x159", :alt => "Create and share world bird lists online, for free."), main_url(:action => 'tour')) %></td>
+			<td class="corner"><%= link_to(image_tag("home/gillwright.jpg", :size => "140x159", :alt => "Birds of the World: Recommended English Names"), :controller => 'ioc') %></td>
+			<td class="bborder"><h2 class="small">Birdstack is powered by the International Ornithological Congress's list of birds of the world.</h2><br /><span class="verb"><%= link_to('Bird Database', :controller => 'ioc') %></span></td>
+		</tr>
+		<tr>
+			<td><h2 class="small">Meet Birdstack members from around the world, welcome new members, and  see whose list is pulling ahead of the rest.</h2><br /><span class="verb"><%= link_to('Birdstackers', :controller => 'people', :action => 'view') %></span></td>
+			<td><%= link_to(image_tag("home/people.jpg", :size => "140x159", :alt => "Birdstackers"), :controller => 'people', :action => 'view') %></td>
+			<td class="lborder"><%= link_to(image_tag("home/ebird.gif", :size => "140x159", :alt => "Your observations can make a difference."), main_url(:action => 'contribute-observations')) %></td>
+			<td><h2 class="small">Participate in international conservation efforts and research projects by sharing your observations.</h2><br /><span class="verb"><%= link_to('Share Data', main_url(:action => 'contribute-observations')) %></span></td>
+		</tr>
+	</table>

@@ -1,0 +1,18 @@
+<%# Takes an optional variable publicize_for that will publicize it for a different user than current_user (probably :false to always present a public view %>
+<%- publicize_for ||= current_user -%>
+
+			<% x = sightings.offset %>
+			<table class="tabular-list">
+				<tr><th></th><th>English name</th><th>Scientific name</th><th>Date</th></tr>
+			<%- for sighting in sightings -%>
+				<%- sighting.publicize!(publicize_for) -%>
+				<% x = x+1 %>
+				<tr<% if x%2 == 0 %> style="background: #efefef;"<% end %>>
+					<td style="text-align: right;"><%= x %>.</td>
+					<td<%- if sighting.user_location -%> title="<% location = sighting.user_location.publicize!(publicize_for) %><%= h([location.name, location.location, location.adm2, location.adm1, CountryCode.country_name(location.cc)].reject {|i| i.blank? }.join(', ')) %>"<%- end -%>><a href="<%= observation_url(:user => sighting.user.login, :id => sighting.id) %>"><%= h(sighting.species.english_name) %></a></td>
+					<td><i><%= h(sighting.species.genus.latin_name) %> <%= h(sighting.species.latin_name) %></i></td>
+                                        <td<%- if sighting.date_year -%> title="<%= render :partial => 'shared/observation_date', :locals => {:sighting => sighting} %>"<%- end -%>><%- if sighting.date_year -%><%= h(sighting.date_year) %><%- end -%><%- if sighting.date_month -%>-<%= h(sighting.date_month) %><%- end -%><%- if sighting.date_day -%>-<%= h(sighting.date_day) %><%- end -%></td>
+				</tr>
+			<%- end -%>
+				<% if sightings.blank? %><tr><td colspan="4" style="text-align: center; font-style: italic; background: #efefef;">No results found.</td></tr><% end %>
+			</table>

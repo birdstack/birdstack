@@ -1,0 +1,9 @@
+				<ul class="auto_complete">
+				<%- for location in @locations do -%>
+					<li><%= h(location.name) %><span class="informal">, <%= h(location.adm1_name) %><br />(<span class="latitude"><%= h(location.latitude) %></span> <span class="longitude"><%= h(location.longitude) %></span>)</span></li>
+				<%- end -%>
+				</ul>
+				<%- if (@locations_count - @locations.size > 0) -%>
+					<hr />
+					<p style="margin: 0 0 5px 3px;"><%= h(@locations_count - @locations.size)%> additional places not shown. Continue typing to narrow your search.</p>
+				<%- end -%>

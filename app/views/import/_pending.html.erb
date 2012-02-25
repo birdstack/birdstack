@@ -1,0 +1,8 @@
+	<%= will_paginate @pending_import_items %><br />
+	<%- for pending_import_item in @pending_import_items -%>
+		<div class="list-report">
+			<h2>Line <%= h(pending_import_item.line) %>: <%= link_to(h(pending_import_item.english_name), :controller => 'sighting', :action => 'species_english_search', :species_english_name => pending_import_item.english_name, :prefill => {:pending_import => @pending_import.id, :pending_import_item => pending_import_item.id}) %> (<%= link_to 'Delete', {:action => 'delete_pending_import_item', :id => @pending_import.id, :pending_import_item => pending_import_item.id}, {:method => 'post', :confirm => 'Are you sure?  The observation has NOT yet been imported. This action cannot be undone.'} %>)</h2>
+			<%= render :partial => 'observation_report', :locals => {:pending_import_item => pending_import_item} %>
+		</div>
+	<%- end -%>
+	<%= will_paginate @pending_import_items %><br />

@@ -1,0 +1,100 @@
+	<%- @page_title = h(@user.login) + '\'s profile' -%>
+
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%= h(@user.login) %></p>
+
+	<p style="display: inline; float: right; margin-left: 10px; margin-bottom: 10px; width: 150px; text-align: center;"><img src="<%= @user.profile_pic.url(:normal) %>" alt="<%= h(@user.login) %>" title="<%= h(@user.login) %>" /></p>
+	
+	<h1 style="margin: 0;"><%= h(@user.login) %></h1>
+	
+       <% if current_user == @user %>
+		<p style="font-size: 90%;"><%= link_to 'Edit your profile', :action => 'edit' %> | <%= link_to 'Edit your account settings', :controller => 'people', :action => 'account', :login => current_user.login %></p>
+        <% else %>
+		<p style="font-size: 90%;"><%= link_to 'Start conversation', :controller => 'conversations', :action => 'start', :conversation => {:participants_text => @user.login} %> | 
+			<%- if logged_in? and current_user.friends.exists?(@user) -%>
+				<%= link_to 'Remove from friends', {:controller => 'friends', :action => 'destroy', :id => @user.id}, :method => :post, :confirm => "Are you sure you want to remove this person from your friends list?" %>
+			<%- elsif logged_in? and FriendRequest.request_exists?(current_user, @user) == current_user -%>
+				<span style="color: #888;" %>Friend requested</span>
+			<%- elsif logged_in? and FriendRequest.request_exists?(current_user, @user) -%>
+				<strong><%= link_to 'Confirm friend request?', :controller => 'friends', :action => 'pending' %></strong>
+			<%- else -%>
+				<%= link_to 'Add as friend', :controller => 'friends', :action => 'add', :id => @user.id %>
+			<%- end %>
+		</p>
+	<% end %>
+
+	<p><%- unless @user.cc.blank? -%>
+		<b>Country:</b> <%= link_to h(CountryCode.country_name(@user.cc)), :controller => 'people_search', :user_search => {:cc => @user.cc} %><br/>
+	<%- end -%>
+
+	<%- unless @user.location.blank? -%>
+		<b>Location:</b> <%= link_to h(@user.location), :controller => 'people_search', :user_search => {:location => @user.location} %><br/>
+	<%- end -%>
+
+	<b>Member since:</b> <%= h(@user.activated_at.strftime("%B %Y")) %><br />
+
+	<%- unless @user.gender.blank? -%>
+		<b>Gender:</b> <%- if @user.gender == 'm' -%>Male<%- else -%>Female<%- end -%><br />
+	<%- end -%>
+
+	<%- unless @user.tag_list.blank? -%>
+		<b>Interests:</b>
+		<%= @user.tag_list.collect {|tag| link_to(h(tag), :controller => 'people_search', :user_search => {:tags => tag})}.join(', ') %>
+		<br/>
+	<%- end -%>
+
+	<%- unless @user.website.blank? -%>
+		<b>Website:</b> <a href="<%= h(@user.website) %>" rel="nofollow"><%= h(@user.website.length > 45 ? @user.website.first(45) + '...' : @user.website) %></a><br />
+	<%- end -%>
+	
+	</p>
+
+	<%- unless @user.bio.blank? -%>
+		<p style="margin: 0;"><b>About me:</b></p><%= birdstack_sanitize(@user.bio) %>
+	<%- end -%>
+
+	<%- unless @user.signature.blank? -%>
+		<p style="margin: 0;"><b>Signature:</b></p><%= birdstack_sanitize(@user.signature) %>
+	<%- end -%>
+
+        <h2 style="clear: both; margin-bottom: 5px;"><% if current_user == @user %>Your<% else %><%= h(@user.login) %>'s<% end %> <%= link_to 'friends', friends_url(:user => @user.login) %> (<%= h(@user.friends.size) %>)</h2>
+	<%= render :partial => 'friends/random_friends', :locals => {:u => @user} %>
+
+	<br /><br />
+
+	<div style="width: 48%; display: inline; float: left;">
+		<h2>Latest activity</h2>
+		<%= render :partial => 'activity/feed_item', :locals => {:activities => @activities, :pic => 'false'} %>
+		<h3 style="font-size: 80%;">More</h3>
+		<p>Browse all of <%= h(@user.login) %>'s <strong><%= link_to "birding locations", locations_url(:user => @user.login) %></strong> (<%= h(@user.user_locations.public.size) %>) and <strong><%= link_to 'birding trips', trips_url(:user => @user.login) %></strong> (<%= h(@user.trips.public.size) %>)</p>
+	</div>
+
+	<div style="width: 48%; display: inline; float: right;">
+		<h2>Recent <%= link_to('photos', :controller => 'people', :action => 'photos', :login => @user.login) %></h2>
+		<%= render :partial => 'activity/feed_item', :locals => {:activities => @photo_activities, :pic => 'false'} %>
+		<h3 style="font-size: 80%;">More</h3>
+		<p>Browse all of <%= h(@user.login) %>'s <strong><%= link_to "photos", :controller => 'people', :action => 'photos', :login => @user.login %></strong></p>
+	</div>
+
+	<h2 style="margin-bottom: 5px; clear: both;"><% if current_user == @user %>Your public observations (private observations not shown)<% else %><%= h(@user.login) %>'s bird observations<% end %></h2>
+	<%= render :partial => 'observations_pagination/user_observations', :locals => {:user => @user.id, :publicize_for => :false} %>
+
+	<br />
+
+	<div style="display: inline; float: left; width: 50%">
+		<h2>Frequently used <%= link_to 'tags', observations_tags_url(:user => @user.login) %></h2>
+		<%= render :partial => 'tags/tag_cloud', :locals => {:tags => @tags, :user => @user} %>
+	</div>
+
+	<div style="display: inline; float: right; width: 50%">
+		<h2>Recently added <%= link_to 'bird lists', lists_url(:user => @user.login) %></h2>
+		<ul style="margin: 0;">
+		<%- @saved_searches[0..4].each do |search| -%>
+			<%- search.publicize!(current_user) -%>
+			<li><%= link_to h(search.name), list_url(:user => search.user.login, :id => search.id, :format => 'html') %><% if @user == current_user %> (<%= link_to 'Edit', :controller => 'search', :action => 'observation', :id => search.id %> | <%= link_to 'Delete', {:controller => 'search', :action => 'delete', :id => search.id}, {:method => 'post', :confirm => 'Are you sure?  This action will NOT delete any observations.'} %>)<% end %></li>
+		<%- end -%>
+		</ul>
+	</div>
+	
+	<%- @user.comment_collection.publicize!(current_user) -%>
+	<%= render :partial => 'shared/comments_comment', :locals => { :comment_collection => @user.comment_collection, :goto => url_for(:controller => 'people', :action => 'view', :login => @user.login) } %>
+	<%- add_to_head(auto_discovery_link_tag(:atom, url_for(:controller => 'comments', :action => 'feed', :id => @user.comment_collection.id), {:title => @user.comment_collection.title})) unless @user.comment_collection.private -%>

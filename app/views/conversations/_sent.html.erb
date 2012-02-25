@@ -1,0 +1,35 @@
+		<div id="pagination-working" style="display: none; text-align: center;"><p style="margin-top: 50px;">Loading...</p><p><%= image_tag("loading-big.gif", :size => "32x32", :alt => "loading...", :title => "loading...") %></p></div>
+
+		<div id="pagination-content">
+
+			<% form_tag :action => 'modify', :go => 'sent' do %>
+
+				<table style="border-collapse: collapse; width: 100%">
+
+				<table style="border-collapse: collapse; width: 100%">
+
+                                    <tr><td colspan="2" style="margin: 10px;"><%= submit_tag 'Delete', :onclick => 'greySubmits();', :style => 'margin-bottom: 5px;' %></td><td style="text-align: right;"><%= will_paginate message_references %></td></tr>
+
+					<% @message_references.each do |mr| %>
+						<%- sent_to_users = mr.message.conversation.users.reject {|u| u == current_user}.first(3) -%>
+						<tr>
+							<td style="border-top: 1px solid #888; border-bottom: 1px solid #888;"><%= check_box_tag "message_references[#{mr.id}]", 1, false, :id => "mr#{mr.id}" %></td>
+							<td style="border-top: 1px solid #888; border-bottom: 1px solid #888;"><a href="<%= url_for :controller => 'people', :action => 'view', :login => sent_to_users.first.login %>"><%= image_tag(sent_to_users.first.profile_pic.url(:small), :alt => h(sent_to_users.first.login), :title => h(sent_to_users.first.login)) %></a></td>
+							<td style="border-top: 1px solid #888; border-bottom: 1px solid #888;"><p style="font-size: 90%; margin: 2px 0 5px;">To: <% sent_to_users.each do |u| %><%= link_to h(u.login), :controller => 'people', :action => 'view', :login => u.login %><% if u != sent_to_users.last %>, <% end %><% end %><% if mr.message.conversation.users.size > 4 %>, ...<% end %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sent: <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => mr.message.created_at, :separator => ', at '} %></p>
+                                                        <%- if mr.message.conversation.messages.first == mr.message -%>
+                                                          <p style="margin-left: 15px;"><%= link_to h(mr.message.conversation.subject), :action => 'view', :id => mr.message.conversation.id %>
+                                                        <%- else -%>
+                                                          <p style="margin-left: 15px;"><%= link_to h(mr.message.conversation.subject), :action => 'view', :id => mr.message.conversation.id, :anchor => mr.message.id %>
+                                                        <%- end -%>
+                                                        <br /><%= render :partial => 'body_preview', :locals => {:body => mr.message.body } %></p></td></p>
+							</td>
+						</tr>
+					<% end %>
+					
+                                        <tr><td colspan="2" style="margin: 10px;"><%= submit_tag 'Delete', :onclick => 'greySubmits();', :style => 'margin-top: 5px;' %></td><td style="text-align: right;"><%= will_paginate message_references %></td></tr>
+					
+				</table>
+				
+			<% end %>
+
+		</div>

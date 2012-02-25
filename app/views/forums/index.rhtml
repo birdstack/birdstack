@@ -1,0 +1,10 @@
+	<%- @page_title = 'Forums' -%>
+
+	<h1>The Birdstack Forums</h1>
+	
+	<div id="forums">
+		<%- for forum in @forums -%>
+			<h2><%= link_to h(forum.name), :controller => 'forums', :action => 'forum', :forum => forum.url %></h2><p class="forum-stats"> <% if forum.thread_count.to_i > 0 %>(<%= h(forum.thread_count) %> discussions containing <%= h(forum.post_count) %> posts, most recent on <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => forum.posted_at, :separator => ', at '} %>)<% end %></p>
+			<p><%= h(forum.description) %></p>
+		<%- end -%>
+	</div>

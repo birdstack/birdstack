@@ -1,0 +1,27 @@
+	<%- @page_title = 'Reset password' -%>
+
+	<h1><%= h(@user.login) %>, please choose a new password.</h1>
+
+	<%- if @user.errors.count > 0 then -%>
+		<h2>Your password cannot be changed until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @user.errors.on(:password) then %><li>Password <%= h(@user.errors.on(:password).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:password_confirmation) then %><li>Password confirmation <%= h(@user.errors.on(:password_confirmation).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:base) then %><li><%= h(@user.errors.on(:base).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_for(:user) do |f| -%>
+
+		<fieldset>
+			<legend>New password</legend>
+			<label for="user_password">Enter a new password:</label><%= f.password_field 'password' %>
+			<div class="fieldtip">At least 6 characters. We recommend mixing letters, numbers, and punctuation for better security.</div>
+			<label for="user_password_confirmation">Re-type your new password:</label><%= f.password_field 'password_confirmation' %>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Reset my password', :class => 'button' %>
+		</fieldset>
+
+	<%- end -%>

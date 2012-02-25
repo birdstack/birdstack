@@ -1,0 +1,239 @@
+
+<script type="text/javascript">
+//<![CDATA[
+
+var map
+var sighting_marker
+
+function load() {
+	if (GBrowserIsCompatible()) {
+		map = new GMap2(document.getElementById("map"));
+
+		GEvent.addListener(map, "click", function(marker, point) {
+			if (!marker) {
+				updatemarker(point);
+			} else {
+				map.panTo(marker.getPoint());
+			}
+
+			document.sighting.user_location_source.value = 'gmap';
+			document.sighting.user_location_zoom.value = map.getZoom();
+		});
+
+		GEvent.addListener(map, "zoomend", function(oldLevel, newLevel) {
+			document.sighting.user_location_zoom.value = newLevel;
+		});
+
+		map.addControl(new GLargeMapControl());
+		map.addControl(new GMapTypeControl());
+
+		<% if @user_location.latitude and @user_location.longitude %>
+			point = new GLatLng(<%= @user_location.latitude %>, <%= @user_location.longitude %>)
+			map.setCenter(point, <%= @user_location.zoom || 1%>);
+			updatemarker(point);
+		<% else %>
+			map.setCenter(new GLatLng(0, 0), 1);
+		<% end %>
+
+		map.setMapType(G_HYBRID_MAP);
+	}
+	
+	switchCoordInput();
+}
+
+function switchCoordInput() {
+	if(document.sighting.location_style.item('location_style_decimal').checked) {
+		Element.show('location_decimal');
+		Element.hide('location_dms');
+	} else {
+		Element.hide('location_decimal');
+		Element.show('location_dms');
+	}
+}
+
+function resetEverything() {
+	document.sighting.user_location_adm1.value = '';
+	resetBelowAdm1();
+}
+
+function resetBelowAdm1() {
+	document.sighting.user_location_adm2.value = '';
+	document.sighting.user_location_location.value = '';
+	resetCoords();
+}
+
+function resetCoords() {
+	document.sighting.user_location_latitude.value = '';
+	document.sighting.user_location_longitude.value = '';
+	dec_to_dms_lat();
+	dec_to_dms_lon();
+
+	map.setCenter(new GLatLng(0, 0), 1);
+	if(sighting_marker)
+		map.removeOverlay(sighting_marker);
+	document.sighting.user_location_source.value = '';
+	document.sighting.user_location_zoom.value = '';
+}
+
+function updatemarker(point) {
+	if(sighting_marker)
+		map.removeOverlay(sighting_marker);
+	sighting_marker = new GMarker(point);
+	map.addOverlay(sighting_marker);
+	point = sighting_marker.getPoint();
+	map.panTo(point);
+
+	document.sighting.user_location_latitude.value = point.lat();
+	document.sighting.user_location_longitude.value = point.lng();
+	dec_to_dms_lat();
+	dec_to_dms_lon();
+}
+
+function updatecoords_adm2(element, selectedElement) {
+	updatecoords(selectedElement, 7);
+
+	document.sighting.user_location_source.value = 'adm2';
+	document.sighting.user_location_zoom.value = map.getZoom();
+}
+
+function updatecoords_ppl(element, selectedElement) {
+	updatecoords(selectedElement, 10);
+
+	document.sighting.user_location_source.value = 'ppl';
+	document.sighting.user_location_zoom.value = map.getZoom();
+}
+
+function updatecoords(selectedElement, zoomLevel) {
+	latitude = selectedElement.getElementsByClassName('latitude')[0].innerHTML
+	longitude = selectedElement.getElementsByClassName('longitude')[0].innerHTML
+
+	updatemarker(new GLatLng(latitude, longitude));
+
+	map.setCenter(sighting_marker.getPoint(), zoomLevel);
+
+	document.sighting.user_location_zoom.value = map.getZoom();
+}
+
+function updatemap() {
+	latitude = document.sighting.user_location_latitude.value;
+	longitude = document.sighting.user_location_longitude.value;
+
+	// If both are blank, clear it all.  If just one is blank, don't try to process.
+	if(latitude == '' && longitude == '') {
+		resetCoords();
+	} else if(latitude == '' || longitude == '') {
+		dec_to_dms_lat();
+		dec_to_dms_lon();
+		return;
+	} else {
+		document.sighting.user_location_source.value = 'user';
+		document.sighting.user_location_zoom.value = map.getZoom();
+
+		updatemarker(new GLatLng(latitude, longitude));
+	}
+}
+
+function dms_to_dec_lat() {
+	d = document.sighting.latitude_d.value
+	m = document.sighting.latitude_m.value
+	s = document.sighting.latitude_s.value
+
+	if(d == '' && m == '' && s == '') {
+		document.sighting.user_location_latitude.value = '';
+		updatemap();
+		return;
+	} else if(d == '' || m == '' || s == '') {
+		return;
+	}
+
+	d = parseFloat(d) || 0
+	m = parseFloat(m) || 0
+	s = parseFloat(s) || 0
+
+	if(d < 0) {
+		m = -m;
+		s = -s;
+	}
+
+	document.sighting.user_location_latitude.value = d + m/60 + s/3600;
+	updatemap();
+}
+
+function dms_to_dec_lon() {
+	d = document.sighting.longitude_d.value
+	m = document.sighting.longitude_m.value
+	s = document.sighting.longitude_s.value
+
+	if(d == '' && m == '' && s == '') {
+		document.sighting.user_location_longitude.value = '';
+		updatemap();
+		return;
+	} else if(d == '' || m == '' || s == '') {
+		return;
+	}
+
+	d = parseFloat(d) || 0
+	m = parseFloat(m) || 0
+	s = parseFloat(s) || 0
+
+	if(d < 0) {
+		m = -m;
+		s = -s;
+	}
+
+	document.sighting.user_location_longitude.value = d + m/60 + s/3600;
+	updatemap();
+}
+
+function dec_to_dms_lat() {
+	latitude = document.sighting.user_location_latitude.value;
+
+	d = '';
+	m = '';
+	s = '';
+
+	if(latitude != '') {
+		latitude = parseFloat(latitude) || 0;
+
+		d = Math.floor(Math.abs(latitude));
+
+		if(latitude < 0) {
+			d = -d;
+		}
+
+		m = Math.floor((Math.abs(latitude) % 1) * 60);
+		s = Math.round(((((Math.abs(latitude) % 1) * 60) % 1) * 60) * 100) / 100;
+	}
+
+	document.sighting.latitude_d.value = d;
+	document.sighting.latitude_m.value = m;
+	document.sighting.latitude_s.value = s;
+}
+
+function dec_to_dms_lon() {
+	longitude = document.sighting.user_location_longitude.value;
+
+	d = '';
+	m = '';
+	s = '';
+
+	if(longitude != '') {
+		longitude = parseFloat(longitude) || 0;
+
+		d = Math.floor(Math.abs(longitude));
+
+		if(longitude < 0) {
+			d = -d;
+		}
+
+		m = Math.floor((Math.abs(longitude) % 1) * 60);
+		s = Math.round(((((Math.abs(longitude) % 1) * 60) % 1) * 60) * 100) / 100;
+	}
+
+	document.sighting.longitude_d.value = d;
+	document.sighting.longitude_m.value = m;
+	document.sighting.longitude_s.value = s;
+}
+
+//]]>
+</script>

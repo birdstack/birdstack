@@ -1,0 +1,3 @@
+<%= @newsletter %>
+
+<%= render :partial => 'shared/mail_footer', :locals => {:user => @user, :notification => User::NOTIFICATION_TYPES[:notify_newsletter]} %>

@@ -1,0 +1,93 @@
+	<% unless @trip %>
+		<%- @page_title = 'The trip does not exist or is not accessible.' -%>
+		<h1>Error</h1>
+		<p>The trip does not exist or is not accessible.</p>
+	<% else %>
+		<%- @trip.publicize!(current_user) -%>
+		<%- @page_title = h(@trip.name) + ' - ' + h(@trip.user.login) + '\'s birding trip' -%>
+
+		<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @trip.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @trip.user.login %><%- else -%><%= link_to h(@trip.user.login), :controller => 'people', :action => 'view', :login => @trip.user.login %><%- end -%> > <%= link_to 'Trips', trips_url(:user => @trip.user.login) %> > <%= h(@trip.name) %></p>
+
+		<h1><%= h(@trip.name) %></h1>
+
+		<%- if @trip.date_year_start -%><p style="margin: 0;">Start date <%- if @trip.time_hour_start -%> and time<%- end -%>: <%= h(@trip.date_day_start) %> <%= @trip.date_month_start ? Time.gm(Time.now.year,@trip.date_month_start).strftime('%B') : '' %> <%= h(@trip.date_year_start) %><%- if @trip.time_hour_start -%>, <%= h(sprintf('%02d',@trip.time_hour_start)) %>:<%= h(sprintf('%02d',@trip.time_minute_start)) %></p><%- end -%></p><%- end -%>
+		<%- if @trip.protocol == 'casual' -%><%- if @trip.date_year_end -%><p style="margin: 0;">End date: <%= h(@trip.date_day_end) %> <%= @trip.date_month_end ? Time.gm(Time.now.year,@trip.date_month_end).strftime('%B') : '' %> <%= h(@trip.date_year_end) %></p><%- end -%></p><%- end -%>
+		<%- unless @trip.protocol == 'casual' -%><p style="margin: 0;">Duration: <%= h(sprintf('%02d',@trip.duration_hours)) %>:<%= h(sprintf('%02d',@trip.duration_minutes)) %></p><%- end -%>
+		<% unless @trip.number_observers.blank? %><p style="margin: 0;">Number of observers: <%= h(@trip.number_observers) %></p><% end %>
+		<p style="margin: 0;">All observations reported: <% if @trip.all_observations_reported %>Yes<% else %>No<% end %></p>
+
+		<%- if @trip.protocol == 'casual' -%>
+			<p style="margin: 0;">Type of trip: Casual birding</p>
+		<%- elsif @trip.protocol == 'stationary' -%>
+			<p style="margin: 0;">Type of trip: Stationary count</p>
+		<%- elsif @trip.protocol == 'traveling' -%>
+			<p style="margin: 0;">Type of trip: Traveling count</p>
+			<p style="margin: 0;">Distance traveled: <%= h(@trip.distance_traveled_km) %> kilometres (<%= h(@trip.distance_traveled_mi) %> miles)</p>
+		<%- elsif @trip.protocol == 'area' -%>
+			<p style="margin: 0;">Type of trip: Area count</p>
+			<p style="margin: 0;">Area covered: <%= h(@trip.area_covered_sqkm) %> square kilometres / <%= h(@trip.area_covered_sqkm*100) %> hectares / <%= h(@trip.area_covered_acres) %> acres / <%= h(@trip.area_covered_sqmi) %> square miles</p>
+		<%- end -%>
+		<%- unless @trip.link.blank? -%>
+			<p>Link:</b> <a href="<%= h(@trip.link) %>" rel="nofollow"><%= h(@trip.link.length > 45 ? @trip.link.first(45) + '...' : @trip.link) %></a></p>
+		<%- end -%>
+
+		<%- if current_user == @trip.user -%><br /><%- if @trip.private -%><p>This is a private trip.</p><%- else -%><p>This is a public trip.</p><%- end -%><%- end -%>
+
+		<%- unless @trip.description.blank? -%><p style="margin: 0;">Notes:</p><div class="notes"><%= birdstack_sanitize(@trip.description) %></div><%- end -%>
+
+		<%- unless @trip.descendants.size == 0 and @trip.root? -%>
+		<p style="margin: 0;">Related trips:</p>
+		<%- @branch.each do |trip| -%>
+			<%- trip.publicize!(current_user) -%>
+			<%- margin_left = (trip.level+1)*10 -%>
+			<p style="margin: 0 0 0 <%= margin_left %>px;"><% if trip == @trip %><%= h(trip.name) %><% else %><%= link_to h(trip.name), trip_url(:user => trip.user.login, :id => trip.id) %><% end %></p>
+		<%- end -%>
+		<%- end -%>
+
+		<% if @user == current_user %>
+			<table style="margin-top: 10px;"><tr><td><%= button_to 'Add an observation', :controller => 'sighting', :action => 'select_species', :prefill => {:trip => @trip.id} %></td>
+			<td><%= button_to 'Edit this trip', {:controller => 'trip', :action => 'edit', :id => @trip.id}, {:method => 'get'} %></td>
+                      <td><% form_tag({:controller => 'trip', :action => 'delete', :id => @trip.id}, {:onsubmit => 'return confirm("Do you really want to delete this trip and any photos attached to it? (This cannot be undone!)") && greySubmits();'}) do %><%= submit_tag 'Delete this trip' %><% end %></td></tr></table>
+		<% end %>
+
+		<%- if @trip.trip_photo.size > 0 || current_user == @trip.user -%><h2 style="margin-top: 15px;">Photos</h2><%- end -%>
+
+		<%- if @trip.trip_photo.size > 0 -%><%- x = 0 -%><table>
+                <%- @trip.trip_photo.all.each do |trip_photo| -%>
+                  <% trip_photo.publicize!(current_user) %>
+		  <%- if x%3 == 0 -%><tr><%- end -%>
+                  <td style="width: 33%; text-align: center;"><a href="<%= trip_photo_url(:user => @trip.user.login, :trip_id => @trip.id, :id => trip_photo.id) %>"><img src="<%= trip_photo.photo(:thumb) %>" alt="<%= h(trip_photo.title) %>" title="<%= h(trip_photo.title) %>" /></a><br />
+                  <%= h(trip_photo.title) %></td>
+		  <%- if x%3 == 2 -%></tr><%- end -%>
+		  <%- x = x+1 -%>
+                <%- end -%>
+		<%- if (x-1)%3 != 2 -%></tr><%- end -%></table><%- end -%>
+
+                <%- if current_user == @trip.user then -%>
+                  <p><%= link_to 'Add a photo', {:controller => 'trip_photo', :action => 'new', :trip_id => @trip.id} %></p>
+                <% end %>
+
+                <%- sighting_photos = @trip.sighting_photos -%>
+                <%- if sighting_photos.size > 0 -%>
+                <h2 style="margin-top: 15px;">Birds photographed on this trip</h2>
+
+		<%- x = 0 -%><table>
+                <%- sighting_photos.each do |sighting_photo| -%>
+                  <% sighting_photo.publicize!(current_user) %>
+		  <%- if x%3 == 0 -%><tr><%- end -%>
+                  <td style="width: 33%; text-align: center;"><a href="<%= observation_photo_url(:user => @trip.user.login, :sighting_id => sighting_photo.sighting_id, :id => sighting_photo.id) %>"><img src="<%= sighting_photo.photo(:thumb) %>" alt="<%= h(sighting_photo.title) %>" title="<%= h(sighting_photo.title) %>" /></a><br />
+                  <%= h(sighting_photo.title) %></td>
+		  <%- if x%3 == 2 -%></tr><%- end -%>
+		  <%- x = x+1 -%>
+                <%- end -%>
+		<%- if (x-1)%3 != 2 -%></tr><%- end -%></table><%- end -%>
+
+		<h2 style="margin: 20px 0 0 0;">Birds observed on this trip:</h2>
+
+		<%= render :partial => 'observations_pagination/trip_observations', :locals => {:trip => @trip.id} %>
+		
+		<%- @trip.comment_collection.publicize!(current_user) -%>
+		<%= render :partial => 'shared/comments_comment', :locals => { :comment_collection => @trip.comment_collection, :goto => trip_path(:user => @trip.user.login, :id => @trip.id) } %>
+
+		<%- add_to_head(auto_discovery_link_tag(:atom, url_for(:controller => 'comments', :action => 'feed', :id => @trip.comment_collection.id), {:title => @trip.comment_collection.title})) unless @trip.comment_collection.private -%>
+	<% end %>

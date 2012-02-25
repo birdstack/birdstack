@@ -1,0 +1,35 @@
+	<%- @page_title = "Processing your photos..." -%>
+
+        <div id="new_photo_processing_top">
+          <h1>Processing your photos...</h1>
+          <p>Do not close or navigate away from this page until uploads and processing are complete.</p>
+        </div>
+        <div id="new_photo_completed_top">
+          <h1>Processing complete</h1>
+        </div>
+
+	<% @new_photos.each do |np| %>
+	  <p><%= h(np.title) %>:</p>
+	  <div id="new_photo_<%= h(np.id) %>" style="margin-bottom: 15px;">
+	  </div>
+	<% end %>
+	<div id="new_photo_completed">
+	  <%= link_to "Back to " + h(@trip.name) + " trip", trip_url(:user => current_user.login, :id => @trip.id) %>
+	</div>
+
+	<div id="processing-update">
+	<%= render :partial => 'shared_photo/processing_update' %>
+	</div>
+
+	<script type="text/javascript">
+	//<![CDATA[
+	  updater = new Ajax.PeriodicalUpdater('processing-update', "<%= url_for(:action => 'processing_update') %>", {
+	frequency: 2,
+	evalScripts: true,
+	method: 'get',
+	parameters: {
+	  "ids[]": [<%= h(@new_photos.collect {|np| np.id}.join(", ")) %>]
+	}
+	  });
+	//]]>
+	</script>

@@ -1,0 +1,17 @@
+	<%- @page_title = 'Genera in the family ' + @families.first.latin_name + ' (' + @families.first.english_name + ')' -%>
+
+	<%= render :partial => 'breadcrumbs' %>
+
+	<h1 class="taxonpage">Genera in the family <%= h(@families.first.latin_name) + ' (' + h(@families.first.english_name) + ')' %></h1>
+
+	<% unless @family.note.blank? %><p style="margin-bottom: 0;"><b>IOC note:</b></p><%= birdstack_sanitize(@family.note) %><% end %>
+
+	<%- for family in @families -%>
+		<ul class="taxalist">
+		<%- for genus in family.genera -%>
+			<li><%= link_to h(genus.latin_name), :controller => :ioc, :order => family.order.latin_name.downcase, :family => family.latin_name.downcase, :genus => genus.latin_name.downcase, :action => :genus %></li>
+		<%- end -%>
+		</ul>
+	<%- end -%>
+
+	<p>Taxonomic source: <a href="http://www.worldbirdnames.org/">IOC World Bird Names</a></p>

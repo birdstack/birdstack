@@ -1,0 +1,39 @@
+		<%- comment_collection.publicize!(current_user) -%>
+		<%- comments = comment_collection.comments.paginate(:page => params[:page]) -%>
+		<%= will_paginate comments %>
+		<table>
+			<%- comments.each do |c| -%>
+				<%- if c.deleted -%>
+					<tr>
+						<td class="profile_pic"><%= image_tag("deleted.png", :size => "16x16", :alt => "deleted") %></td>
+						<td>
+							<p class="deleted-comment"><%= h(c.comment) %></p>
+							<p class="comment-info">Original comment posted <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => c.created_at, :separator => ', '} %> by <%= link_to h(c.user.login), :controller => 'people', :action => 'view', :login => c.user.login %></p><br /><br />
+						</td>
+					</tr>
+				<%- else -%>
+					<tr>
+						<td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => c.user.login %>"><img src="<%= c.user.profile_pic.url(:small) %>" alt="<%= h(c.user.login) %>" /></a></td>
+						<td><p><b><%= link_to h(c.user.login), :controller => 'people', :action => 'view', :login => c.user.login %></b> said:</p>
+
+							<%= birdstack_sanitize(c.comment) %>
+
+							<%- unless c.user.signature.blank? -%>
+								<hr />
+								<%= birdstack_sanitize(c.user.signature) %>
+							<%- end -%>
+
+							<p class="comment-info">Posted <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => c.created_at, :separator => ', '} %>
+								<%- if c.user == current_user then -%>
+									(<%= link_to 'Edit', :controller => 'comment', :action => 'edit', :id => c.id, :goto => goto %><% unless comment_collection.comments.first == c %> | <%= link_to 'Delete', {:controller => 'comment', :action => 'delete', :id => c.id, :goto => goto}, :confirm => 'Do you really want to delete this comment? This action cannot be undone.', :method => 'post' %><% end %>)
+								<%- end -%>
+								<%- if c.updated_at != c.created_at -%>
+									<br />Last updated <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => c.updated_at, :separator => ', '} %><% unless c.updated_reason.blank? %>. Reason: &quot;<%= h(c.updated_reason) %>&quot;<% end %>
+								<%- end -%>
+							</p>
+						</td>
+					</tr>
+				<%- end -%>
+			<%- end -%>
+		</table>
+		<%= will_paginate comments %>

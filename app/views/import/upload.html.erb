@@ -1,0 +1,36 @@
+	<%- @page_title = 'Choose a file to import' -%>
+
+	<p class="breadcrumb"><%= link_to 'Import', :action => 'index' %> &gt; Upload</p>
+
+	<h1>Choose a file to import</h1>
+
+	<p>If you read the <%= link_to 'file format instructions', :controller => 'help', :action => 'import-observations-csv' %> before you attempt an upload, you will probably save yourself some frustration. Note that uploading and processing your file may take a few moments depending on its size, so be patient after you click the "Continue" button.</p>
+
+	<%- if @import_file.errors.count > 0 then -%>
+		<h2>Your file cannot be uploaded until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @import_file.errors.on(:file) then %><li>File <%= h(@import_file.errors.on(:file).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('submit_button').disable()
+		}
+//]]>
+	</script>
+
+
+	<% form_for(:import_file, :html => {:multipart => true, :onsubmit => 'greyButtons()'}) do |f| %>
+		<fieldset>
+			<legend>Choose a file</legend>
+			<label for="import_file_file">File:</label><%= f.file_field 'file' %>
+			<p class="fieldtip">150 kilobyte (KB) limit</p>
+			<label for="import_file_description">Description (optional):</label><%= f.text_field 'description' %>
+			<div class="checkbox"><%= f.check_box 'ebird_exclude' %><label for="import_file_ebird_exclude">These observations have already been submitted to <a href="http://ebird.org/">eBird</a>.</label></div>
+		</fieldset>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Continue', :class => 'button', :id => 'submit_button' %>
+		</fieldset>
+	<%- end -%>

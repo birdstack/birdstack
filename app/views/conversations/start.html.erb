@@ -1,0 +1,38 @@
+	<%- @page_title = 'Start a new conversation' -%>
+
+	<p style="text-align: center;"><%= link_to 'Inbox', :action => 'index' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'Sent items', :action => 'sent' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start new</p>
+
+	<h1>Start a new conversation</h1>
+
+	<%- if (@conversation.errors.count == 0 and @message.errors.count == 0) and !@message.body.blank? -%>
+		<h2>Preview:</h2>
+		<p><b><%= h(@conversation.subject) %></b></p>
+		<%= birdstack_sanitize(@message.body) %><br /><br />
+	<%- end -%>
+
+	<%- if @conversation.errors.count > 0 or @message.errors.count > 0 then -%>
+		<h2>Your message cannot be sent until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @conversation.errors.on(:subject) then %><li>The conversation subject <%= h(@conversation.errors.on(:subject).to_a.first) %>.</li><% end %>
+                        <% if @conversation.errors.on(:users) then %><% @conversation.errors.on(:users).each do |e| %><li><%= h(e) %>.</li><% end %><% end %>
+			<% if @message.errors.on(:body) then %><li>The message body <%= h(@message.errors.on(:body).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_for :message do |f| -%>
+		<fieldset<% if !@conversation.errors.empty? or !@message.errors.empty? %> class="errorfieldlabel"<% end %>>
+			<legend>Message</legend>
+			<%- fields_for :conversation do |c| -%>
+				<label for="conversation_participants_text">To:</label><%= c.text_field :participants_text, :style => 'width: 570px;' %>
+				<p class="fieldtip">Use Birdstack membernames, and separate multiple names with commas.</p>
+				<label for="conversation_subject">Subject:</label><%= c.text_field :subject, :style => 'width: 570px;' %>
+			<%- end -%>
+			<label for="message_body">Body:</label><%= f.text_area :body, :class => 'textbox', :style => 'width: 570px;' %>
+  			<div class="fieldtip"><%= render :partial => 'shared/permitted_xhtml_tags' %></div>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Preview', :class => 'button' %>
+			<%= submit_tag 'Post', :class => 'button' %>
+		</fieldset>
+	<%- end -%>

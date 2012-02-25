@@ -1,0 +1,19 @@
+<%# Note that we never give publicize! or find_public a user.  The sidebar stack is always rendered from the perspective of a non-logged in user -%>
+<%- cache 'sidebar_stack' do -%>
+	<%- sightings = Sighting.find_public_recent(10) -%>
+
+	<div class="birdstack" style="margin-top: 10px;">
+		<b class="corners1"></b><b class="corners2"></b><b class="corners3"></b><b class="corners4"></b>
+		<div class="stackcontent">
+			<p>Recent Observations</p>
+			<table>
+			<%- for sighting in sightings -%>
+				<%- sighting.publicize! -%>
+				    <tr><td class="left"><%= image_tag("exclaim.gif", :size => "16x16", :alt => "!") %></td><td class="right"><a href="<%= observation_path(:user => sighting.user.login, :id => sighting.id) %>"><%= h(sighting.species.english_name) %></a> (<a href="<%= url_for :controller => 'people', :action => 'view', :login => sighting.user.login %>" class="birdstackuser"><%= h(sighting.user.login) %></a>)</td></tr>
+			<%- end -%>
+			</table>
+			<a href="http://birdstack.com"><%= image_tag("logo100.gif", :size => "100x13", :alt => "Birdstack: ", :class => "logo") %></a>
+		</div>
+		<b class="corners4"></b><b class="corners3"></b><b class="corners2"></b><b class="corners1"></b>
+	</div>
+<%- end -%>

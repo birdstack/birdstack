@@ -1,0 +1,15 @@
+Sent at: <%= Time.now.to_s %>
+<% if @user %>
+Logged in as: <%= @user.login %>
+Account email: <%= @user.email %>
+<% end %>
+Name: <%= @contact.name %>
+Email: <%= @contact.email %>
+Subject: <%= @contact.subject %>
+
+<%= @contact.body %>
+
+---
+
+Remote IP: <%= @remote_ip %>
+REMOTE_ADDR: <%= ENV['REMOTE_ADDR'] %>

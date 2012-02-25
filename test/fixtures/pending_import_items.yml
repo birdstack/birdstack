@@ -1,0 +1,4 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+badentry:
+  pending_import: joesimport
+  english_name: blah

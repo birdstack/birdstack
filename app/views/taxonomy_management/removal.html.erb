@@ -1,0 +1,34 @@
+	<%- @page_title = 'Remove: ' + h(@change.species.english_name) %>
+
+	<h1>Remove: <%= h(@change.species.english_name) %></h1>
+
+	<p><%= h(@change.description) %> (<%= h(@change.date.strftime("%d %B %Y")) %>)</p>
+
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('submit_top').disable()
+			$('submit_bottom').disable()
+		}
+//]]>
+	</script>
+
+	<% form_tag({}, {:onsubmit => 'greyButtons()'}) do %>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save and continue', :class => 'button', :id => 'submit_top' %><br /><br />
+		</fieldset>
+		<fieldset style="border: 0;">
+			<div class="list-report">
+				<%- for sighting in @sightings -%>
+					<hr />
+					<label for="sightings_<%= sighting.id %>">Choose action:</label><%= select_tag "sightings[#{sighting.id}]", options_for_select([['Delete','delete'],['Retain temporarily','']]), :id => "sightings_#{sighting.id}" %><br /><br />
+					<%= link_to h(sighting.species.english_name), observation_url(:user => current_user.login, :id => sighting.id) %> (<i><%= h(sighting.species.genus.latin_name) %> <%= h(sighting.species.latin_name) %></i>)
+					<%= render :partial => 'shared/observation_report', :locals => {:sighting => sighting} %>
+				<%- end -%>
+				<hr />
+			</div>
+		</fieldset>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save and continue', :class => 'button', :id => 'submit_bottom' %>
+		</fieldset>
+	<% end %>

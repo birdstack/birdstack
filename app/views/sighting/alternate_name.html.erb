@@ -1,0 +1,18 @@
+<%# Don't forget, this page is also used from the IOC page %>
+	<%- @page_title = 'Alternate name results for "' + h(@alternate_names.first.name) + '"' -%>
+
+	<%= render :partial => 'shared/workflow' %>
+
+	<h1>Alternate name results</h1>
+
+	<p><b><%= h(@alternate_names.first.name) %></b> is an alternate name for <%= h(@alternate_names.size) %> species:</p>
+
+	<% i = 0 %>
+	<% for alternate_name in @alternate_names %>
+		<% i += 1 %>
+		<h2><%= h(i) %>. <%= h(alternate_name.species.english_name) %> <span style="font-size: 90%;">(<%= link_to 'Add an observation', :controller => 'sighting', :action => 'species_english_search', :id => alternate_name.species.id, :prefill => params[:prefill] %> or <%= link_to 'See species information', :controller => 'ioc', :action => 'species', :order => alternate_name.species.genus.family.order.latin_name.downcase, :family => alternate_name.species.genus.family.latin_name.downcase, :genus => alternate_name.species.genus.latin_name.downcase, :species => alternate_name.species.latin_name %>)</span></h2>
+		<p><b><%= h(alternate_name.name) %></b> is an alternate name for <b><%= h(alternate_name.species.english_name) %></b> (<i><%= h(alternate_name.species.genus.latin_name) + ' ' + h(alternate_name.species.latin_name) %></i>). <%= render :partial => 'shared/range_info', :locals => {:species => alternate_name.species} %></p>
+		<%= birdstack_sanitize(alternate_name.description) %>
+		<p class="comment-info">Suggested by <span class="whois"><%= link_to h(alternate_name.user.login), :controller => 'people', :action => 'view', :login => alternate_name.user.login %></span> on <%= h(alternate_name.created_at.strftime("%d %B %Y")) %>. | <%= link_to '[flag this suggestion as incorrect]', :controller => 'alternate_name', :action => 'flag', :id => alternate_name.id %>
+		<%- unless alternate_name == @alternate_names.last -%><hr /><%- end -%>
+	<% end %>

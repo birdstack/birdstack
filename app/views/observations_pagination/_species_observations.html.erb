@@ -1,0 +1,14 @@
+<%# This one is different because the search is always run in the context of the current user and as owned by the current user %>
+<%# In other words, it will only show the current user's observations and only to that user %>
+<% species ||= params[:id] %>
+<%# If we ever change this to not run in the context of the current user (and as owned by the current user), we'll need to make sure the search doesn't always return private data %>
+
+<% if species %>
+	<% cache :controller => 'observations_pagination', :action => 'species_observations', :user => current_user.id, :id => species, :type => params[:type], :sort => params[:sort], :no_display_change => params[:no_display_change], :page => params[:page] || 1, :render_for => logged_in? ? current_user.id : 'public' do %>
+		<% search = Birdstack::Search.new(current_user, {:observation_species => {:id => [species]}}, false, current_user) %>
+
+		<%= render :partial => 'shared/observations_frame', :locals => {:url => {:controller => 'observations_pagination', :action => 'species', :id => species}, :search => search} %>
+	<% end %>
+<% else %>
+	Unable to find species
+<% end %>

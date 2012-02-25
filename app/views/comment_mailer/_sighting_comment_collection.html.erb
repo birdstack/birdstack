@@ -1,0 +1,13 @@
+Species observed: <%= comment.comment_collection.sighting.species.english_name %>
+
+User: <%= comment.user.login %>
+
+##########
+
+<%= Birdstack::strip_tags(comment.comment) %>
+
+##########
+
+DO NOT REPLY to this email. <%= comment.user.login %> won't see your reply.
+To post a response to <%= comment.user.login %>'s comment, use this link:
+<%= SITE_URL_PREFIX %><%= observation_path(:user => comment.comment_collection.user.login, :id => comment.comment_collection.sighting.id) %>

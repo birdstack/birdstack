@@ -1,0 +1,1 @@
+<% if logged_in? == true and current_user.time_day_first == false %><%= h(timestamp.strftime("%B %d, %Y")) %><% else %><%= h(timestamp.strftime("%d %B %Y")) %><% end %>

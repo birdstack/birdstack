@@ -1,0 +1,61 @@
+		<%- comment_collection ||= CommentCollection.find_by_id(params[:comment_collection]) -%>
+		<%- unless comment_collection.user == current_user -%>
+			<%- comment_collection = CommentCollection.find_public_by_id(comment_collection.id, current_user) -%>
+		<%- end -%>
+		<%- unless comment_collection -%>
+			<p>Cannot find comment collection.</p>
+		<%- else -%>
+			<%- comment_collection.publicize!(current_user) -%>
+
+			<%- goto ||= params[:goto] -%>
+
+			<%- comments = comment_collection.comments.paginate(:page => params[:page], :order => 'comments.created_at ASC') -%>
+
+			<%= will_paginate comments, :params => {:controller => 'comments', :action => 'paginate', :goto => goto, :comment_collection => comment_collection.id} %>
+			<%- if comments.size > 0 -%>
+			<table>
+				<%- comments.each do |c| -%>
+					<%- if c.deleted -%>
+						<tr>
+							<td class="profile_pic"><%= image_tag("deleted.png", :size => "16x16", :alt => "deleted") %></td>
+							<td>
+								<p class="deleted-comment"><%= h(c.comment) %></p>
+								<p class="comment-info">Original comment posted <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => c.created_at, :separator => ', '} %> by <%= link_to h(c.user.login), :controller => 'people', :action => 'view', :login => c.user.login %>
+									<%- if current_user == comment_collection.user -%>
+										(<%= link_to 'Remove this notification', {:controller => 'comment', :action => 'permanently_delete', :id => c.id, :goto => goto}, :confirm => 'Delete this notice permanently? This action cannot be undone.', :method => 'post' %>)
+									<%- end -%>
+								</p>
+							</td>
+						</tr>
+					<%- else -%>
+						<tr>
+							<td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => c.user.login %>"><%= image_tag(c.user.profile_pic(:small), :alt => h(c.user.login), :title => h(c.user.login)) %></a></td>
+							<td><p><b><%= link_to h(c.user.login), :controller => 'people', :action => 'view', :login => c.user.login %></b> said:</p>
+
+								<%= birdstack_sanitize(c.comment) %>
+
+								<p class="comment-info">Posted <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => c.created_at, :separator => ', '} %>
+									<%- if c.user == current_user then -%>
+										(<%= link_to 'Edit', :controller => 'comment', :action => 'edit', :id => c.id, :goto => goto %> | 
+										<%- if current_user != comment_collection.user -%>
+											<%= link_to 'Delete', {:controller => 'comment', :action => 'delete', :id => c.id, :goto => goto}, :confirm => 'Do you really want to delete this comment? This action cannot be undone.', :method => 'post' %>)
+										<%- end -%>
+									<%- end -%>
+									<%- if c.user != current_user and current_user == comment_collection.user -%>(<%- end -%>
+									<%- if current_user == comment_collection.user -%>
+	<%- #Tabs in the following line would render as an unwanted space in the browser. -%>
+<%= link_to 'Delete', {:controller => 'comment', :action => 'permanently_delete', :id => c.id, :goto => goto}, :confirm => 'Delete this comment permanently? This action cannot be undone.', :method => 'post' %>)
+									<%- end -%>
+									<%- if c.updated_at != c.created_at -%>
+										<br />Last updated <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => c.updated_at, :separator => ', '} %><% unless c.updated_reason.blank? %>. Reason: &quot;<%= h(c.updated_reason) %>&quot;<% end %>
+									<%- end -%>
+								</p>
+							</td>
+						<%- end -%>
+					</tr>
+				<%- end -%>
+			</table>
+			<% end %>
+
+			<%= will_paginate comments, :params => {:controller => 'comments', :action => 'paginate', :goto => goto, :comment_collection => comment_collection.id} %>
+		<% end %>

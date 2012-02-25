@@ -1,0 +1,52 @@
+<% SALT = 'NaCl' unless defined?(SALT) %>
+quentin:
+  id: 1
+  login: quentin
+  email: quentin@example.com
+  salt: <%= SALT %>
+  crypted_password: <%= User.encrypt('testing123456', SALT) %>
+  created_at: <%= 5.days.ago.to_s :db %>
+  activation_code: quentinscode
+  activated_at: <%= 5.days.ago.to_s :db %>
+  comment_collection_id: 1
+  notify_profile_comment: false
+aaron:
+  id: 2
+  login: aaron
+  email: aaron@example.com
+  salt: <%= SALT %>
+  crypted_password: <%= User.encrypt('testing123456', SALT) %>
+  activation_code: aaronscode 
+  created_at: <%= 1.days.ago.to_s :db %>
+lazyjoe:
+  id: 3
+  login: lazyjoe
+  email: lazyjoe@example.com
+  salt: <%= SALT %>
+  crypted_password: <%= User.encrypt('testing123456', SALT) %>
+  activation_code: lazyjoescode 
+  created_at: <%= (Time.now - (ACCOUNT_ACTIVIATION_TIMEOUT * 2)).to_s :db %>
+joe:
+  login: joe
+  email: joe@example.com
+  salt: <%= SALT %>
+  crypted_password: <%= User.encrypt('testing123456', SALT) %>
+  created_at: <%= 5.days.ago.to_s :db %>
+  activation_code: asdfadfadsfoweuro
+  activated_at: <%= 5.days.ago.to_s :db %>
+joe1:
+  login: joe1
+  email: joe1@example.com
+  salt: <%= SALT %>
+  crypted_password: <%= User.encrypt('testing123456', SALT) %>
+  created_at: <%= 5.days.ago.to_s :db %>
+  activation_code: asdfadfadsfoweuro2
+  activated_at: <%= 5.days.ago.to_s :db %>
+anotherjoe:
+  login: anotherjoe
+  email: anotherjoe@example.com
+  salt: <%= SALT %>
+  crypted_password: <%= User.encrypt('testing123456', SALT) %>
+  created_at: <%= 5.days.ago.to_s :db %>
+  activation_code: asdfadfadsfoweuro1
+  activated_at: <%= 5.days.ago.to_s :db %>

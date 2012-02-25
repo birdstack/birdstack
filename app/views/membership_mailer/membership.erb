@@ -1,0 +1,22 @@
+<%= @user.login %>,
+
+Thank you for being a supporting member of Birdstack for this past year. Your
+support is what makes the site possible. This is just a reminder that your
+year-long membership will be expiring in a week.  If you would like to renew
+for another year, please visit http://birdstack.com/supporting-members
+
+Benefits of membership include:
+
+- You will not see any ads when you are logged in to your Birdstack account.
+- Your photo storage capacity is increased to 250 photos.
+- We will contribute 10 percent of your membership donation directly to
+  Birdlife International's Preventing Extinctions Programme.
+- You may have the opportunity to test and preview exciting new Birdstack
+  features.
+- You will have the confidence that you are helping to support Birdstack's
+  continued maintenance and development.
+
+We suggest a minimum donation of $25 (USD). For details, go to
+http://birdstack.com/supporting-members
+
+<%= render :partial => 'shared/mail_footer', :locals => {:user => @user, :notification => User::NOTIFICATION_TYPES[:notify_membership]} %>

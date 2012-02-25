@@ -1,0 +1,22 @@
+	<%- @page_title = 'Edit ' + h(@sighting_photo.title) -%>
+
+	<h1>Edit <%= h(@sighting_photo.title) %></h1>
+
+	<p style="text-align: center;"><img src="<%= @sighting_photo.photo(:full) %>" alt="<%= h(@sighting_photo.title) %>" /></p>
+
+	<% form_for @sighting_photo, :url => { :action => 'update', :sighting_id => @sighting_photo.sighting.id } do |f| %>
+	  <%= f.error_messages %>
+	  <fieldset>
+	  <legend>Edit photo info</legend>
+	  <label for="sighting_photo_title">Title:</label><%= f.text_field :title, :style => 'width: 570px;' %>
+	  <label for="sighting_photo_description">Description</label><%= f.text_area :description, :style => 'width: 570px; height: 150px;' %>
+	  <p class="fieldtip"><%= render :partial => 'shared/permitted_xhtml_tags.html.erb' %></p>
+          <label for="sighting_photo_license">License:</label><%= f.select :license, User.available_photo_licenses %>
+	  <%= f.hidden_field :id, :value => @sighting_photo.id %>
+	  </fieldset>
+	  <fieldset class="actionbuttons">
+	   <%= f.submit %>
+	  </fieldset
+	<% end %>
+
+	<p><%= link_to 'Delete this photo', {:action => 'destroy', :sighting_id => @sighting_photo.sighting.id, :id => @sighting_photo.id}, :confirm => 'Are you sure you want to delete this photo? This cannot be undone.', :method => :delete %></p>

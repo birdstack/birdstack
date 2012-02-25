@@ -1,0 +1,20 @@
+		<% date = 0 %>
+
+		<% activities.each do |activity| -%>
+
+		<% if date != activity.occurred_at.strftime("%d %B") %><h3 style="font-size: 80%;"><%= render :partial => 'shared/timestamp_day_month', :locals => {:timestamp => activity.occurred_at} %></h3><% end %>
+		
+		<% if pic == 'true' %>
+			<table>
+				<tr><td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => activity.user.login %>"><%= image_tag(activity.user.profile_pic.url(:small), :alt => h(activity.user.login), :title => h(activity.user.login)) %></a></td>
+					<td><p><%= render :partial => 'activity/single_item', :locals => {:activity => activity} %></p></td></tr>
+			</table>
+		<% else %>
+			<p><%= render :partial => 'activity/single_item', :locals => {:activity => activity} %></p>
+		<% end %>
+
+		<% date = activity.occurred_at.strftime("%d %B") %>
+
+		<%- end -%>
+		
+		<% if activities.size == 0 %><p>No recent activity.</p><% end %>

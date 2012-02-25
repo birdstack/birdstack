@@ -1,0 +1,16 @@
+<%# Takes an optional variable publicize_for that will publicize it for a different user than current_user (probably :false to always present a public view %>
+<% publicize_for ||= current_user %>
+
+			<% counter = sightings.offset %>
+
+			<%- for sighting in sightings -%>
+				<% sighting.publicize!(publicize_for) %>
+
+				<% counter += 1 %>
+				<div class="list-report">
+				<h2><%= counter %>. <a href="<%= observation_url(:user => sighting.user.login, :id => sighting.id) %>"><%= h(sighting.species.english_name) %> (<i><%= h(sighting.species.genus.latin_name) %> <%= h(sighting.species.latin_name) %></i>)</a></h2>
+				<%= render :partial => 'shared/observation_report', :locals => {:sighting => sighting, :publicize_for => publicize_for} %>
+				</div>
+			<%- end -%>
+			
+			<% if sightings.blank? %><p style="text-align: center; font-style: italic; background-color: #efefef;">No results found.</p><% end %>

@@ -1,0 +1,53 @@
+	<%- @page_title = 'Data output options' -%>
+
+	<h1 id="top">Data output options</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#atom">Atom</a> | <a href="#csv">CSV</a> | <a href="#html">HTML</a> | <a href="#stack">Stacks</a> | <a href="#xml">XML</a></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p><%= image_tag("help/output-options.png", :alt => "output", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Once you have collected your <%= link_to 'observations', :action => 'observations' -%> into <%= link_to 'lists', :action => 'searches' %>, you have a wide variety of options for using and publishing your data.</p>
+
+	<p>On your list view page (accessible through <%- if logged_in? -%><%= link_to('My Lists', lists_url(:user => current_user.login)) %><%- else -%>My Lists<%- end -%>), you will see a menu of options at the top right corner of your list (example at right). Each of the options is discussed below.</p>
+
+	<p>We don't want to keep your data locked away in some special format that's hard to access or view -- it's yours, so use it! Whether you want to download extensive datasets for customized queries and analysis or just want a slick, easy way to share your latest observations with your friends, we hope you'll find an option that suits you.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="atom">Atom</h2>
+
+	<p>Syndicate your lists with Atom feeds. Your friends and blog readers can subscribe to be notified every time you update your list. If you aren't sure what feeds are, read <a href="http://www.sixapart.com/about/feeds">About Feeds</a> to get started. Otherwise, you've seen the orange button; you know what to do.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="csv">CSV</h2>
+
+	<p>Choose the "Export" option to download your list in CSV (Comma Separated Values) format. This option gives you full taxononic data, full observation data, and full data about any trips and locations associated with the observations on the list -- more than 60 possible columns of data.</p>
+
+	<p>The CSV files we generate are encoded as UTF-8, so you must be sure that you open and/or process them accordingly.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="html">HTML</h2>
+
+	<p>The same page that you use to view your lists is accessible to other people, if you have set it to be public. You can link to this page from your own website or blog, and you can email the link to share it with others.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="stack">Stacks</h2>
+
+	<p><%= image_tag("help/output-stack.png", :alt => "stack", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Stacks are customizable widgets that you can embed on your own blog or website with a few lines of code (JavaScript is required). They are similar to the "Recent Observations" panel that you see on most pages of the Birdstack site.</p>
+
+	<p>You can set size, length, and color options for your Stacks, and then all you have to do is copy the code and paste it into your own site.</p>
+
+	<p>Forget about updating sidebars or templates by hand -- just record your observations in Birdstack, and they'll show up live on your own site!</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="xml">XML</h2>
+
+	<p>Choose the "Export" option to access your list in XML format. This option gives you full taxononic data, full observation data, and full data about any trips and locations associated with the observations on the list.</p>
+
+	<p>The XML files we generate are encoded as UTF-8, so you must be sure that you process them accordingly.</p>
+
+	<p><a href="#top">[top]</a></p>

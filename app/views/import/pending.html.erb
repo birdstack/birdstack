@@ -1,0 +1,34 @@
+	<%- @page_title = 'Pending observations from"' + h(@pending_import.filename) + '"' -%>
+
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('revalidate_top').disable()
+			$('delete_top').disable()
+			$('revalidate_bottom').disable()
+			$('delete_bottom').disable()
+		}
+//]]>
+	</script>
+
+	<p class="breadcrumb"><%= link_to 'Import', :action => 'index' %> &gt; <%= h(@pending_import.filename) %></p>
+
+        <%- if !@pending_import_items.empty? then -%>
+          <h1>Invalid observations from "<%= h(@pending_import.filename) %>"</h1>
+
+          <p>The following observations cannot be imported until you edit them to correct certain errors. Click on each species name to receive further instructions. (<%= link_to 'Help', :controller => 'help', :action => 'import-observations-process' %>)</p>
+
+          <table><tr><td><% form_tag({:action => 'revalidate', :id => @pending_import.id},{:onsubmit => 'greyButtons()'}) do %><%= submit_tag('Revalidate all pending records', :id => 'revalidate_top') %><% end %></td>
+                  <td><%= button_to 'Delete all pending records', {:action => 'delete', :id => @pending_import.id}, {:confirm => 'Are you sure?  These observations have NOT yet been imported. This action cannot be undone.', :id => 'delete_top'} %></td></tr></table><br />
+          <div id="pending">
+                  <%= render :partial => 'pending' %>
+          </div>
+          <%- if @pending_import_items.blank? -%><p style="text-align: center; font-style: italic; background-color: #efefef;">No results found.</p><%- end -%>
+          <table><tr><td><% form_tag({:action => 'revalidate', :id => @pending_import.id},{:onsubmit => 'greyButtons()'}) do %><%= submit_tag('Revalidate all pending records', :id => 'revalidate_bottom') %><% end %></td>
+                  <td><%= button_to 'Delete all pending records', {:action => 'delete', :id => @pending_import.id}, {:confirm => 'Are you sure?  These observations have NOT yet been imported. This action cannot be undone.', :id => 'delete_bottom'} %></td></tr></table>
+        <%- else -%>
+          <h1>"<%= h(@pending_import.filename) %>" has been fully imported</h1>
+          <p><%= link_to 'Return to the main import page', :action => 'index' %></p>
+          
+          <p><%= link_to('Remove this entry and return to import page', {:action => 'delete', :id => @pending_import.id}, {:method => 'post', :confirm => 'Are you sure? This action cannot be undone.'}) %></p>
+        <%- end -%>

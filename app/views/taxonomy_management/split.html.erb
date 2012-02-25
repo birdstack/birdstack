@@ -1,0 +1,64 @@
+	<%- @page_title = 'Split: ' + h(@change.species.english_name) -%>
+
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('submit_top').disable()
+			$('submit_bottom').disable()
+		}
+//]]>
+	</script>
+
+	<h1>Split: <%= h(@change.species.english_name) %></h1>
+
+	<p><b><%= h(@change.species.english_name) %></b> is split into the following species:</p>
+
+	<ul>
+		<% 0.upto(@change.potential_species.size - 1) do |index| %>
+			<li style="margin-bottom: 5px;"><b><%= h(@change.potential_species[index].english_name) %></b> (<i><%= h(@change.potential_species[index].genus.latin_name) + ' ' + h(@change.potential_species[index].latin_name) %></i>). <%= render :partial => 'shared/range_info', :locals => {:species => @change.potential_species[index]} %></li>
+		<% end %>
+	</ul>
+
+	<%= birdstack_sanitize('<b>IOC notes:</b> ' + @change.description) %>
+
+	<p><b>Instructions:</b> Your observations of <%= h(@change.species.english_name) %> are listed below (up to 50 results per page). For each observation, choose the correct new species. You can leave some to do later if necessary.  If you would like to append a note to each <%= h(@change.species.english_name) %> observation, enter it in the box below (see example).</p>
+
+	<% form_tag({}, {:onsubmit => 'greyButtons()'}) do %>
+		<fieldset style="border: 0; padding-bottom: 0;">
+			<label for="notes">Notes:</label><%= text_area_tag 'notes', params[:notes], :class => 'wide', :style => 'height: 35px; scrollbars: auto;' %>
+			<p class="fieldtip">Permitted <abbr>(X)HTML</abbr> tags are &lt;a&gt;, &lt;b&gt;, &lt;blockquote&gt;, &lt;em&gt;,  &lt;i&gt;, &lt;img&gt;, &lt;strong&gt;, and &lt;u&gt;</p>
+		</fieldset>
+
+		<p style="text-align: center;"><b>Set page default:</b>
+		<% 0.upto(@change.potential_species.size - 1) do |index| %>
+			<%= link_to_function(h(@change.potential_species[index].english_name),
+				@sightings.collect { |sighting|
+				     "$('sightings_#{sighting.id}').selectedIndex = #{index + 1};"
+				}.join(' ')
+			) %> | 
+		<% end %>
+		<%= link_to_function("I don't know yet",
+			@sightings.collect { |sighting|
+			     "$('sightings_#{sighting.id}').selectedIndex = 0;"
+			}.join(' ')
+		) %>
+		</p>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save and continue', :class => 'button', :id => 'submit_top' %><br /><br />
+		</fieldset>
+		<fieldset style="border: 0;">
+			<div class="list-report">
+				<%- for sighting in @sightings -%>
+					<hr />
+					<label for="sightings_<%= sighting.id %>">New species:</label><%= select_tag "sightings[#{sighting.id}]", options_for_select([['I don\'t know yet','']] + @change.potential_species.collect {|s| [s.english_name, s.id]}), :id => "sightings_#{sighting.id}" %><br /><br />
+					<%= link_to h(sighting.species.english_name), observation_url(:user => current_user.login, :id => sighting.id) %> (<i><%= h(sighting.species.genus.latin_name) %> <%= h(sighting.species.latin_name) %></i>)
+					<%= render :partial => 'shared/observation_report', :locals => {:sighting => sighting} %>
+				<%- end -%>
+				<hr />
+			</div>
+		</fieldset>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save and continue', :class => 'button', :id => 'submit_bottom' %>
+		</fieldset>
+	<% end %>

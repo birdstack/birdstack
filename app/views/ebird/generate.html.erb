@@ -1,0 +1,21 @@
+	<%- @page_title = 'Export records to eBird' -%>
+
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @saved_search.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- else -%><%= link_to h(@saved_search.user.login), :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- end -%> > <%= link_to 'Lists', lists_url(:user => @saved_search.user.login) %> > <%= link_to h(@saved_search.name), list_url(:user => current_user.login, :id => @saved_search.id, :format => 'html') %> > <%= link_to 'Export', :controller => 'lists', :action => 'export', :id => params[:id] %> > eBird</p>
+
+	<h1>Export records to eBird</h1>
+
+	<%- if @export -%>
+
+		<p>Found <%= h(pluralize(@results.size, 'record')) %> to include in the export.</p>
+		
+		<p>Step 1: <%= link_to 'Download the export file', :action => 'download', :id => @export.id %></p>
+		
+		<p>Step 2: Log in to <a href="http://ebird.org/">eBird</a>, click on "Submit Observations," and follow the instructions to upload your export file.  When asked for the format of the file, select "eBird Record Format (Extended)."</p>
+
+	<%- else -%>
+	
+		<p>Found no records to include in the export. (<%= link_to h('Help'), :controller => 'help', :action => 'ebird' %>)</p>
+
+	<%- end -%>
+	
+	<%= link_to 'View previous exports', :action => 'index' %>

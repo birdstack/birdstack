@@ -1,0 +1,62 @@
+	<%- unless @sighting -%>
+	
+		<%- @page_title = 'Error accessing observation' -%> 
+		<h1>Error</h1>
+		<p>The observation does not exist or cannot be accessed.</p>
+
+	<%- else -%>
+		<%- @sighting.publicize!(current_user) %>
+
+		<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @sighting.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @sighting.user.login %><%- else -%><%= link_to h(@sighting.user.login), :controller => 'people', :action => 'view', :login => @sighting.user.login %><%- end -%> > Observations</p>
+
+		<%- if @sighting.user_location.andand.latitude and @sighting.user_location.andand.longitude -%>
+			<%- add_to_head(render(:partial => 'location/view_header', :locals => {:location => @sighting.user_location})) -%>
+			<%- add_to_body_params(:onload => 'load()', :onunload => 'GUnload()') -%>
+		<%- end -%>
+
+		<%- @page_title = h(@sighting.species.english_name) +
+			(@sighting.date_year.blank? ? '' : ', '  + h(@sighting.date_year)) +
+			(@sighting.date_month.blank? ? '' : '-' + h(@sighting.date_month)) +
+			(@sighting.date_day.blank? ? '' : '-' + h(@sighting.date_day)) +
+			(@sighting.user_location.blank? ? '' : ', ' + h(@sighting.user_location.name)) +
+			' (' + h(@sighting.user.login) + ')' -%>
+
+		<h1 style="font-size: 150%;"><%= h(@sighting.species.english_name) %> (<i><%= h(@sighting.species.genus.latin_name) %> <%= h(@sighting.species.latin_name) %></i>)</h1>
+
+		<div class="list-report">
+			<%= render :partial => 'shared/observation_report', :locals => {:sighting => @sighting} %>
+		</div>
+
+                <%- if current_user == @sighting.user then -%><table style="margin-bottom: 15px;"><tr>
+                  <td><%= button_to 'Edit this observation', {:controller => 'sighting', :action => 'edit', :id => @sighting.id}, {:method => 'get'} %></td>
+                  <td><% form_tag({:controller => 'sighting', :action => 'delete', :id => @sighting.id}, {:onsubmit => 'return confirm("Do you really want to delete this observation and any photos attached to it?  (This cannot be undone!)") && greySubmits();'})  do %><%= submit_tag "Delete this observation" %><% end %></td>
+                </tr></table><%- end -%>
+
+		<%- if @sighting.sighting_photo.size > 0 || current_user == @sighting.user -%><h2>Photos</h2><%- end -%>
+
+		<%- if @sighting.sighting_photo.size > 0 -%><%- x = 0 -%><table>
+                <%- @sighting.sighting_photo.all.each do |sighting_photo| -%>
+                  <% sighting_photo.publicize!(current_user) %>
+		  <%- if x%3 == 0 -%><tr><%- end -%>
+                  <td style="width: 33%; text-align: center;"><a href="<%= observation_photo_url(:user => @sighting.user.login, :sighting_id => @sighting.id, :id => sighting_photo.id) %>"><img src="<%= sighting_photo.photo(:thumb) %>" alt="<%= h(sighting_photo.title) %>" title="<%= h(sighting_photo.title) %>" /></a><br />
+                  <%= h(sighting_photo.title) %></td>
+		  <%- if x%3 == 2 -%></tr><%- end -%>
+		  <%- x = x+1 -%>
+                <%- end -%>
+		<%- if (x-1)%3 != 2 -%></tr><%- end -%></table><%- end -%>
+
+                <%- if current_user == @sighting.user then -%>
+                  <p><%= link_to 'Add a photo', {:controller => 'sighting_photo', :action => 'new', :sighting_id => @sighting.id} %></p>
+                <% end %>
+
+		<p><i>See general information about <%= link_to h(@sighting.species.english_name), :controller => :ioc, :order => @sighting.species.genus.family.order.latin_name.downcase,  :family => @sighting.species.genus.family.latin_name.downcase, :genus => @sighting.species.genus.latin_name.downcase, :species => @sighting.species.latin_name.downcase, :action => :species %>.</i></p>
+
+		<%- if @sighting.user_location.andand.latitude and @sighting.user_location.andand.longitude -%>
+			<div id="map" style="width: 570px; height: 300px; margin: 15px 0 10px;"></div>
+		<%- end -%>
+
+		<%- @sighting.comment_collection.publicize!(current_user) -%>
+		<%= render :partial => 'shared/comments_comment', :locals => { :comment_collection => @sighting.comment_collection, :goto => observation_path(:user => @sighting.user.login, :id => @sighting.id) } %>
+		<%- add_to_head(auto_discovery_link_tag(:atom, url_for(:controller => 'comments', :action => 'feed', :id => @sighting.comment_collection.id), {:title => @sighting.comment_collection.title})) unless @sighting.comment_collection.private -%>
+
+	<%- end -%>

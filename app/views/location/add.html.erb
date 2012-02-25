@@ -1,0 +1,13 @@
+	<%= render :partial => 'shared/workflow' %>
+
+	<%- if @sighting -%>
+		<%- @page_title = 'Create a location' -%>
+		<h1>Create a location for <%= h(@sighting.species.english_name) %> <%- if @sighting.date_year -%>(<% end %><%= render :partial => 'shared/observation_date', :locals => {:sighting => @sighting} %><%- if @sighting.date_year -%>)<%- end -%></h1>
+	<%- else -%>
+		<%- @page_title = 'Create a new location' -%>
+		<h1>Create a new location</h1>
+	<%- end -%>
+
+	<p>Our autocomplete geocoding features will help you find locations on the interactive map.<br />You can zoom in and click on the map to provide more precise detail.<br />All fields except "Location name" are <strong>optional</strong>. (<%= link_to 'Help', :controller => 'help', :action => 'locations' %>)</p>
+
+	<%= render :partial => 'add_or_edit' %>

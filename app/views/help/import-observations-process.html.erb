@@ -1,0 +1,29 @@
+	<%- @page_title = 'Processing imported observations' -%>
+
+	<h1>Processing imported observations</h1>
+
+	<p><%= image_tag("help/import-valid.png", :alt => "valid", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>After you have uploaded a <%= link_to 'valid CSV file', :action => 'import-observations-csv' %>, you will be taken to a screen showing valid records that are ready to be imported. The records on this page have bird names that exist in the Birdstack database, and all of their associated data (like dates) has passed a series of checks that we automatically perform.</p>
+	
+	<p>There are 50 results per page. Line numbers reference the original file, so if you look at your CSV file in a spreadsheet program, you can find the line for reference. Scan through the records to make sure that everything came through the way you wanted it to. If you are happy, click "Save and continue" to import those records and move on to the next 50 results. Note that the records are not actually imported into your Birdstack account until you click "Save and continue."</p>
+	
+	<p>If you see a record that you want to change before it's imported (perhaps you've spotted a typo in the "notes" field), simply uncheck the box beside it, and you'll have an opportunity to edit it later.</p>
+
+	<p>If something major is wrong and you want to cancel the entire import operation, return to the main import page and delete the pending dataset.</p>
+
+	<p>Observations will be imported using your default privacy settings. <%= link_to 'More about privacy.', :controller => 'help', :action => 'privacy' %></p>
+
+	<p><%= image_tag("help/import-invalid.png", :alt => "invalid", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>After you have fully imported all of your valid records, you will need to go through and resolve those that failed validation. Some records might fail validation because of mistakes in the date (e.g., maybe a typo results in a date of July 32, which is not allowed).</p>
+	
+	<p>To resolve these problems, click on the species name, and you will be taken to a page with further instructions.</p>
+
+	<p>If, in the previous step, you unchecked a valid observation, it will now show up in this list so that you can edit it. There might be nothing wrong with it, except that you indicated you wanted to change something about it.</p>
+
+	<p><%= image_tag("help/import-altname.png", :alt => "altname", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Another common cause of invalid observations is that the species name doesn't exactly match a species in the Birdstack database. Click on the species name, and you'll be taken to a page that has various suggestions -- alternate names (example at right), spelling suggestions, and substring results -- as appropriate.</p>
+
+	<p>If you are having trouble finding the name of a bird, try looking it up in <a href="http://www.bsc-eoc.org/avibase/avibase.jsp">Avibase</a>, which contains extensive alternate name lists. You can also try the <%= link_to 'Bird Name and ID Help forum', :controller => 'forums', :action => 'bird-name-id-help' %> here on Birdstack. After you have found the bird's name, please create an alternate name (from the species account page) to help other Birdstack users in the future.</p>
+
+	<p>A final possible cause for failed validation is that someone may have set up an ambiguous name notification on a name that you're trying to add. You might, for example, be trying to import observations of "Bismarck Imperial Pigeon," which is a name that applies to more than one species.</p>
+
+	<p>In this case, you will be taken to a page asking you to choose which species you want to add. If you are completely sure that your choice will always be the same (perhaps because all your observations come from the same geographic location), you can choose the "No, do not show me this message next time," option. Then, when you return to the list of invalid observations, click the "revalidate" button, which should apply the same decision you just made to any other pending records of the same species.</p>
+
+	<p>If you see that something is wrong with all the observations, and you'd rather just start over with a new file, you can click the "delete" button to remove all pending observations.</p>

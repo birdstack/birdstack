@@ -1,0 +1,17 @@
+	<%- @page_title = 'Pending friend requests' -%>
+	
+	<h1>Pending friend requests</h1>
+
+	<% if @friend_requests.size == 0 %>
+		<p>No pending friend requests. You can return to your <%= link_to 'friends page', :controller => 'friends', :action => 'index' %> or <%= link_to 'look for some more friends', :controller => 'people', :action => 'index' %>.</p>
+	<% else %>
+		<table style="width: 100%;"><% @friend_requests.each do |r| %>
+			<tr>
+				<td><a href="<%= url_for :controller => 'people', :action => 'view', :login => r.potential_friend.login %>"><%= image_tag(r.potential_friend.profile_pic(:normal), :alt => h(r.potential_friend.login), :title => h(r.potential_friend.login), :size => '150x150') %></a></td>
+				<td><p><%= link_to h(r.potential_friend.login), :controller => 'people', :action => 'view', :login => r.potential_friend.login %> wants to be your friend on Birdstack.</p>
+					<blockquote><%= birdstack_sanitize(r.message) %></blockquote>
+					<table><tr><td><% form_tag :controller => 'friends', :action => 'confirm', :id => r.id do %><fieldset style="margin: 0; border: 0; padding: 0;"><%= submit_tag 'Confirm' %></fieldset><% end %></td><td><% form_tag :controller => 'friends', :action => 'ignore', :id => r.id do %><fieldset style="margin: 0; border: 0; padding: 0;"><%= submit_tag 'Ignore' %></fieldset><% end %></td></tr></table>
+				</td>
+			</tr>
+		<% end %></table>
+	<% end %>

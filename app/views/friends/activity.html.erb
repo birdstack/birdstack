@@ -1,0 +1,5 @@
+	<%- @page_title = 'Your friends\' recent activity' -%>
+
+	<h1>Your friends' recent activity</h1>
+
+        <%= render :partial => 'activity/feed_item', :locals => {:activities => @activities, :pic => 'true'} %>

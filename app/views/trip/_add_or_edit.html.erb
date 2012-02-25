@@ -1,0 +1,200 @@
+	<%- if @trip.errors.count > 0 then -%>
+		<h2>The trip cannot be created until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<%- if @trip.errors.on(:name) then -%><li>Name <%= h(@trip.errors.on(:name).to_a.first) %>.</li><%- end -%>
+			<%- if @trip.errors.on(:description) then -%><li>Description <%= h(@trip.errors.on(:description).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:parent_id) then -%><li>Parent <%= h(@trip.errors.on(:parent_id).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:base) then -%><li><%= h(@trip.errors.on(:base).to_a.first) %>.</li><%- end -%>
+			<%- if @trip.errors.on(:all_observations_reported) then -%><li>All observations reported <%= h(@trip.errors.on(:all_observations_reported).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:number_observers) then -%><li>Number of observers <%= h(@trip.errors.on(:number_observers).to_a.first) %>.</li><%- end %>
+
+			<%- if @trip.errors.on(:date_year_start) then -%><li>Starting date year <%= h(@trip.errors.on(:date_year_start).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:date_month_start) then -%><li>Starting date month <%= h(@trip.errors.on(:date_month_start).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:date_day_start) then -%><li>Starting date day <%= h(@trip.errors.on(:date_day_start).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:date_start) then -%><li>Starting date <%= h(@trip.errors.on(:date_start).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:date_year_end) then -%><li>Ending date year <%= h(@trip.errors.on(:date_year_end).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:date_month_end) then -%><li>Ending date month <%= h(@trip.errors.on(:date_month_end).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:date_day_end) then -%><li>Ending date day <%= h(@trip.errors.on(:date_day_end).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:date_end) then -%><li>Ending date <%= h(@trip.errors.on(:date_end).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:private) then -%><li>Private <%= h(@trip.errors.on(:private).to_a.first) %>.</li><%- end %>
+			<% if @trip.errors.on(:link) then %><li>Link <%= h(@trip.errors.on(:link).to_a.first) %>.</li><% end %>
+
+			<%# Science trip related errors here %>
+			<%- if @trip.errors.on(:time_hour_start) then -%><li>Start time hour <%= h(@trip.errors.on(:time_hour_start).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:time_minute_start) then -%><li>Start time minute <%= h(@trip.errors.on(:time_minute_start).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:duration_hours) then -%><li>Duration hours <%= h(@trip.errors.on(:duration_hours).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:duration_minutes) then -%><li>Duration minutes <%= h(@trip.errors.on(:duration_minutes).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:protocol) then -%><li>Protocol <%= h(@trip.errors.on(:protocol).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:distance_traveled) then -%><li>Distance traveled <%= h(@trip.errors.on(:distance_traveled).to_a.first) %>.</li><%- end %>
+			<%- if @trip.errors.on(:area_covered) then -%><li>Area covered <%= h(@trip.errors.on(:area_covered).to_a.first) %>.</li><%- end %>
+
+			<%- if @trip.errors.on(:sightings) then -%><li>Associated observations <%= h(@trip.errors.on(:sightings).to_a.first) %>.</li><%- end %>
+		</ul>
+	<%- end -%>
+
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('submit_button').disable()
+		}
+//]]>
+	</script>
+
+	<%- form_for :trip, :html => {:name => 'trip', :onsubmit => 'greyButtons()'} do |f| -%>
+		<fieldset>
+			<legend>Trip description</legend>
+			
+			<label for="trip_name">Trip name:</label><%= f.text_field('name') %>
+			<p class="fieldtip">We recommend using trip names that are unique and easy to remember.<br />(For example, "Kumul Lodge, October '07" instead of just "Kumul.")</p>
+
+			<label for="trip_parent_id">Parent trip:</label><%= f.select(:parent_id, [['None', '']] + Birdstack::trips_options(current_user)) %>
+			<p class="fieldtip">You can use this feature to split long trips into meaningful smaller units.<br />
+				Trips marked with an asterisk (*) <em>cannot</em> be selected as parent trips.</p>
+
+			<label for="trip_ number_observers">Number of observers:</label><%= f.text_field('number_observers') %><br />
+
+			<div class="checkbox"><%= f.check_box('all_observations_reported') %><label for="trip_all_observations_reported">I am recording all of the birds I saw or heard on this trip.</label></div>
+
+			<script type="text/javascript">
+//<![CDATA[
+			function toggleScienceTrip() {
+				['casual', 'stationary', 'traveling', 'area'].each(function(name) {
+					element = document.getElementById(name + '_protocol')
+						
+					if(name == document.trip.trip_protocol.value) {
+						if(element.style.display == 'none') {
+							Element.show(element)
+						}
+					} else {
+						if(element.style.display != 'none') {
+							Element.hide(element)
+						}
+					}
+				});
+
+				if(document.trip.trip_protocol.value == 'casual') {
+					Element.hide(document.getElementById('science_trip'))
+				} else {
+					Element.show(document.getElementById('science_trip'))
+				}
+			}
+//]]>
+			</script>
+			<label for="trip_protocol">How did you gather these observations?</label><%= f.select('protocol', [['Casual birding', 'casual'], ['Stationary count', 'stationary'], ['Traveling count', 'traveling'], ['Area count', 'area']], {}, :onChange => 'toggleScienceTrip()') %>
+			
+			<script type="text/javascript">
+//<![CDATA[
+			function prefillDateEnd() {
+				if($('trip_date_year_end').value == '') {
+					$('trip_date_year_end').value = $('trip_date_year_start').value;
+				}
+				if($('trip_date_month_end').value == '') {
+					$('trip_date_month_end').value = $('trip_date_month_start').value;
+				}
+				if($('trip_date_day_end').value == '') {
+					$('trip_date_day_end').value = $('trip_date_day_start').value;
+				}
+			}
+//]]>
+			</script>
+
+			<p style="margin: 10px 0 0 0;">Start date:</p>
+			<table>
+				<tr style="color: #888; text-align: center;">
+					<td>YYYY</td>
+					<td>MM</td>
+					<td>DD</td>
+				</tr>
+				<tr>
+					<td><%= f.text_field('date_year_start', :style => 'width: 40px;') %></td>
+					<td><%= f.text_field('date_month_start', :style => 'width: 20px;') %></td>
+					<td><%= f.text_field('date_day_start', :style => 'width: 20px;', :onChange => 'prefillDateEnd();') %></td>
+				</tr>
+			</table>
+
+			<div id="casual_protocol" style="display: none;">
+				<p style="margin: 10px 0 0 0;">End date:</p>
+				<table>
+					<tr style="color: #888; text-align: center;">
+						<td>YYYY</td>
+						<td>MM</td>
+						<td>DD</td>
+					</tr>
+					<tr>
+						<td><%= f.text_field('date_year_end', :style => 'width: 40px;') %></td>
+						<td><%= f.text_field('date_month_end', :style => 'width: 20px;') %></td>
+						<td><%= f.text_field('date_day_end', :style => 'width: 20px;') %></td>
+					</tr>
+				</table>
+
+			</div>
+
+			<div id="science_trip" style="display: none;">
+				<p style="margin: 10px 0 0 0;">Start time:</p>
+				<table>
+					<tr style="color: #888; text-align: center;">
+						<td>HH</td>
+						<td>:</td>
+						<td>MM</td>
+					</tr>
+					<tr>
+						<td><%= f.text_field('time_hour_start', :style => 'width: 20px;') %></td>
+						<td>:</td>
+						<td><%= f.text_field('time_minute_start', :style => 'width: 20px;') %></td>
+					</tr>
+				</table>
+				<p class="fieldtip">Enter a two-digit hour using 24-hour time. (Add 12 to each hour after noon: 7:30 p.m. is 19:30.)</p>
+
+				<p style="margin: 10px 0 0 0;">Duration:</p>
+				<table>
+					<tr style="color: #888; text-align: center;">
+						<td>HH</td>
+						<td>:</td>
+						<td>MM</td>
+					</tr>
+					<tr>
+						<td><%= f.text_field('duration_hours', :style => 'width: 20px;') %></td>
+						<td>:</td>
+						<td><%= f.text_field('duration_minutes', :style => 'width: 20px;') %></td>
+					</tr>
+				</table>
+
+				<p class="fieldtip">Maximum duration is 23 hours and 59 minutes.</p>
+
+			</div>
+
+			<div id="stationary_protocol" style="display: none;">
+			</div>
+
+			<div id="traveling_protocol" style="display: none;">
+				<label for="trip_distance_traveled">Distance traveled: (<%= link_to '?', :controller => 'help', :action => 'trips', :anchor=> 'traveling' %>)</label><%= f.text_field('distance_traveled', :style => 'margin: 0;') %> <%= f.select('distance_traveled_units', [['kilometres', 'km'],['miles', 'mi']], {}, :style => 'margin: 0;') %>
+			</div>
+
+			<div id="area_protocol" style="display: none;">
+				<label for="trip_area_covered">Area covered: (<%= link_to '?', :controller => 'help', :action => 'trips', :anchor=> 'area' %>)</label><%= f.text_field('area_covered', :style => 'margin: 0;') %> <%= f.select('area_covered_units', [['square kilometres', 'sqkm'],['hectares', 'ha'],['acres', 'acres'],['square miles', 'sqmi']], {}, :style => 'margin: 0;') %>
+			</div>
+
+			<script type="text/javascript">
+//<![CDATA[
+			toggleScienceTrip()
+//]]>
+			</script>
+
+			<label for="trip_link">Link:</label><%= f.text_field('link', :style => 'width: 570px;') %>
+			<p class="fieldtip">If you like, you can include a link to a blog post, trip report, externally hosted image gallery, etc.</p>
+
+			<label for="trip_description">Notes:</label><%= f.text_area('description', :class => 'wide') %>
+			<p class="fieldtip">Permitted <abbr>(X)HTML</abbr> tags are &lt;a&gt;, &lt;b&gt;, &lt;blockquote&gt;, &lt;em&gt;,  &lt;i&gt;, &lt;img&gt;, &lt;strong&gt;, and &lt;u&gt;</p>
+
+			<div class="checkbox"><%= f.check_box 'private' %><label for="trip_private">Mark this trip as private. If a trip is private, only you can see it. (<%= link_to 'Help', :controller => 'help', :action => 'privacy' %>)</label></div>
+		</fieldset>
+
+		<%= render :partial => 'shared/prefill_fields' %>
+		
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save trip', :class => 'button', :id => 'submit_button' %>
+		</fieldset>
+
+		<%- if @sighting -%><%= hidden_field_tag 'sighting', @sighting.id %><%- end -%>
+	<%- end -%>
+

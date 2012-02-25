@@ -1,0 +1,5 @@
+<%- if logged_in? and !current_user.time_24_hr then -%>
+  <%= h(sprintf('%02d', sighting.time_hour > 12 ? sighting.time_hour - 12 : sighting.time_hour)) %>:<%= h(sprintf('%02d',sighting.time_minute)) %> <%= sighting.time_hour > 12 ? 'PM' : 'AM' %>
+<%- else -%>
+  <%= h(sprintf('%02d',sighting.time_hour)) %>:<%= h(sprintf('%02d',sighting.time_minute)) %>
+<%- end -%>

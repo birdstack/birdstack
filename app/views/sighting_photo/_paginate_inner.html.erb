@@ -1,0 +1,22 @@
+<%# Local vars: user %>
+<%- if(user != nil) then -%>
+
+<%- url = {:controller => 'sighting_photo', :action => 'paginate', :user => user.login} -%>
+
+<%- sighting_photos = [] -%>
+
+<%- per_page = 6 -%>
+<%- if user == current_user then -%>
+  <%- sighting_photos = user.sighting_photos.paginate(:order => 'sighting_photos.created_at DESC', :page => params[:page], :per_page => per_page) -%>
+<%- else -%>
+  <%- sighting_photos = user.sighting_photos.public.paginate(:order => 'sighting_photos.created_at DESC', :page => params[:page], :per_page => per_page) -%>
+<%- end -%>
+
+<div id="pagination-working-sighting-photos" style="display: none; text-align: center;">
+  <p style="margin-top: 50px;">Loading...</p><p><%= image_tag("loading-big.gif", :size => "32x32", :alt => "loading...", :title => "loading...") %></p>
+</div>
+
+<div id="pagination-content-sighting-photos">
+  <%= render :partial => 'shared_photo/sighting_photo_paginate', :locals => {:sighting_photos => sighting_photos, :url => url} %>
+</div>
+<%- end -%>

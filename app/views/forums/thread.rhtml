@@ -1,0 +1,16 @@
+	<%- @comment_collection.publicize!(current_user) -%>
+	<%- @page_title = h(@comment_collection.title) -%>
+
+	<%- add_to_head(auto_discovery_link_tag(:atom, url_for(:controller => 'comments', :action => 'feed', :id => @comment_collection.id), {:title => @comment_collection.title})) -%>
+
+	<p class="breadcrumb"><%= link_to 'The Birdstack Forums', :controller => 'forums', :action => 'index' %> &gt; <%= link_to h(@forum.name), :controller => 'forums', :forum => @forum.url, :action => 'forum' %> &gt; <%= h(@comment_collection.title) %></p>
+
+	<h1 style="display: inline; margin: 0 10px 0 0;"><%= h(@comment_collection.title) %></h1><p style="display: inline;"><%- unless @comment_collection.private -%><%= link_to(image_tag("feed-icon-14x14.png", :size => "14x14", :alt => "feed"), url_for(:controller => 'comments', :action => 'feed', :id => @comment_collection.id)) %><%- end -%></p>
+	
+	<br /><br />
+	
+	<div id="comments">
+		<%= render :partial => 'shared/comments_forum', :locals => { :comment_collection => @comment_collection, :goto => url_for(:controller => 'forums', :forum => @forum.url, :action => 'thread', :id => @comment_collection.id) } %>
+	</div>
+
+	<p><%= link_to 'Post a reply', :controller => 'comments', :action => 'post', :id => @comment_collection.id, :goto => url_for(:controller => 'forums', :forum => @forum.url, :action => 'thread', :id => @comment_collection.id) %></p>

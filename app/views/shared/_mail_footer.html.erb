@@ -1,0 +1,9 @@
+<%# local var: notification, from User::NOTIFICATION_TYPES -%>
+Thanks, and good birding!
+
+Birdstack
+http://birdstack.com
+
+To stop receiving notifications for <%= notification[:desc] %>, go to:
+<%= SITE_URL_PREFIX %><%= url_for(:controller => 'account', :action => 'us', :id => @user.activation_code, :t => notification[:short]) %>
+Kapikpik, LLC, PO Box 14082, Baton Rouge, LA 70898

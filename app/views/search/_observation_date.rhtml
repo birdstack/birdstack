@@ -1,0 +1,53 @@
+			<% section_id = 'observation_date' %>
+				<tr id="<%= section_id %>" <% if @observation_date.blank? %>style="display: none;"<% end %>>
+					<td>
+						<label for="<%= section_id %>">Dates:</label>
+						<% fields_for section_id.to_sym do |f| %>
+							<p style="margin: 10px 0 0 0;">From:</p>
+							<table>
+								<tr style="color: #888; text-align: center;">
+									<td>YYYY</td>
+									<td>MM</td>
+									<td>DD</td>
+								</tr>
+								<tr>
+									<td><%= f.text_field('date_year_start', :style => 'width: 40px;') %></td>
+									<td><%= f.text_field('date_month_start', :style => 'width: 20px;') %></td>
+									<td><%= f.text_field('date_day_start', :style => 'width: 20px;') %></td>
+								</tr>
+							</table>
+
+							<p style="margin: 10px 0 0 0;">Through:</p>
+							<table>
+								<tr style="color: #888; text-align: center;">
+									<td>YYYY</td>
+									<td>MM</td>
+									<td>DD</td>
+								</tr>
+								<tr>
+									<td><%= f.text_field('date_year_end', :style => 'width: 40px;') %></td>
+									<td><%= f.text_field('date_month_end', :style => 'width: 20px;') %></td>
+									<td><%= f.text_field('date_day_end', :style => 'width: 20px;') %></td>
+								</tr>
+							</table>
+						<% end %>
+					</td>
+					<td></td>
+					<td></td>
+					<td style="text-align: right; vertical-align: top;">
+						<input type="button" value="-" onClick="remove_<%= section_id %>()" class="button" title="Remove this section from your search." style="margin-top: 14px;" />
+						<script type="text/javascript">
+						//<![CDATA[
+							function remove_<%= section_id %>() {
+								document.getElementById('<%= section_id %>_date_year_start').value = ''
+								document.getElementById('<%= section_id %>_date_month_start').value = ''
+								document.getElementById('<%= section_id %>_date_day_start').value = ''
+								document.getElementById('<%= section_id %>_date_year_end').value = ''
+								document.getElementById('<%= section_id %>_date_month_end').value = ''
+								document.getElementById('<%= section_id %>_date_day_end').value = ''
+								removeSearch(document.getElementById('<%= section_id %>'))
+							}
+						//]]>
+						</script>
+					</td>
+				</tr>

@@ -1,0 +1,5 @@
+	<p style="text-align: center; line-height: 30px;">
+		<% tag_cloud tags, %w(cloud1 cloud2 cloud3 cloud4) do |tag, css_class| %>
+			<span style="white-space: nowrap;"><%= link_to h(tag.name.downcase), observations_tag_url(:id => tag.name.downcase, :user => user.login), :class => css_class %></span>
+		<% end %>
+	</p>

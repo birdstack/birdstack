@@ -1,0 +1,82 @@
+	<%- @page_title = 'Creating and using locations' -%>
+
+	<h1 id="top">Creating and using locations</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#create">Create a location</a> | <a href="#merge">Merging locations</a> | <a href="#privacy">Privacy</a> | <a href="#fields">Fields</a></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p><%= image_tag("help/location-view.jpg", :alt => "location", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>You will probably want to create <%= link_to 'locations', :controller => 'location', :action => 'index' %> for most of the observations you put into Birdstack. Our location creation process includes geocoding (returning latitude and longitude coordinates based on place names) and Google Maps integration to help you create very detailed descriptions of your locations, if you choose to do so.</p>
+
+	<p>Your location view page (right) displays information about the location, a map (if you provided coordinates or used the geocoding feature), and a list of observations from the location.</p>
+	
+	<p>The location page can be fully public. This way, you could post a link on your website or blog, and all your visitors (whether or not they have Birdstack accounts) could see the page and browse your observations.</p>
+	
+	<p>But if you need to, you can suppress the latitude/longitude coordinates and map from public view, leaving the name and other information visible. If you don't want anyone else to see the location at all, not even its name, you can set it to be fully private, and no one but you will have access to it.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="create">Create a location</h2>
+
+	<p>When you create a location, you can add as much or as little detail as you like. Only a location name is required; all other fields can be left blank, but we encourage you to provide as much detail as possible. You might want to search with it later.</p>
+
+	<p><%= image_tag("help/location-autocomplete.png", :alt => "location", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>When you select a country from the dropdown list, you activate an autocomplete feature on the remaining fields. To use autocomplete effectively, you may need to type more slowly than you usually do. After all, we are performing a live search on potentially tens of thousands of records!</p>
+	
+	<p>At the "County, parish, or district" and "City, town, or village" levels, latitude and longitude coordinates are provided alongside the place name. This information comes from a variety of public sources. Our database contains over 3.4 million place names.</p>
+
+	<p><%= image_tag("help/location-map.jpg", :alt => "location", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>If you enter a place name that has coordinates, the map on the form will automatically zoom in and center on the point. The latitude and longitude boxes will be filled. You can also zoom and click on the map yourself to specify the location even further -- to a park or street or in some cases even a specific building or tree.</p>
+
+	<p>If you're having trouble with geocoding, visit the <%= link_to 'Help with Geocoding forum', :controller => 'forums', :action => 'geocoding-help' %>.</p>
+
+	<p>If you have your own coordinates from a GPS device or some other source, you can enter them directly in the latitude/longitude boxes (choose either decimal format or degrees, minutes, and seconds), and the map will zoom and center in response to your input.</p>
+
+	<p><i>(Note: Birdstack does not currently have the ability to perform reverse geocoding. In other words, we can't work backwards from a specified point to determine which country or city it's in.)</i></p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="merge">Merging locations</h2>
+
+	<p>You may discover that you have created duplicate locations, or for various reasons, you may decide to collapse one location into another. You can use the location merging feature to transfer all observations from one location to another.</p>
+
+	<p>To merge Locations A and B, go to the edit page for Location A. At the bottom of the page, select Location B from the dropdown list and click "Merge."</p>
+
+	<p>This will reassign all observations from Location A to Location B and then delete Location A.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="privacy">Privacy options</h2>
+
+	<p>Birdstack lets you define very precise locations, but you may be uncomfortable with publishing the location of your home. Or perhaps you are restrained by law or common sense from disclosing the location of a nesting bird or a threatened bird.</p>
+
+	<p>Whatever reasons you may have, you can choose one of three privacy levels for each location you create:</p>
+	
+	<ul>
+		<li><strong>Public.</strong> Everyone can see the location and all information about it.</li>
+		<li><strong>Coordinates withheld.</strong> Nobody but you can see the location's latitude, longitude, or map. But everybody can see the location's name and other information.</li>
+		<li><strong>Private.</strong> No one but you can see that the location exists at all. If a private location is associated with a public observation, the observation will be visible but will show no location information at all.</li>
+	</ul>
+	
+	<p>Please note that setting locations as private does <em>not</em> apply to the individual observations made at those locations. If you want the observations to be private too, you must adjust their settings. <%= link_to 'More about privacy.', :controller => 'help', :action => 'privacy' %></p>
+
+	<p>You can set the default privacy level for new locations on your <%- if logged_in? -%><%= link_to 'account management page', :controller => 'people', :action => 'account', :login => current_user.login %><%- else -%>account management page<%- end -%>.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="fields">Location data fields</h2>
+	
+	<ul>
+		<li><strong>Location name.</strong> User-supplied or derived from other fields like city if it is left blank. Appropriate for park names, bodies of water, hiking trails, etc.</li>
+		<li><strong>Country.</strong> Optional, but if present must come from the predefined list.</li>
+		<li><strong>State or province.</strong> Autocomplete available if a country is selected, but any value may be entered.</li>
+		<li><strong>County, parish, or district.</strong> Autocomplete available if a country is selected, but any value may be entered. If a recognized state or province is selected, autocomplete will search only within that selection.</li>
+		<li><strong>City, town, or village.</strong> A populated place. Autocomplete available if a country is selected, but any value may be entered. If a recognized state or province is selected, autocomplete will search only within that selection.</li>
+		<li><strong>Latitude and longitude.</strong> May be entered either in decimal or in degrees, minutes, and seconds (DMS). Use the radio buttons to toggle between formats. Valid coordinates are automatically plotted on the map.</li>
+		<li><strong>Elevation.</strong> May be entered in feet or in metres.</li>
+		<li><strong>Ecoregion.</strong> Valid <a href="http://www.nationalgeographic.com/wildworld/terrestrial.html">ecoregion codes</a> only.</li>
+		<li><strong>Link.</strong> You can include a website address (typically beginning with http:// or www) to a blog post, external website, or externally hosted image gallery.</li>
+		<li><strong>Notes.</strong> Text field. <%= render :partial => 'shared/permitted_xhtml_tags' %>.</li>
+	</ul>
+	
+	<p>All of the above fields -- <em>except</em> latitude, longitude, and notes -- can be searched using the <%= link_to 'find observations', :controller => 'search', :action => 'observation' %> page.</p>
+
+	<p><a href="#top">[top]</a></p>

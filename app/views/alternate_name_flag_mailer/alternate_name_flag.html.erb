@@ -1,0 +1,21 @@
+Sent at: <%= Time.now.to_s %>
+<% if @alternate_name_flag.user %>
+Logged in as: <%= @alternate_name_flag.user.login %>
+Account email: <%= @alternate_name_flag.user.email %>
+<% end %>
+Name: <%= @alternate_name_flag.name %>
+Email: <%= @alternate_name_flag.email %>
+
+<%= @alternate_name_flag.body %>
+
+---
+
+ID: <%= @alternate_name_flag.alternate_name.id %>
+
+Alternate Name: <%= @alternate_name_flag.alternate_name.name %>
+
+Alternate for: <%= @alternate_name_flag.alternate_name.species.english_name %>
+
+Description: <%= @alternate_name_flag.alternate_name.description %>
+
+Created by: <%= @alternate_name_flag.alternate_name.user.login %>

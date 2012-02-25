@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+noadm1reno:
+  name: Reno!
+  adm2: Reno County
+  cc: US
+  comment_collection: userlocationcomments1
+blankadm1reno:
+  name: Reno!
+  adm1: "" 
+  adm2: Reno County
+  cc: US
+  comment_collection: userlocationcomments2
+joehome:
+  name: home
+  user: joe
+  comment_collection: userlocationcomments3
+ebirdablelocation:
+  name: exactly
+  user_id: 1
+  comment_collection: userlocationcomments4
+  cc: US
+  latitude: 1
+  longitude: 1
+  source: user
+

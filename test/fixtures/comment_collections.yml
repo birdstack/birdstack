@@ -1,0 +1,140 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  title: Test
+  created_at: Time.now.to_s(:db)
+  type: UserCommentCollection
+  user_id: 1
+
+aaroncollection:
+  id: 2
+  title: Aaron is awesome
+  created_at: Time.now.to_s(:db)
+  type: UserCommentCollection
+  user_id: 2
+
+sightingcomments1:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments2:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments3:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments4:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments5:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments6:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments7:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments8:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments9:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments10:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments11:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments12:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+sightingcomments13:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user: joe
+sightingcomments14:
+  title: sighting
+  type: SightingCommentCollection
+  created_at: Time.now.to_s(:db)
+  user: 1
+userlocationcomments1:
+  title: location
+  type: UserLocationCommentCollection
+  created_at: Time.now.to_s(:db)
+  user: joe
+userlocationcomments2:
+  title: location
+  type: UserLocationCommentCollection
+  created_at: Time.now.to_s(:db)
+  user: joe
+userlocationcomments3:
+  title: location
+  type: UserLocationCommentCollection
+  created_at: Time.now.to_s(:db)
+  user: joe
+userlocationcomments4:
+  title: location
+  type: UserLocationCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+tripcomments1:
+  title: trip
+  type: TripCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+tripcomments2:
+  title: trip
+  type: TripCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+tripcomments3:
+  title: trip
+  type: TripCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+tripcomments4:
+  title: trip
+  type: TripCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+tripcomments5:
+  title: trip
+  type: TripCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+tripcomments6:
+  title: trip
+  type: TripCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1
+tripcomments7:
+  title: trip
+  type: TripCommentCollection
+  created_at: Time.now.to_s(:db)
+  user_id: 1

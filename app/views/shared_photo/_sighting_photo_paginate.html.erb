@@ -1,0 +1,19 @@
+  <%- if sighting_photos.size > 0 -%>
+    <%- x = 0 -%>
+    <table style="margin-bottom: 5px;">
+    <% sighting_photos.each do |sighting_photo| %>
+      <% sighting_photo.publicize!(current_user) %>
+      <%- if x%3 == 0 -%><tr><%- end -%>
+      <td style="width: 33%; text-align: center;">
+        <a href="<%= observation_photo_url(:user => sighting_photo.user.login, :sighting_id => sighting_photo.sighting.id, :id => sighting_photo.id) %>"><img src="<%= sighting_photo.photo(:thumb) %>" alt="<%= h(sighting_photo.title) %>" title="<%= h(sighting_photo.title) %>" /></a><br />
+        <%= h(sighting_photo.title) %>
+      </td>
+      <%- if x%3 == 2 -%></tr><%- end -%>
+      <%- x = x+1 -%>
+    <% end %>
+    </table>
+
+    <%= will_paginate sighting_photos, :params => url, :class => 'pagination-sighting-photos' %>
+  <% else %>
+    <p>None yet</p>
+  <% end %>

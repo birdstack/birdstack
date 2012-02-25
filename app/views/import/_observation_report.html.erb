@@ -1,0 +1,19 @@
+        <%- if pending_import_item.date_year or pending_import_item.time_hour -%><p><%- if pending_import_item.date_year -%>Date<%- end -%><%- if pending_import_item.date_year and pending_import_item.time_hour %> and <% end -%><%- if pending_import_item.time_hour -%>Time<%- end -%>: <% end -%><%= render :partial => 'shared/observation_date', :locals => {:sighting => pending_import_item} %><%- if pending_import_item.date_year and pending_import_item.time_hour -%>, <% end -%><%- if pending_import_item.time_hour -%><%= render :partial => 'shared/observation_time.html.erb', :locals => {:sighting => pending_import_item} %></p><%- end -%>
+				<%- if !pending_import_item.location_name.blank? -%><p>Location: <%= h(pending_import_item.location_name) %></p><%- end -%>
+				<%- if !pending_import_item.trip_name.blank? -%><p>Trip: <%= h(pending_import_item.trip_name) %></p><%- end -%>
+				<%- if pending_import_item.species_count -%><p>Number observed: <%= h(pending_import_item.species_count) %></p><%- end -%>
+				<%- if pending_import_item.juvenile_male and (pending_import_item.juvenile_male != 0) -%><p style="margin-left: 40px;">Juvenile males: <%= h(pending_import_item.juvenile_male) %></p><%- end -%>
+				<%- if pending_import_item.juvenile_female and (pending_import_item.juvenile_female != 0) -%><p style="margin-left: 40px;">Juvenile females: <%= h(pending_import_item.juvenile_female) %></p><%- end -%>
+				<%- if pending_import_item.juvenile_unknown and (pending_import_item.juvenile_unknown != 0) -%><p style="margin-left: 40px;">Juveniles of unknown sex: <%= h(pending_import_item.juvenile_unknown) %></p><%- end -%>
+				<%- if pending_import_item.immature_male and (pending_import_item.immature_male != 0) -%><p style="margin-left: 40px;">Immature males: <%= h(pending_import_item.immature_male) %></p><%- end -%>
+				<%- if pending_import_item.immature_female and (pending_import_item.immature_female != 0) -%><p style="margin-left: 40px;">Immature females: <%= h(pending_import_item.immature_female) %></p><%- end -%>
+				<%- if pending_import_item.immature_unknown and (pending_import_item.immature_unknown != 0) -%><p style="margin-left: 40px;">Immatures of unknown sex: <%= h(pending_import_item.immature_unknown) %></p><%- end -%>
+				<%- if pending_import_item.adult_male and (pending_import_item.adult_male != 0) -%><p style="margin-left: 40px;">Adult males: <%= h(pending_import_item.adult_male) %></p><%- end -%>
+				<%- if pending_import_item.adult_female and (pending_import_item.adult_female != 0) -%><p style="margin-left: 40px;">Adult females: <%= h(pending_import_item.adult_female) %></p><%- end -%>
+				<%- if pending_import_item.adult_unknown and (pending_import_item.adult_unknown != 0) -%><p style="margin-left: 40px;">Adults of unknown sex: <%= h(pending_import_item.adult_unknown) %></p><%- end -%>
+				<%- if pending_import_item.unknown_male and (pending_import_item.unknown_male != 0) -%><p style="margin-left: 40px;">Males of unknown age: <%= h(pending_import_item.unknown_male) %></p><%- end -%>
+				<%- if pending_import_item.unknown_female and (pending_import_item.unknown_female != 0) -%><p style="margin-left: 40px;">Females of unknown age: <%= h(pending_import_item.unknown_female) %></p><%- end -%>
+				<%- if pending_import_item.unknown_unknown and (pending_import_item.unknown_unknown != 0) -%><p style="margin-left: 40px;">Individuals of unknown age and sex: <%= h(pending_import_item.unknown_unknown) %></p><%- end -%>
+				<%- unless pending_import_item.tag_list.blank? -%><p style="margin-left: 40px;">Tags: <%= h(pending_import_item.tag_list) %></p><%- end -%>
+				<%- unless pending_import_item.link.blank? -%><p style="margin-left: 40px;">Link: <%= h(pending_import_item.link) %></p><%- end -%>
+				<%- if pending_import_item.notes? -%><p>Notes:</p><div class="notes"><%= birdstack_sanitize(pending_import_item.notes) %></div><%- end -%>

@@ -1,0 +1,28 @@
+			<% section_id = 'observation_tag' %>
+				<tr id="<%= section_id %>" <% if @observation_tag.blank? %>style="display: none;"<% end %>>
+					<td>
+						<label for="<%= section_id %>_available_options_search">Tags:</label>
+						<%= render :partial => 'two_select_boxes',
+							:locals => {
+								:section_id => section_id,
+								:available_options => current_user.sightings.tag_counts(:order => 'tags.name').collect do |option|
+									[
+										option.name,
+										option.name
+									]
+								end,
+								:selected_options => Set.new(@observation_tag)
+							}
+						%>
+
+						<script type="text/javascript">
+						//<![CDATA[
+							function remove_<%= section_id %>() {
+								clearSelectBoxOptions(document.getElementById('<%= section_id %>_id'))
+
+								removeSearch(document.getElementById('<%= section_id %>'))
+							}
+						//]]>
+						</script>
+					</td>
+				</tr>

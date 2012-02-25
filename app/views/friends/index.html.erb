@@ -1,0 +1,34 @@
+	<%- if @user == current_user -%>
+		<%- @page_title = 'Your friends' -%>
+		<h1>Your friends</h1>
+		<p>You have <%= pluralize(@friends.size, 'friend') %> on Birdstack.<% if @friends.size > 0 %> Do you want to <%= link_to 'see what they\'ve been up to', :controller => 'friends', :action => 'activity' %>?<% end %></p>
+	<%- else -%>
+		<%- @page_title = h(@user.login) + '\'s friends' -%>
+		<h1><%= h(@user.login) %>'s friends</h1>
+		<p><%= h(@user.login) %> has <%= pluralize(@friends.size, 'friend') %> on Birdstack. 
+			<%- if logged_in? and current_user.friends.exists?(@user) -%>
+				You are friends with <%= h(@user.login) %> (<%= link_to 'remove', {:controller => 'friends', :action => 'destroy', :id => @user.id}, :method => :post, :confirm => "Are you sure you want to remove this person from your friends list?" %>).
+			<%- elsif logged_in? and FriendRequest.request_exists?(current_user, @user) == current_user -%>
+				You sent <%= h(@user.login) %> a friend request.
+			<%- elsif logged_in? and FriendRequest.request_exists?(current_user, @user) -%>
+				<%= h(@user.login) %> sent you <%= link_to 'a friend request', :controller => 'friends', :action => 'pending' %>.
+			<%- else -%>
+				Would you like to <%= link_to 'be friends with ' + h(@user.login), :controller => 'friends', :action => 'add', :id => @user.id %>?
+			<%- end %>
+		</p>
+	<%- end -%>
+
+	<%- if @friends.size > 0 -%>
+		<% i = 1 %>
+		<table style="width: 100%">
+		<%- @friends.each do |friend| %>
+			<% if i % 3 == 1 %><tr><% end %>
+				<td style="text-align: center; vertical-align: middle; width: 33%; height: 200px;"><a href="<%= url_for :controller => 'people', :action => 'view', :login => friend.login %>"><%= image_tag(friend.profile_pic.url(:normal), :alt => h(friend.login), :title => h(friend.login)) %></a><br />
+					<a href="<%= url_for :controller => 'people', :action => 'view', :login => friend.login %>"><%= h(friend.login) %></a><br />
+					<%= h(friend.location) %>
+				</td>
+			<% if i%3 == 0 %></tr><% end %>
+			<% i += 1 %>
+		<%- end %>
+		</table>
+	<%- end -%>

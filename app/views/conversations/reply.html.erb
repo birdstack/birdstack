@@ -1,0 +1,20 @@
+	<%- @page_title = 'Reply to "' + @conversation.subject + '"' %>
+
+	<p style="text-align: center;"><%= link_to 'Inbox', :action => 'index' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'Sent items', :action => 'sent' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'Start new', :action => 'start' %></p>
+
+	<h1>Reply to "<%= @conversation.subject %>"</h1>
+
+	<%- if (@message.errors.count == 0) and !@message.body.blank? -%>
+		<h2>Preview:</h2>
+		<p><b><%= h(@conversation.subject) %></b></p>
+		<%= birdstack_sanitize(@message.body) %><br /><br />
+	<%- end -%>
+
+	<%- if @message.errors.count > 0 then -%>
+		<h2>Your post cannot be created until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @message.errors.on(:body) then %><li>The message body <%= h(@message.errors.on(:body).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+        <%= render :partial => 'reply', :locals => {:conversation => @conversation, :message => @message} %>

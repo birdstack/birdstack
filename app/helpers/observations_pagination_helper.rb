@@ -1,0 +1,2 @@
+module ObservationsPaginationHelper
+end

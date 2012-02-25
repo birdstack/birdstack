@@ -1,0 +1,17 @@
+			<% section_id = 'observation_genus' %>
+				<tr id="<%= section_id %>"<% if @observation_genus.blank? %> style="display: none;"<% end %>>
+					<td>
+						<label for="observation_genus_available_options_search">Genera:</label>
+						<%= render :partial => 'two_select_boxes', :locals => { :section_id => section_id, :available_options => current_user.searchable_genera.collect {|i| [i.latin_name, Birdstack::Search::obj_to_csv(i, section_id)]}, :selected_options => Set.new(@observation_genus)} %>
+
+						<script type="text/javascript">
+						//<![CDATA[
+							function remove_<%= section_id %>() {
+								clearSelectBoxOptions(document.getElementById('<%= section_id %>_id'))
+
+								removeSearch(document.getElementById('<%= section_id %>'))
+							}
+						//]]>
+						</script>
+					</td>
+				</tr>

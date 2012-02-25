@@ -1,0 +1,57 @@
+	<%- @page_title = 'Create a free account' -%>
+	<%- add_to_body_params(:onLoad => "$('user_login').focus()") -%>
+
+	<h1>Create your Birdstack account</h1>
+
+	<%- if @user.errors.count > 0 then -%>
+		<h2>Your account cannot be created until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @user.errors.on(:login) then %><li>Username <%= h(@user.errors.on(:login).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:password) then %><li>Password <%= h(@user.errors.on(:password).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:email) then %><li>Email address <%= h(@user.errors.on(:email).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:user_agreement) then %><li>User agreement <%= h(@user.errors.on(:user_agreement).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:age_verification) then %><li>Age agreement <%= h(@user.errors.on(:age_verification).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:captcha) then %><li>Verification <%= h(@user.errors.on(:captcha).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:base) then %><li><%= h(@user.errors.on(:base).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_for :user do |f| -%>
+
+		<fieldset <% if @user.errors.on(:login) %>class="errorfieldlabel"<% end %>>
+			<legend>Username</legend>
+			<label for="user_login">Choose a username:</label><%= f.text_field :login, :class => 'textbox' %>
+			<div class="fieldtip">Must be 4-15 characters long. Can include letters, numbers, hyphens (-), and underscores (_).</div>
+		</fieldset>
+
+		<fieldset <% if @user.errors.on(:password) %>class="errorfieldlabel"<% end %>>
+			<legend>Password</legend>
+			<label for="user_password">Choose a password:</label><%= f.password_field :password, :class => 'textbox' %>
+			<div class="fieldtip">At least 6 characters. We recommend mixing letters, numbers, and punctuation for better security.</div>
+			<label for="user_password_confirmation">Re-type your password:</label><%= f.password_field :password_confirmation, :class => 'textbox' %>
+		</fieldset>
+
+		<fieldset <% if @user.errors.on(:email) %>class="errorfieldlabel"<% end %>>
+			<legend>Email</legend>
+			<label for="user_email">Enter your email address:</label><%= f.text_field :email %>
+			<div class="fieldtip">Required to activate your account. Birdstack will never sell your email address.</div>
+			<label for="user_email_confirmation">Re-type your email address:</label><%= f.text_field :email_confirmation, :autocomplete => 'off', :class => 'textbox' %>
+		</fieldset>
+
+		<fieldset <% if @user.errors.on(:user_agreement) or @user.errors.on(:age_verification) %>class="errorfieldlabel"<% end %>>
+			<legend>User agreement</legend>
+			<div class="checkbox"><%= f.check_box 'user_agreement', :class => 'checkbox' %>I have read and agree to abide by the <%= link_to('Terms of Service', :controller => 'main', :action => 'terms') %> and <%= link_to('Privacy Policy', :controller => 'main', :action => 'privacy') %>.</div>
+			<div class="checkbox"><%= f.check_box 'age_verification', :class => 'checkbox' %>I certify that I am at least 13 years of age. (Required for legal reasons.)</div>
+		</fieldset>
+
+		<fieldset <% if @user.errors.on(:captcha) %>class="errorfieldlabel"<% end %>>
+			<legend>Verification</legend>
+			<label for="user_captcha_code">Enter the letters shown below:</label><%= f.text_field :captcha, :value => '', :autocomplete => 'off', :class => 'textbox' %>
+			<%= show_simple_captcha_plain(:object => 'user') %>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Create my Birdstack account!', :class => 'button' %>
+		</fieldset>
+
+	<%- end -%>

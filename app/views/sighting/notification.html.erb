@@ -1,0 +1,32 @@
+	<%- @page_title = 'Ambiguous species name: ' + h(@notification.species.english_name) -%>
+
+	<%= render :partial => 'shared/workflow' %>
+
+	<h1>Ambiguous species name: <%= h(@notification.species.english_name) %></h1>
+	
+	<p>The name "<b><%= h(@notification.species.english_name) %></b>" can refer to more than one species.</p>
+
+	<hr />
+	
+	<%= birdstack_sanitize(@notification.description) %>
+	
+	<p>Notification provided by <span class="whois"><%= link_to h(@notification.user.login), :controller => 'people', :action => 'view', :login => @notification.user.login %></span> on <%= h(@notification.created_at.strftime("%d %B %Y")) %>. | <%= link_to '[flag this notification as incorrect]', :controller => 'notifications', :action => 'flag', :id => @notification.id %></p>
+
+	<hr /><br />
+
+	<%- form_tag do -%>
+		<fieldset>
+			<legend>Select a species</legend>
+			<%- for species in [@notification.species] + @notification.potential_species -%>
+				<div class="checkbox"><%= radio_button_tag 'species', species.id, species == @notification.species ? true : false %><label for="species_<%= species.id %>"><b><%= h(species.english_name) %></b> (<i><%= h(species.genus.latin_name) + ' ' + h(species.latin_name) %></i>). <%= render :partial => 'shared/range_info', :locals => {:species => species} %></label></div>
+			<%- end -%>
+		</fieldset>
+		<fieldset>
+			<legend>Show message next time?</legend>
+			<div class="checkbox"><%= check_box_tag 'ignore', 1, false, {:class => 'checkbox'} %><label for="ignore" class="checkbox">No,  do not show me this message the next time I add an observation of <%= h(@notification.species.english_name) %>.</label></div>
+		</fieldset>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Continue', :class => 'button' %>
+			<%= render :partial => 'shared/prefill_fields' %>
+		</fieldset>
+	<%- end -%>

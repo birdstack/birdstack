@@ -1,0 +1,84 @@
+	<%- @page_title = @species.english_name + ' (' + @species.genus.latin_name + ' ' + @species.latin_name + ') - ' + 'photos, recent observations map, range information, and alternate names' -%>
+
+	<%= render :partial => 'breadcrumbs' %>
+
+	<h1><%= h(@species.english_name) %><br />&nbsp;&nbsp;&nbsp;(<span class="latin"><%= h(@species.genus.latin_name + ' ' + @species.latin_name) %></span>)</h1>
+
+	<div class="speciesrange">
+		<h2>Breeding Range</h2>
+		<h3>General region<% if @species.regions.size > 1 %>s<% end %>: </h3>
+		<ul>
+			<%- for region in @species.regions -%>
+				<li><%= h(region.name) %> (<%= link_to h(region.code), main_url(:action => 'abbreviations') %>)<% if region != @species.regions.last %>,<% end %></li>
+			<%- end -%>
+		</ul>
+		<br />
+		<h3>Subregions: </h3>
+		<p><%= h(@species.breeding_subregions) %><br /><br /></p>
+
+		<%- if !@species.nonbreeding_regions.blank? -%>
+			<h2>Nonbreeding Range</h2>
+			<p class="nonbreeding"><%= h(@species.nonbreeding_regions) %><br /><br /></p>
+		<%- end -%>
+
+	</div>
+
+	<%= render :partial => 'observations_pagination/species_map_init', :locals => {:species => @species.id} %>
+
+	<hr />
+
+        <h2>Photos</h2>
+        <%= render :partial => 'ioc/paginate_species_photos', :locals => {:species => @species} %>
+        <hr />
+
+	<h2 style="margin-bottom: 5px;">Resources on the Web</h2>
+	<p><a href="http://www.birdforum.net/opus/<%= u(@species.genus.latin_name) + '_' + u(@species.latin_name) %>">BirdForum Opus</a> | <a href="http://flickr.com/search/groups/?q=<%= u(@species.genus.latin_name) + u(@species.latin_name) %>&amp;w=42637302%40N00&amp;m=pool">Field Guide: Birds of the World (Flickr)</a>| <a href="http://images.google.com/images?q=<%= u(@species.genus.latin_name) + '+' + u(@species.latin_name) %>">Google Image Search</a> |<br /><a href="http://ibc.lynxeds.com/search/ibc_features/<%= u(@species.genus.latin_name) + '+' + u(@species.latin_name) %>">Internet Bird Collection</a> | <a href="http://www.mangoverde.com/cgi-bin/search/search.pl?p=1&amp;lang=en&amp;include=&amp;exclude=&amp;penalty=0&amp;sort=&amp;mode=all&amp;q=<%= u(@species.genus.latin_name) + '+' + u(@species.latin_name) %>">Mangoverde World Bird Guide</a> | <a href="http://en.wikipedia.org/wiki/<%= u(@species.genus.latin_name) + '_' + u(@species.latin_name) %>">Wikipedia:WikiProject Birds</a></p>
+
+	<hr />
+
+	<% if !@species.note.blank? %>
+		<h2 style="margin-bottom: 5px;">IOC Footnote</h2>
+		<%= birdstack_sanitize(@species.note) %>
+
+		<hr />
+	<% end %>
+
+	<%- if @species.alternate_names -%>
+		<h2 style="margin-bottom: 5px;">Alternate names for <%= h(@species.english_name) %>:</h2>
+		<%- counter = 0 -%>
+		<% for alternate_name in @species.alternate_names %>
+			<p><b><%= counter += 1 %>. <%= h(alternate_name.name) %></b></p>
+			<%= birdstack_sanitize(alternate_name.description) %>
+			<p>Suggested by <span class="whois"><%= link_to h(alternate_name.user.login), :controller => 'people', :action => 'view', :login => alternate_name.user.login %></span> on <%= render :partial => 'shared/timestamp_dmy', :locals => {:timestamp => alternate_name.created_at} %>. <%= link_to '[flag this suggestion as incorrect]', :controller => 'alternate_name', :action => 'flag', :id => alternate_name.id %><br />
+			</p>
+		<% end %>
+	<%- else -%>
+		<h2 style="margin-bottom: 5px;">Is there an alternate name for <%= h(@species.english_name) %>?</h2>
+	<%- end -%>
+		<p><%= link_to 'Add an alternate name', :controller => 'alternate_name', :action => 'add', :id => @species.id %></p>
+
+	<hr />
+
+	<%- if @species.notification -%>
+		<h2 style="margin-bottom: 5px;">The name "<%= h(@species.english_name) %>" may also refer to the following species:</h2>
+		<ul>
+		<%- for potential_species in @species.notification.potential_species -%>
+			<li><%= link_to(h(potential_species.english_name), :controller => 'ioc', :action => 'species', :species => potential_species.latin_name, :genus => potential_species.genus.latin_name.downcase, :family => potential_species.genus.family.latin_name.downcase, :order => potential_species.genus.family.order.latin_name.downcase) %></li>
+		<%- end -%>
+		</ul>
+		<%= birdstack_sanitize(@species.notification.description) %>
+		<p>Notification provided by <span class="whois"><%= link_to h(@species.notification.user.login), :controller => 'people', :action => 'view', :login => @species.notification.user.login %></span> on <%= render :partial => 'shared/timestamp_dmy', :locals => {:timestamp => @species.notification.created_at} %>. | <%= link_to '[flag this notification as incorrect]', :controller => 'notifications', :action => 'flag', :id => @species.notification.id %></p>
+	<%- else -%>
+		<h2 style="margin-bottom: 5px;">Is the English name "<%= h(@species.english_name) %>" used for species other than <i><%= h(@species.genus.latin_name) + ' ' + h(@species.latin_name) %></i>?</h2>
+		<p><%= link_to 'Tell us (advanced)', :controller => 'notifications', :action => 'add', :id => @species.id %></p>
+	<%- end -%>
+
+	<hr />
+
+	<%- if logged_in? then -%>
+		<h2 style="margin-bottom: 5px;">All your <%= h(@species.english_name) %> observations:</h2>
+		<%= render :partial => 'observations_pagination/species_observations', :locals => {:species => @species.id} %>
+	<% end %>
+
+	<h2 style="margin-bottom: 5px;">Taxonomic source</h2>
+	<p><a href="http://www.worldbirdnames.org/">IOC World Bird Names</a></p>

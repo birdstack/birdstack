@@ -1,0 +1,34 @@
+<%# Don't call any other partials from this partial without qualifying the file name with '.html.erb' or whatever type it is.  This is necessary because of the ambiguity when being used within atom feeds %>
+<%# Takes an optional variable publicize_for that will publicize it for a different user than current_user (probably :false to always present a public view %>
+<% publicize_for ||= current_user %>
+				<%- sighting.publicize!(publicize_for) -%>
+
+				<%- if sighting.date_year or sighting.time_hour -%>
+                              <p><%- if sighting.date_year -%>Date<%- end -%><%- if sighting.date_year and sighting.time_hour %> and <% end -%><%- if sighting.time_hour -%>Time<%- end -%>: <%= render :partial => 'shared/observation_date.html.erb', :locals => {:sighting => sighting} %><%- if sighting.date_year and sighting.time_hour -%>, <% end -%><%- if sighting.time_hour -%><%= render :partial => 'shared/observation_time.html.erb', :locals => {:sighting => sighting} %><%- end -%></p>
+				<%- end -%>
+
+				<%- if sighting.user_location -%><%- location = sighting.user_location.publicize!(publicize_for || current_user) -%><p>Location: <%= link_to h(location.name), location_url(:user => location.user.login, :id => location.id) %><%- if location.location? or location.adm2? or location.adm1? or location.cc?-%> (<%= h([location.location, location.adm2, location.adm1, CountryCode.country_name(location.cc)].reject {|i| i.blank? }.join(', ')) %>)<%- end -%></p><%- end -%>
+				<%- if sighting.trip -%><%- trip = sighting.trip.publicize!(publicize_for || current_user) -%><p>Trip:	<%= link_to h(trip.name), trip_url(:user => trip.user.login, :id => trip.id) %><%- for ancestor_trip in sighting.trip.public_ancestors(publicize_for || current_user).reverse -%><%- ancestor_trip.publicize!(publicize_for || current_user) -%> &lt; <%= link_to h(ancestor_trip.name), trip_url(:user => ancestor_trip.user.login, :id => ancestor_trip.id) %><%- end -%></p>
+				<%- end -%>
+				<%- if sighting.species_count -%><p>Number observed: <%= h(sighting.species_count) %></p>
+					<%- if sighting.juvenile_male and (sighting.juvenile_male != 0) -%><p style="margin-left: 40px;">Juvenile males: <%= h(sighting.juvenile_male) %></p><%- end -%>
+					<%- if sighting.juvenile_female and (sighting.juvenile_female != 0) -%><p style="margin-left: 40px;">Juvenile females: <%= h(sighting.juvenile_female) %></p><%- end -%>
+					<%- if sighting.juvenile_unknown and (sighting.juvenile_unknown != 0) -%><p style="margin-left: 40px;">Juveniles of unknown sex: <%= h(sighting.juvenile_unknown) %></p><%- end -%>
+					<%- if sighting.immature_male and (sighting.immature_male != 0) -%><p style="margin-left: 40px;">Immature males: <%= h(sighting.immature_male) %></p><%- end -%>
+					<%- if sighting.immature_female and (sighting.immature_female != 0) -%><p style="margin-left: 40px;">Immature females: <%= h(sighting.immature_female) %></p><%- end -%>
+					<%- if sighting.immature_unknown and (sighting.immature_unknown != 0) -%><p style="margin-left: 40px;">Immatures of unknown sex: <%= h(sighting.immature_unknown) %></p><%- end -%>
+					<%- if sighting.adult_male and (sighting.adult_male != 0) -%><p style="margin-left: 40px;">Adult males: <%= h(sighting.adult_male) %></p><%- end -%>
+					<%- if sighting.adult_female and (sighting.adult_female != 0) -%><p style="margin-left: 40px;">Adult females: <%= h(sighting.adult_female) %></p><%- end -%>
+					<%- if sighting.adult_unknown and (sighting.adult_unknown != 0) -%><p style="margin-left: 40px;">Adults of unknown sex: <%= h(sighting.adult_unknown) %></p><%- end -%>
+					<%- if sighting.unknown_male and (sighting.unknown_male != 0) -%><p style="margin-left: 40px;">Males of unknown age: <%= h(sighting.unknown_male) %></p><%- end -%>
+					<%- if sighting.unknown_female and (sighting.unknown_female != 0) -%><p style="margin-left: 40px;">Females of unknown age: <%= h(sighting.unknown_female) %></p><%- end -%>
+					<%- if sighting.unknown_unknown and (sighting.unknown_unknown != 0) -%><p style="margin-left: 40px;">Individuals of unknown age and sex: <%= h(sighting.unknown_unknown) %></p><%- end -%>
+				<%- end -%>
+				<%- unless sighting.tag_list.blank? -%>
+					<p>Tags: <%= sighting.tag_list.collect {|tag| link_to(h(tag), observations_tag_url(:user => sighting.user.login, :id => tag))}.join(', ') %></p>
+				<%- end -%>
+				<%- unless sighting.link.blank? -%>
+					<p>Link:</b> <a href="<%= h(sighting.link) %>" rel="nofollow"><%= h(sighting.link.length > 50 ? sighting.link.first(50) + '...' : sighting.link) %></a></p>
+				<%- end -%>
+				<%- if (publicize_for || current_user) == sighting.user -%><br /><%- if sighting.private -%><p>This is a private observation.</p><%- else -%><p>This is a public observation.</p><%- end -%><br /><%- end -%>
+				<%- if sighting.notes? -%><p>Notes:</p><div class="notes"><%= birdstack_sanitize(sighting.notes) %></div><%- end -%>

@@ -1,0 +1,77 @@
+	<%- add_to_head(render(:partial => 'location_header')) -%>
+	<%- add_to_body_params(:onload => "load()", :onunload => "GUnload()") -%>
+		
+	<%- if @user_location.errors.count > 0 then -%>
+		<h2>Your location cannot be saved until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<%- if @user_location.errors.on(:name) then -%><li>Name <%= h(@user_location.errors.on(:name).to_a.first) %>.</li><%- end -%>
+			<%- if @user_location.errors.on(:latitude) then -%><li>Latitude <%= h(@user_location.errors.on(:latitude).to_a.first) %>.</li><%- end -%>
+			<%- if @user_location.errors.on(:longitude) then -%><li>Longitude <%= h(@user_location.errors.on(:longitude).to_a.first) %>.</li><%- end -%>
+			<%- if @user_location.errors.on(:base) then -%><li><%= h(@user_location.errors.on(:base).to_a.first) %>.</li><%- end -%>
+			<%- if @user_location.errors.on(:elevation) then %><li>Elevation <%= h(@user_location.errors.on(:elevation).to_a.first) %>.</li><% end %>
+			<%- if @user_location.errors.on(:ecoregion) then %><li>Ecoregion <%= h(@user_location.errors.on(:ecoregion).to_a.first) %>.</li><% end %>
+			<%- if @user_location.errors.on(:link) then %><li>Link <%= h(@user_location.errors.on(:link).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('submit_button').disable()
+		}
+//]]>
+	</script>
+
+
+	<% form_tag({}, {:name => 'sighting', :onsubmit => 'greyButtons()'}) do %>
+		<fieldset>
+			<legend>Location information</legend>
+			<label for="user_location_name">Location name:</label><%= text_field :user_location, 'name' %>
+			<p class="fieldtip">We suggest you choose a name that is unique and easy to remember.</p>
+			<label for="user_location_cc">Country:</label><%= select(:user_location, 'cc', ([CountryCode.new('cc' => '', 'name' => 'Select a Country')] + @countries).collect {|i| [i.name, i.cc] }, {}, :onChange => 'resetEverything();') %>
+			<label for="user_location_adm1">State or province:</label><%= text_field :user_location, 'adm1', :autocomplete => 'off' %>
+				<div class="auto_complete" id="adm1_auto_complete"></div>
+				<%= auto_complete_field 'user_location_adm1', :url => { :controller => :location, :action => 'auto_complete_for_adm1' }, :min_chars => 1, :update => 'adm1_auto_complete', :with => "'adm1='+document.sighting.user_location_adm1.value+'&cc='+document.sighting.user_location_cc.value", :indicator => 'working-adm1', :after_update_element => 'resetBelowAdm1', :method => 'get' %> <span id="working-adm1" style="display: none"><%= image_tag("loading.gif", :size => "16x16", :alt => "loading...", :title => "loading...") %></span>
+			<label for="user_location_adm2">County, parish, or district:</label><%= text_field :user_location, 'adm2', :autocomplete => 'off' %>
+				<div class="auto_complete" id="adm2_auto_complete"></div>
+				<%= auto_complete_field 'user_location_adm2', :url => { :controller => :location, :action => 'auto_complete_for_adm2' }, :min_chars => 1, :update => 'adm2_auto_complete', :with => "'adm2='+document.sighting.user_location_adm2.value+'&adm1='+document.sighting.user_location_adm1.value+'&cc='+document.sighting.user_location_cc.value", :indicator => 'working-adm2', :after_update_element => 'updatecoords_adm2', :method => 'get' %> <span id="working-adm2" style="display: none"><%= image_tag("loading.gif", :size => "16x16", :alt => "loading...", :title => "loading...") %></span>
+			<label for="user_location_location">City, town, or village:</label><%= text_field :user_location, 'location', :autocomplete => 'off' %>
+				<div class="auto_complete" id="location_auto_complete"></div>
+				<%= auto_complete_field 'user_location_location', :url => { :controller => :location, :action => 'auto_complete_for_location' }, :min_chars => 2, :update => 'location_auto_complete', :with => "'location='+document.sighting.user_location_location.value+'&adm1='+document.sighting.user_location_adm1.value+'&cc='+document.sighting.user_location_cc.value", :indicator => 'working-ppl', :after_update_element => 'updatecoords_ppl', :method => 'get' %> <span id="working-ppl" style="display: none"><%= image_tag("loading.gif", :size => "16x16", :alt => "loading...", :title => "loading...") %></span>
+			<div id="location_decimal">
+				<label for="user_location_latitude">Latitude:</label><%= text_field :user_location, 'latitude', :onChange => 'updatemap();' %>
+				<label for="user_location_longitude">Longitude:</label><%= text_field :user_location, 'longitude', :onChange => 'updatemap();' %>
+			</div>
+			<div id="location_dms" style="display: none;">
+				<label for="user_location_latitude">Latitude:</label>
+				<table><tr style="color: #888; text-align: center;"><td>Degrees</td><td>Minutes</td><td>Seconds</td></tr>
+				<tr><td><%= text_field_tag 'latitude_d', nil, :onchange => 'dms_to_dec_lat()', :style => 'width: 70px;' %></td><td><%= text_field_tag 'latitude_m', nil, :onchange => 'dms_to_dec_lat()', :style => 'width: 70px;' %></td><td><%= text_field_tag 'latitude_s', nil, :onchange => 'dms_to_dec_lat()', :style => 'width: 70px;' %></td></tr></table>
+				
+				<label for="user_location_longitude">Longitude:</label>
+				<table><tr style="color: #888; text-align: center;"><td>Degrees</td><td>Minutes</td><td>Seconds</td></tr>
+				<tr><td><%= text_field_tag 'longitude_d', nil, :onchange => 'dms_to_dec_lon()', :style => 'width: 70px;' %></td><td><%= text_field_tag 'longitude_m', nil, :onchange => 'dms_to_dec_lon()', :style => 'width: 70px;' %></td><td><%= text_field_tag 'longitude_s', nil, :onchange => 'dms_to_dec_lon()', :style => 'width: 70px;' %></td></tr></table>
+			</div>
+
+			<input type="radio" name="location_style" id="location_style_decimal" value="decimal" checked="checked" onClick="switchCoordInput()" class="checkbox" /><label class="checkbox" for="location_style_decimal">Decimal</label>
+			<input type="radio" name="location_style" id="location_style_dms" value="dms" onClick="switchCoordInput()" class="checkbox" /><label class="checkbox" for="location_style_dms"><abbr title="Degrees, Minutes, Seconds">DMS</abbr></label>
+
+			<p style="margin: 5px 0;"><%= link_to_function 'Clear map and coordinates', 'resetCoords()' %></p>
+			<div id="map" style="width: 570px; height: 300px"></div>
+			<br />
+			<label for="user_location_elevation">Elevation:</label><%= text_field(:user_location, 'elevation', :style => 'margin: 0;') %> <%= select(:user_location, 'elevation_units', [['metres', 'm'],['feet', 'ft']], {}, :style => 'margin: 0;') %><br />
+			<label for="user_location_ecoregion">Ecoregion code:</label><%= text_field(:user_location, 'ecoregion') %>
+				<p class="fieldtip">Ecoregion codes are composed of two letters and four digits. <a href="http://www.nationalgeographic.com/wildworld/terrestrial.html">What is an ecoregion?</a></p>
+			<label for="user_location_link">Link:</label><%= text_field(:user_location, 'link', :style => 'width: 570px;') %>
+			<p class="fieldtip">If you like, you can include a link to a blog post, trip report, externally hosted image gallery, etc.</p>
+			<label for="user_location_notes">Notes:</label><%= text_area :user_location, 'notes', :class => 'wide' %>
+			<p class="fieldtip">Permitted <abbr>(X)HTML</abbr> tags are &lt;a&gt;, &lt;b&gt;, &lt;blockquote&gt;, &lt;em&gt;,  &lt;i&gt;, &lt;img&gt;, &lt;strong&gt;, and &lt;u&gt;</p>
+				<%= hidden_field :user_location, 'zoom' %>
+				<%= hidden_field :user_location, 'source' %>
+				<%= render :partial => 'shared/prefill_fields' %>
+			<label for="user_location_private">Privacy (<%= link_to 'Help', :controller => 'help', :action => 'privacy' %>):</label><%= select :user_location, 'private', [['Public', 0],['Hide latitude/longitude only', 1],['Fully private', 2]] %>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save location and continue', :class => 'button', :id => 'submit_button' %>
+		</fieldset>
+	<% end %>

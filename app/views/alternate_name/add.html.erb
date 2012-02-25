@@ -1,0 +1,31 @@
+	<%- @page_title = 'Add an alternate name for ' + h(@alternate_name.species.english_name) -%>
+
+	<h1>Add an alternate name for <%= h(@alternate_name.species.english_name) %> (<i><%= h(@alternate_name.species.genus.latin_name) + ' ' + h(@alternate_name.species.latin_name) %></i>)</h1>
+
+	<%- if @alternate_name.errors.count > 0 then -%>
+		<h2>Your alternate name cannot be saved until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<%- if @alternate_name.errors.on(:species_id) then -%><li>Species <%= h(@alternate_name.errors.on(:species_id).to_a.first) %>.</li><%- end -%>
+			<%- if @alternate_name.errors.on(:name) then -%><li>Alternate name <%= h(@alternate_name.errors.on(:name).to_a.first) %>.</li><%- end -%>
+			<%- if @alternate_name.errors.on(:description) then -%><li>Explanation <%= h(@alternate_name.errors.on(:description).to_a.first) %>.</li><%- end -%>
+			<%- if @alternate_name.errors.on(:base) then -%><li><%= h(@alternate_name.errors.on(:base).to_a.first) %>.</li><%- end -%>
+		</ul>
+	<%- end -%>
+
+	<p>Due to regional preferences, variation over time, and differing taxonomic treatments, birds often have more than one English name. Please help build the database of alternate names to help other Birdstack members find the birds they are looking for.</p>
+	
+	<p>For example, if you have trouble finding "Common Loon" or "Great Northern Diver" and discover that the bird is called "Great Northern Loon" in our database, you can create alternate name suggestions so that the next time a Birdstack members search for "Common Loon" or "Great Northern Diver," they will be directed to "Great Northern Loon."</p>
+
+	<%- form_for :alternate_name, :html => {:id => 'alternate_name'} do |f| -%>
+		<fieldset>
+			<legend>Alternate Name Details</legend>
+			<label for="alternate_name_name">Alternate name:</label><%= f.text_field 'name' %>
+			<label for="alternate_name_description">Explanation:</label><%= f.text_area 'description' %>
+			<p class="fieldtip">Required. Please explain where and how the alternate name is used, citing sources if possible.<br />
+			<%= render :partial => 'shared/permitted_xhtml_tags' %></p>
+		</fieldset>
+		
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save', :class => 'button' %>
+		</fieldset>
+	<%- end -%>

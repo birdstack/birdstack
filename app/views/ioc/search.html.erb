@@ -1,0 +1,78 @@
+	<%- @page_title = 'Search for ' + h(@ioc_search.term) -%>
+
+	<%= render :partial => 'breadcrumbs' %>
+
+	<%- if @ioc_search.errors.count > 0  -%>
+		<h1 class="taxonpage">Unable to perform search</h1>
+		<ul class="errormessage">
+			<% if @ioc_search.errors.on(:term) then %><li>Your query <%= h(@ioc_search.errors.on(:term).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- else -%>
+		<h1 class="taxonpage"><%= h((@results[:order_latin].size)+(@results[:family_latin].size)+(@results[:family_english].size)+(@results[:genus_latin].size)+(@results[:species_binomial].size)+(@results[:species_english][:species].size)+(@results[:species_english][:alternate_names].size)+(@results[:species_english][:spell_check_search].size)) %> result<% if (@results[:order_latin].size)+(@results[:family_latin].size)+(@results[:family_english].size)+(@results[:genus_latin].size)+(@results[:species_binomial].size)+(@results[:species_english][:species].size)+(@results[:species_english][:alternate_names].size)+(@results[:species_english][:spell_check_search].size) > 1 %>s<% end %> for "<%= h(@ioc_search.term) %>"</h1>
+
+		<% if @results[:order_latin].size > 0 %>
+			<h2>Order<% if @results[:order_latin].size > 1 %>s<% end %> (<%= h(@results[:order_latin].size) %>)</h2>
+			<ul>
+			<%- for order in @results[:order_latin] -%>
+				<li><b><%= link_to h(order.latin_name), :controller => 'ioc', :action => 'order', :order => order.latin_name.downcase %></b></li>
+			<%- end -%>
+			</ul>
+		<% end %>
+
+		<% if (@results[:family_latin].size + @results[:family_english].size) > 0 %>
+			<h2>Famil<% if (@results[:family_latin].size + @results[:family_english].size) == 1 %>y<% else %>ies<% end %> (<%= h(@results[:family_latin].size + @results[:family_english].size) %>)</h2>
+			<ul>
+			<%- for family in @results[:family_english] -%>
+				<li><b><%= link_to h(family.english_name), :controller => 'ioc', :action => 'family', :order => family.order.latin_name.downcase, :family => family.latin_name.downcase %></b></li>
+			<%- end -%>
+			<%- for family in @results[:family_latin] -%>
+				<li><b><%= link_to h(family.latin_name), :controller => 'ioc', :action => 'family', :order => family.order.latin_name.downcase, :family => family.latin_name.downcase %></b></li>
+			<%- end -%>
+			</ul>
+		<% end %>
+
+		<% if @results[:genus_latin].size > 0 %>
+			<h2>Gen<% if @results[:genus_latin].size == 1 %>us<% else %>era<% end %> (<%= h(@results[:genus_latin].size) %>)</h2>
+			<ul>
+			<%- for genus in @results[:genus_latin] -%>
+				<li><b><span class="latin"><%= link_to h(genus.latin_name), :controller => 'ioc', :action => 'genus', :order => genus.family.order.latin_name.downcase, :family => genus.family.latin_name.downcase, :genus => genus.latin_name.downcase %></span></b></li>
+			<%- end -%>
+			</ul>
+		<% end %>
+
+		<% if @results[:species_binomial].size > 0 %>
+			<h2>Binomial name<% if @results[:species_binomial].size > 1 %>s<% end %> (<%= h(@results[:species_binomial].size) %>)</h2>
+			<ul>
+			<%- for species in @results[:species_binomial] -%>
+				<li><b><span class="latin"><%= link_to h(species.genus.latin_name) + ' ' + h(species.latin_name), :controller => 'ioc', :action => 'species', :order => species.genus.family.order.latin_name.downcase, :family => species.genus.family.latin_name.downcase, :genus => species.genus.latin_name.downcase, :species => species.latin_name %></span></b> (<%= h(species.english_name) %>). <%= render :partial => 'shared/range_info', :locals => {:species => species}%></li>
+			<%- end -%>
+			</ul>
+		<% end %>
+
+		<% if @results[:species_english][:species].size > 0 %>
+			<h2>English species name<% if @results[:species_english][:species].size > 1 %>s<% end %> (<%= h(@results[:species_english][:species].size) %>)</h2>
+			<ul>
+			<%- for species in @results[:species_english][:species] -%>
+				<li><b><%= link_to h(species.english_name), :controller => 'ioc', :action => 'species', :order => species.genus.family.order.latin_name.downcase, :family => species.genus.family.latin_name.downcase, :genus => species.genus.latin_name.downcase, :species => species.latin_name %></b> (<i><%= h(species.genus.latin_name) + ' ' + h(species.latin_name) %></i>). <%= render :partial => 'shared/range_info', :locals => {:species => species}%></li>
+			<%- end -%>
+			</ul>
+		<% end %>
+
+		<% if @results[:species_english][:alternate_names].size > 0 %>
+			<h2>Alternate species name<% if @results[:species_english][:alternate_names].size > 1 %>s<% end %> (<%= h(@results[:species_english][:alternate_names].size)%>)</h2>
+			<ul>
+			<%- for alternate_name in @results[:species_english][:alternate_names] -%>
+				<li><b><%= link_to h(alternate_name.name), :controller => 'ioc', :action => 'alternate_name', :name => alternate_name.search_name %></b></li>
+			<%- end -%>
+			</ul>
+		<%- end -%>
+
+		<%- if @results[:species_english][:spell_check_search].size > 0 -%>
+			<h2>Spelling suggestion<% if @results[:species_english][:spell_check_search].size > 1 %>s<% end %> (<%= h(@results[:species_english][:spell_check_search].size) %>)</h2>
+			<ul>
+			<%- for species in @results[:species_english][:spell_check_search] -%>
+				<li><b><%= link_to h(species.english_name), :controller => 'ioc', :action => 'species', :order => species.genus.family.order.latin_name.downcase, :family => species.genus.family.latin_name.downcase, :genus => species.genus.latin_name.downcase, :species => species.latin_name %></b> (<i><%= h(species.genus.latin_name) + ' ' + h(species.latin_name) %></i>). <%= render :partial => 'shared/range_info', :locals => {:species => species}%></li>
+			<%- end -%>
+			</ul>
+		<%- end -%>
+	<%- end -%>

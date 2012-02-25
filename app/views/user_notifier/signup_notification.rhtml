@@ -1,0 +1,24 @@
+Hello,
+
+You are receiving this email because you created a Birdstack account
+with the username '<%= @user.login %>'.
+
+Before you can log in and start enjoying Birdstack, you must activate 
+your account by clicking this link:
+
+<%= SITE_URL_PREFIX + url_for(:controller => :account, :action => :activate, :id => @user.activation_code) %>
+
+This activation link will expire in seven days. If it expires before
+you've activated your account, you will have to sign up again on the
+account creation page (<%= SITE_URL_PREFIX + url_for(:controller => :account, :action => :signup) %>).
+
+If you did not request this email, simply ignore it, and the account
+will be automatically deleted.
+
+Thanks, and good birding!
+
+Birdstack
+<%= SITE_URL_PREFIX + url_for(:controller => :main, :action => :index) %>
+
+Please do not reply to this email. It is sent automatically from
+a box that is not monitored.

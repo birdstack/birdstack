@@ -1,0 +1,51 @@
+	<%- @page_title = 'Edit "' + h(@saved_search.name ) + '"' -%>
+
+	<h1>Edit "<%= h(@saved_search.name ) %>"</h1>
+
+	<p><%= link_to 'I\'m finished editing my list', list_url(:user => current_user.login, :id => @saved_search.id, :format => 'html') %> |  <%= link_to 'Help', :controller => 'help', :action => 'searches' %></p>
+
+	<%- if @search and @search.errors.size > 0 then -%>
+		<h2>The search cannot be run until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% @search.errors.each do |attr, error| %>
+				<li><%= h(error) %></li>
+			<%- end -%>
+		</ul>
+	<%- end -%>
+
+	<%- if @saved_search and @saved_search.errors.count > 0 then -%>
+		<h2>The list cannot be saved until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<%- if @saved_search.errors.on(:name) then -%><li>Name <%= h(@saved_search.errors.on(:name).to_a.first) %>.</li><%- end -%>
+		</ul>
+	<%- end -%>
+	
+	<% form_tag({:controller => 'search', :action => 'observation'}, {:id => 'observation_search'}) do %>
+
+		<fieldset>
+
+			<legend>List info</legend>
+
+			<%- if @search and @search.errors.empty? -%>
+				<% fields_for :saved_search do |f| %>
+						<label for="saved_search_name"><b>Name:</b></label><%= f.text_field 'name', :style => 'margin: 0 10px 0 0;' %>
+						<%= f.check_box 'private', :class => 'checkbox' %><label for="saved_search_public" style="display: inline;">I want to make this list private. (<%= link_to 'Help', :controller => 'help', :action => 'privacy' %>)</label>
+				<% end %>
+			<% end %>
+
+			<%= render :partial => 'search_form_observation' %>
+
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save changes', :class => 'button', :style => 'margin-bottom: 20px;' %>
+		</fieldset>
+
+		<%- if @saved_search -%>
+			<%= render :partial => 'observations_pagination/list_observations', :list => @saved_search.id %>
+		<%- end -%>
+	<% end %>
+
+	<hr style="width: 40%; margin-bottom: 11px; text-align: center;" />
+
+	<div style="text-align: center;"><%= button_to 'Delete this list', {:controller => 'search', :action => 'delete', :id => @saved_search.id}, {:confirm => "Are you sure?  This action will NOT delete any observations."} %></div>

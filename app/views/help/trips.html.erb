@@ -1,0 +1,90 @@
+	<%- @page_title = 'Creating and using trips' -%>
+
+	<h1 id="top">Creating and using trips</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#create">Create a trip</a> | <a href="#privacy">Privacy</a> | <a href="#fields">Fields</a></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p><%= image_tag("help/trip-view.png", :alt => "trip", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>You can use trips to organize your <%= link_to 'observations', :action => 'observations' %> by time and effort. Whether it was a couple of hours spent watching your bird table or a four-week tour in South America, trips help you organize your observations in a way that makes sense to you and to others.</p>
+
+	<p>Trips can contain sub-trips -- perhaps you want to keep separate lists for each location you visit during an extended trip.</p>
+
+	<p>Trips can also carry information about effort, or how you birded. Effort information is particularly helpful for scientists who analyze observational data. It helps them interpret your reports more effectively, if you choose to submit your Birdstack data to a scientific database (this is not required).</p>
+	
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="create">Create a trip</h2>
+
+	<p>When you <%= link_to 'create a trip', :controller => 'trip', :action => 'add' %>, you are presented with several <a href="#fields">fields</a> to fill out. The only required field is "Name," but the more information you can provide, the more useful the trip will be to you, and the more useful it will be to researchers if you decide to submit your Birdstack data to a database like <a href="http://ebird.org/">eBird</a>.</p>
+
+	<p>If you fill in dates for your trip, then all observations associated with that trip must fall within the date range you specify.</p>
+
+	<p>Location information is attached to individual observations within trips, not to trips themselves, because many trips cover large distances and diverse locations.</p>
+
+	<p>Depending on which type of trip you create, you may be presented with additional data fields to fill. The four types of trip are as follows:</p>
+	
+	<ul>
+		<li><strong>Casual birding.</strong> Casual birding generally means that you weren't keeping track of time or distance or following a specific methodology as you birded. Perhaps you're reporting the highlights from a three-day camping trip, or noting something you saw out your window at the office. This trip type corresponds to eBird's <a href="http://ebird.org/content/ebird/about/glossary">casual observation/incidental sighting</a>.</li>
+		<li><strong>Stationary count.</strong> If you're staying in one place and deliberately counting all of the birds you observe at that location (e.g., a feeder count, hawk watch, or <a href="http://www.birdwatchersdigest.com/site/funbirds/bigsit/bigsit.aspx">Big Sit</a>), you are performing a stationary count. "Trips" of this type are limited to one 24-hour day (they can span two calendar days) and require duration information in hours and minutes. This trip type corresponds to eBird's <a href="http://ebird.org/content/ebird/about/glossary">stationary count</a>.</li>
+		<li id="traveling"><strong>Traveling count.</strong> If you're reporting birds you observed over a known distance during a known amount of time, you should report a traveling count. Examples could be a nestbox trail monitoring session, a <a href="http://www.pwrc.usgs.gov/BBS/">Breeding Bird Survey</a>, or walking a trail of known distance. These trips too are limited to one 24-hour day (they can span two calendar days) and require duration information in hours and minutes, and the distance traveled. This trip type corresponds to eBird's <a href="http://ebird.org/content/ebird/about/glossary">traveling count</a>. <b>Tip:</b> You can use the Google Maps Distance Measurement Tool to measure the distance you traveled while birding. Just go to <a href="http://maps.google.com/">Google Maps</a>, click on "My Maps," and then click on "Distance Measurement Tool" in the "Featured content" sidebar.</li>
+		<li id="area"><strong>Area count.</strong> Finally, if you birded an area of known size (in acres, square kilometres, etc.), you should report an area count. An area could take place in your half-acre lot, or it could be something like a <a href="http://www.audubon.org/bird/cbc/">Christmas Bird Count</a>. Area counts are also limited to one 24-hour day (they can span two calendar days) and require duration information in hours and minutes, and the area covered. This trip type corresponds to eBird's <a href="http://ebird.org/content/ebird/about/glossary">exhaustive area count</a>. <b>Tip:</b> You can use a tool like the <a href="http://www.acme.com/planimeter/">Google Planimeter</a> to calculate the area of a spot where you birded.</li>
+	</ul>
+	
+	<p>Once you've filled in the basic information about your trip, you can begin adding observations immediately.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="privacy">Privacy options</h2>
+
+	<p>If you like, you can mark trips as private, and you will be the only one who can see them. Please note that this setting does <em>not</em> apply to the individual observations in a trip. It means that the data about the trip itself will be hidden from others, but if you want the observations to be private too, you must adjust their settings. <%= link_to 'More about privacy.', :controller => 'help', :action => 'privacy' %></p>
+
+	<%- if logged_in? -%><p>To set the default privacy option for new locations, go to your <%= link_to 'account management page', :controller => 'people', :action => 'account', :login => current_user.login %>.</p><%- end -%>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="fields">Trip data fields</h2>
+	
+	<ul>
+		<li><strong>Trip name.</strong> The only required field (for casual birding trips). Choose something that will be unique and memorable.</li>
+		<li><strong>Parent trip.</strong> This is the way to associate trips with each other. Select from your predefined list of other trips.</li>
+		<li><strong>Number of observers.</strong> Number of observers in digits.</li>
+		<li><strong>All observations reported.</strong> This information will help scientists if you choose to submit your Birdstack data to another database.</li>
+		<li><strong>Trip type.</strong> How did you gather your observations?
+			<ul>
+				<li><b>Casual birding</b>
+					<ul>
+						<li><b>Start date.</b> Optional, unless you fill in an end date. Partial dates may be entered.</li>
+						<li><b>End date.</b> Optional. If you enter a start date and leave the end date blank, the start date values will also be applied to the end date. If you fill in start and end dates, all observations must fall within those dates.</li>
+					</ul>
+				</li>
+				<li><b>Stationary count</b>
+					<ul>
+						<li><b>Start date.</b> Required.</li>
+						<li><b>Start time.</b> Required. Remember to enter the hour using 24-hour time (00-23).</li>
+						<li><b>Duration.</b> Required. In hours and minutes. Maximum duration is 23:59; this can span two calendar days.</li>
+					</ul>
+				</li>
+				<li><b>Traveling count</b>
+					<ul>
+						<li><b>Start date.</b> Required.</li>
+						<li><b>Start time.</b> Required. Remember to enter the hour using 24-hour time (00-23).</li>
+						<li><b>Duration.</b> Required. In hours and minutes. Maximum duration is 23:59; this can span two calendar days.</li>
+						<li><b>Distance traveled.</b> Required. In miles or kilometres.</li>
+					</ul>
+				</li>
+				<li><b>Area count</b>
+					<ul>
+						<li><b>Start date.</b> Required.</li>
+						<li><b>Start time.</b> Required. Remember to enter the hour using 24-hour time (00-23).</li>
+						<li><b>Duration.</b> Required. In hours and minutes. Maximum duration is 23:59; this can span two calendar days.</li>
+						<li><b>Area covered.</b> Required. In square kilometres, hectares, acres, or square miles.</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li><strong>Link.</strong> You can include a website address (typically beginning with http:// or www) to a blog post, external website, or externally hosted image gallery.</li>
+		<li><strong>Notes.</strong> Text field. <%= render :partial => 'shared/permitted_xhtml_tags' %>.</li>
+	</ul>
+
+	<p><a href="#top">[top]</a></p>

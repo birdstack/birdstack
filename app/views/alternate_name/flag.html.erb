@@ -1,0 +1,42 @@
+	<%- @page_title = 'Flag alternate name "' + h(@alternate_name.name) + '" for ' + h(@alternate_name.species.english_name) -%>
+
+	<h1>Flag alternate name "<%= h(@alternate_name.name) %>" (for <%= h(@alternate_name.species.english_name) %>)</h1>
+
+	<%- if @alternate_name_flag.errors.count > 0 then -%>
+		<h2>Your message cannot be sent until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @alternate_name_flag.errors.on(:name) then %><li>Name <%= h(@alternate_name_flag.errors.on(:name).to_a.first) %>.</li><% end %>
+			<% if @alternate_name_flag.errors.on(:email) then %><li>Email address <%= h(@alternate_name_flag.errors.on(:email).to_a.first) %>.</li><% end %>
+			<% if @alternate_name_flag.errors.on(:body) then %><li>Body <%= h(@alternate_name_flag.errors.on(:body).to_a.first) %>.</li><% end %>
+			<% if @alternate_name_flag.errors.on(:captcha) then %><li>Verification <%= h(@alternate_name_flag.errors.on(:captcha).to_a.first) %>.</li><% end %>
+			<% if @alternate_name_flag.errors.on(:base) then %><li><%= h(@alternate_name_flag.errors.on(:base).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<p>If you believe that "<%= h(@alternate_name.name) %>" should <strong>not</strong> be listed as an alternate name for <%= h(@alternate_name.species.english_name) %> (<i><%= h(@alternate_name.species.genus.latin_name) + ' ' + h(@alternate_name.species.latin_name) %></i>), please explain why, and a moderator will review the listing.</p>
+
+	<%- form_for :alternate_name_flag do |f| -%>
+
+	<fieldset <% if @alternate_name_flag.errors.on(:name) or @alternate_name_flag.errors.on(:email) or @alternate_name_flag.errors.on(:body) %>class="errorfieldlabel"<% end %>>
+		<legend>Feedback</legend>
+		<p class="fieldtip" style="margin-top: 10px;">All fields are required. We will protect your email address.</p>
+		<label for="alternate_name_flag_name">Name:</label><%= f.text_field :name, :class => 'textbox' %>
+		<label for="alternate_name_flag_email">Email address:</label><%= f.text_field :email, :class => 'textbox' %>
+		<label for="alternate_name_flag_body">Message:</label><%= f.text_area :body, :class => 'textbox' %>
+		<p class="fieldtip">Please be thorough, citing sources when possible.</p>
+	</fieldset>
+
+	<% if !logged_in? %>
+		 <fieldset <% if @alternate_name_flag.errors.on(:captcha) %>class="errorfieldlabel"<% end %>>
+			<legend>Verification</legend>
+			<label for="alternate_name_flag_captcha_code">Enter the letters shown below:</label><%= f.text_field :captcha, :value => '', :autocomplete => 'off', :class => 'textbox' %>
+			<%= show_simple_captcha_plain(:object => 'alternate_name_flag') %>
+		</fieldset>
+	<% end %>
+
+	<fieldset class="actionbuttons">
+		<%= submit_tag 'Send', :class => 'button' %>
+	</fieldset>
+
+	<%- end -%>
+

@@ -1,0 +1,700 @@
+body {
+	margin: 10px 5px;
+	padding: 0;
+	background: #fff;
+	color: #000;
+	font: 12px verdana, sans-serif;
+	text-align: center; /* for IE weirdness */
+}
+
+form {
+	margin: 0;
+	border: 0;
+}
+
+form fieldset {
+	margin: 0 0 15px 0;
+	border: 1px solid #c0c0c0;
+	padding: 0 10px 10px 10px;
+}
+
+form fieldset.actionbuttons {
+	margin: 0;
+	border: 0;
+	padding: 0;
+	text-align: center;
+}
+
+form fieldset.actionbuttons .button {
+	display: inline;
+}
+
+form fieldset legend {
+	margin: 0;
+	padding: 0 2px;
+	font-weight: bold;
+	font-size: 115%;
+	color: #000;
+}
+
+form fieldset input {
+	margin: 0 0 5px;
+	display: inline;
+}
+
+form fieldset textarea, form fieldset select {
+	margin: 0 0 5px;
+	max-width: 570px;
+}
+
+form fieldset textarea.wide {
+	width: 570px;
+	height: 150px;
+}
+
+form fieldset input.textbox {
+	display: block;
+}
+
+form fieldset input.checkbox, form fieldset input.radiobuttion, form fieldset .checkbox input {
+	margin: 0 5px 0 0;
+	display: inline;
+	vertical-align: middle;
+}
+
+form fieldset .checkbox {
+	margin: 10px 0 2px 0;
+}
+
+form fieldset .checkbox label {
+	margin: 0 0 5px 0;
+	display: inline;
+	vertical-align: middle;
+}
+
+form fieldset label {
+	margin: 10px 0 2px 0;
+	padding: 0;
+	display: block;
+}
+
+form fieldset label.checkbox, form fieldset label.radiobutton {
+	display: inline;
+	vertical-align: middle;
+}
+
+#content form fieldset .fieldtip {
+	margin: 0 0 10px 10px;
+	font-size: 90%;
+	color: #888;
+}
+
+table.frontnav {
+	margin: 20px 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	text-align: center;
+	border-collapse: collapse;
+}
+
+table.frontnav tr {
+	margin: 0 0 10px;
+	border: 0;
+	padding: 0;
+}
+
+table.frontnav td {
+	margin: 0;
+	padding: 10px 0 10px;
+	width: 25%;
+	vertical-align: top;
+}
+
+table.frontnav td.lborder, table.frontnav td.corner {
+		border-left: 1px solid #c0c0c0;
+}
+
+table.frontnav td.bborder, table.frontnav td.corner {
+		border-bottom: 1px solid #c0c0c0;
+}
+
+#content h2.small {
+	margin: 15px 0 0 0;
+	font-size: 100%;
+	font-weight: normal;
+}
+
+#content .verb {
+	font-size: 140%;
+	font-weight: bold;
+}
+
+h1 {
+	margin: 0 0 15px 0;
+	font-size: 200%;
+}
+
+
+img {
+	border: 0;
+}
+
+a:link, a:visited {
+	color: #4018f3;
+}
+
+a:active {
+	color: #be5e13;
+}
+
+abbr, acronym {
+	border: none;
+}
+
+abbr[title], acronym[title] {
+	border-bottom: 1px dotted #0c806b;
+}
+
+#container {
+	margin: 0 auto;
+	width: 790px;
+	background: #fff;
+	text-align: left;
+}
+
+#head {
+	margin: 0;
+}
+
+#head p {
+	margin: 0 0 10px;
+	float: right;
+	text-align: right;
+	font-size: 90%;
+}
+
+#head p.logo {
+	margin: 0 0 10px;
+	float: left;
+}
+
+.whois {
+	font-weight: bold;
+}
+
+#signinbar {
+	margin: 0 0 10px;
+	padding: 0 10px;
+	border: 1px dotted;
+	clear: both;
+	background: #efefef;
+	font-size: 90%;
+}
+
+#signinbar form {
+	margin: 0;
+	padding: 0;
+}
+
+#signinbar fieldset {
+	margin: 5px 0;
+	border: 0;
+	padding: 0;
+	text-align: center;
+}
+
+#signinbar label {
+	margin: 0;
+	padding: 0;
+	vertical-align: middle;
+	display: inline;
+}
+
+#signinbar input {
+	display: inline;
+	vertical-align: middle;
+}
+
+#signinbar input.textbox {
+	margin: 0 10px 0 5px;
+	height: 12px;
+	font-size: 90%;
+}
+
+#signinbar input.checkbox {
+	margin: 0px 5px 0 5px;
+}
+
+#signinbar input.button {
+	margin: 0 20px 0 25px;
+	height: 20px;
+	font-size: 90%;
+}
+
+#navbar {
+	margin: 0 0 20px 0;
+	border-top: #000000 1px solid;
+	border-bottom: #000000 1px solid;
+	clear: both;
+	text-align: center;
+}
+
+#navbar ul {
+	margin: 6px 0;
+	padding: 0;
+	list-style: none;
+}
+
+#navbar ul li {
+	margin: 0 10px;
+	padding: 0;
+	display: inline;
+	font-weight: bold;
+}
+
+#navbar ul li a {
+	text-decoration: none;
+	color: #4018f3;
+}
+
+#navbar ul li a:hover {
+	text-decoration: underline;
+}
+
+#content {
+	width: 600px;
+	float: left;
+}
+
+#content .flashwarning, #content .flashmessage, #content .flashnotice  {
+	margin: 0 0 15px 0;
+	border-bottom: 1px #000 solid;
+	border-top: 1px #000 solid;
+	padding: 5px;
+	text-align: center;
+	font-size: 110%;
+	font-weight: bold;
+}
+
+#content .flashwarning {
+	background: #f593c4;
+}	
+
+#content .flashmessage, #content .flashnotice {
+	background: #49f349;
+}
+
+#content h1.home {
+	font-weight: bold;
+	font-size: 200%;
+	margin: 0;
+	background: url('/images/home/birder.jpg') no-repeat;
+}
+
+#content h2 {
+	margin: 0 0 15px 0;
+	padding: 0;
+	font-size: 115%;
+}
+
+#content p {
+	margin: 0 0 15px 0;
+	padding: 0;
+	line-height: 140%;
+}
+
+#content p.ad {
+	margin: 0 0 15px 0;
+	text-align: center;
+}
+
+#content form.signinblock {
+	margin: 30px 0 0 0;
+	padding: 0;
+	float: right;
+}
+
+#content form.signinblock fieldset {
+	margin: 0;
+	border: 1px dotted #000000;
+	padding: 10px;
+	width: 260px;
+	background-color: #efefef;
+}
+
+#content form.signinblock p {
+	font-size: 130%;
+	font-weight: bold;
+	text-align: center;
+	margin: 0 0 10px;
+}
+
+#content form.signinblock input {
+	margin: 5px 0 5px 5px;
+	vertical-align: middle;
+	font-size: 14px;
+	display: inline;
+}
+
+#content form.signinblock label {
+	display: inline;
+}
+
+#content div.usercontent img {
+	max-width: 550px;
+}
+
+.fieldWithErrors {
+	display: inline;
+}
+
+.errorfieldlabel {
+	border: 2px #f10079 solid;
+}
+
+.errormessage {
+	color: #f10079;
+}
+
+.latin {
+	font-style: italic;
+}
+
+#content p.breadcrumb {
+	margin: 0 0 15px 0;
+	font-size: 90%;
+	color: #888;
+}
+
+#content h1.taxonpage {
+	 font-size: 140%;
+}
+
+#content .speciesrange h2 {
+	margin: 0;
+}
+
+#content .speciesrange h3 {
+	margin: 0 0 0 15px;
+	display: inline;
+	font-size: 100%;
+	font-weight: normal;
+}
+
+#content .speciesrange p, .speciesrange a {
+	display: inline;
+	font-weight: bold;
+}
+
+#content .speciesrange ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: inline;
+}
+
+#content .speciesrange li {
+	display: inline;	
+}
+
+#content .speciesrange p.nonbreeding {
+	margin: 0 0 15px 15px;
+	font-weight: normal;
+}
+
+#content .taxalist {
+	list-style: circle;
+}
+
+#content ul.taxalist li {
+	margin: 0 0 3px 0;
+}
+
+#content table.search, #content table.tabular-list {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#content table.tabular-list {
+	margin-bottom: 15px;
+}
+
+#content table.search label {
+	margin: 0;
+	font-weight: bold;
+}
+
+#content table.search input.text {
+	width: 250px;
+}
+
+#content table.search input.button {
+	padding: 0 5px;
+}
+
+#content table.search select {
+	width: 254px;
+	margin: 0 0 10px 0;
+}
+
+#content table.tabular-list td, #content table.tabular-list th {
+	border: 1px #c0c0c0 solid;
+	padding: 3px;
+}
+
+#content table.tabular-list th {
+	text-align: center;
+}
+
+#content .list-report {
+	margin: 0 0 20px 0;
+}
+
+#content  .list-report p {
+	margin: 0 0 0 20px;
+}
+
+#content .list-report h2 {
+	margin: 0;
+}
+
+#content  .notes p {
+	margin-left: 40px;
+}
+
+#signup {
+	margin: 30px 0 30px 0;
+	padding: 0;
+	display: inline;
+	float: left;
+	width: 300px;
+}
+
+div.auto_complete {
+	border: 1px solid #888;
+	background: #fff;
+	z-index: 1;
+}
+
+div.auto_complete ul {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	list-style-type: none;
+}
+
+div.auto_complete ul li {
+	margin: 0;
+	padding: 3px;
+}
+
+div.auto_complete ul li.selected {
+	background-color: #4018f3;
+	color: #fff;
+}
+
+div.auto_complete ul strong.highlight {
+	color: #800;
+	margin: 0;
+	padding: 0;
+}
+
+#forums h2, #threadlist h2 {
+	margin: 0;
+}
+
+#threadlist h2 {
+	font-size: 100%;
+	font-weight: bold;
+}
+
+#content p.forum-description, #forums p, #threadlist p {
+	margin: 0 0 15px 15px;
+}
+
+#threadlist p {
+	font-size: 90%;
+}
+
+#forums p.forum-stats, #threadlist p.forum-stats {
+	margin: 0;
+	color: #888;
+}
+
+#sidebar {
+	margin: 0;
+	width: 170px;
+	float: right;
+	text-align: center;
+}
+
+.birdstack {
+	margin: 0 0 20px;
+	width: 165px;
+	background: transparent;
+	color: #000;
+	text-align: center;
+	font: 12px verdana, sans-serif;
+}
+
+.birdstack p {
+	margin: 0 0 6px;
+	font-weight: bold;
+}
+
+.birdstack img {
+	margin: 0;
+	border: 0;
+}
+
+.birdstack img.logo {
+	margin: 5px 0 0 0;
+	width: 100px;
+	height: 13px;
+}
+
+.birdstack .stackcontent a:link, .birdstack .stackcontent a:visited {
+	color: #000;
+	text-decoration: none;	
+}
+
+.birdstack .stackcontent a:hover, .birdstack .stackcontent a:active {
+	color: #000;
+	text-decoration: underline;
+}
+
+.birdstack .corners1, .birdstack .corners2, .birdstack .corners3 {
+	display: block;
+	height: 1px;
+	overflow: hidden;
+	font-size: .01em;
+}
+
+.birdstack .corners1, .birdstack .corners3, .birdstack .corners4, .birdstack .stackcontent, .birdstack .usernav {
+	border-left: 1px solid #c0c0c0;
+	border-right: 1px solid #c0c0c0;
+}
+
+.birdstack .corners1 {
+	margin: 0 5px;
+	background: #c0c0c0;
+}
+
+.birdstack .corners2 {
+	margin: 0 3px;
+	border-left: 2px solid #c0c0c0;
+	border-right: 2px solid #c0c0c0;
+	background: #fff;
+}
+
+.birdstack .corners3 {
+	margin: 0 2px;
+	background: #fff;
+}
+
+.birdstack .corners4 {
+	display: block;
+	margin: 0 1px;
+	height: 2px;
+	background: #fff;
+	overflow: hidden;
+	font-size: .01em;
+}
+
+.birdstack .stackcontent {
+	background: #fff;
+}
+
+.birdstack .stackcontent a.birdstackuser {
+	font-style: italic;
+}
+
+.birdstack .usernav p.links {
+	margin: 5px 0 0 0;
+	font-weight: normal;
+}
+
+.birdstack table {
+	margin: 0;
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 100%;
+}
+
+.birdstack table tbody {
+	border: 0;
+}
+
+.birdstack table td.left {
+	padding: 2px 0 2px 5px;
+	border-bottom: 1px solid #c0c0c0;
+	width: 1%;
+	text-align: right;
+	vertical-align: top;
+}
+
+.birdstack table td.right {
+	padding: 2px 2px 2px 5px;
+	border-bottom: 1px solid #c0c0c0;
+	text-align: left;
+	vertical-align: middle;
+}
+
+#comments .deleted-comment {
+	margin: 0;
+	color: #888;
+	font-style: italic;
+}
+
+#content td.profile_pic {
+	vertical-align: top;
+	text-align: center;
+	width: 32px;
+}
+
+#comments hr {
+	margin: 0 0 10px 0;
+	width: 100px;
+	text-align: left;
+}
+
+#content p.comment-info {
+	margin: 0 0 15px 0;
+	color: #888;
+	font-size: 90%;
+}
+
+#footer {
+	padding: 20px 0 0 0;
+	clear: both;
+}
+
+#footer ul {
+	margin: 5px 0 5px 0;
+	padding: 0;
+	list-style: none;
+	text-align: center;
+}
+
+#footer ul li {
+	margin: 0 10px;
+	padding: 0;
+	display: inline;
+	font-size: 90%;
+}
+
+#footer p.copyright {
+	font-size: 90%;
+	color: #888;
+	text-align: center;
+}
+
+.cloud1, .cloud2, .cloud3, .cloud4 { text-decoration: none; margin-right: 10px; }
+
+.cloud1 { font-size: 100%; }
+.cloud2 { font-size: 150%; }
+.cloud3 { font-size: 200%; }
+.cloud4 { font-size: 250%; }
+
+.pagination-sighting-photos, .pagination-trip-photos, .pagination-user-location-photos { margin-bottom: 15px; }

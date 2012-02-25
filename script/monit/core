@@ -1,0 +1,23 @@
+check process sshd with pidfile /var/run/sshd.pid
+  start program  "/etc/init.d/ssh start"
+  stop program  "/etc/init.d/ssh stop"
+  if failed port 4100 protocol ssh 2 cycles then restart
+
+check process mysql with pidfile /var/run/mysqld/mysqld.pid
+   group database
+   start program = "/etc/init.d/mysql start"
+   stop program = "/etc/init.d/mysql stop"
+   if failed host 127.0.0.1 port 3306 for 2 cycles then restart
+
+check process apache2 with pidfile /var/run/apache2.pid
+  start program = "/etc/init.d/apache2 start"
+  stop program = "/etc/init.d/apache2 stop"
+  if failed port 80 protocol HTTP request / with timeout 20 seconds 3 cycles then restart
+  if totalmem > 500 Mb 2 cycles then restart
+  if cpu usage > 95% 3 cycles then restart
+
+
+check process exim with pidfile /var/run/exim4/exim.pid
+  start program = "/etc/init.d/exim4 start"
+  start program = "/etc/init.d/exim4 stop"
+  if failed port 25 protocol smtp with timeout 10 seconds 2 cycles then restart

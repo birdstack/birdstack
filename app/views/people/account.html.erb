@@ -1,0 +1,65 @@
+	<%- @page_title = 'Account settings' -%>
+
+	<h1>Account settings</h1>
+
+	<%- if @user.errors.count > 0 -%>
+		<h2>Your account cannot be updated until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @user.errors.on(:password) then %><li>Password <%= h(@user.errors.on(:password).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:email) then %><li>Email address <%= h(@user.errors.on(:email).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:time_zone) then %><li>Time zone <%= h(@user.errors.on(:time_zone).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:time_24_hr) then %><li>Time 24/12 hr preference <%= h(@user.errors.on(:time_zone).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:time_day_first) then %><li>Time day/month first preference <%= h(@user.errors.on(:time_zone).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:base) then %><li><%= h(@user.errors.on(:base).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_for :user, :html => {:multipart => true} do |f| -%>
+
+		<fieldset<% if @user.errors.on(:password) %> class="errorfieldlabel"<% end %>>
+			<legend>Password</legend>
+			<label for="user_password">Choose a password:</label><%= f.password_field :password, :class => 'textbox' %>
+			<p class="fieldtip">At least 6 characters. We recommend mixing letters, numbers, and punctuation for better security.</p>
+			<label for="user_password_confirmation">Re-type your password:</label><%= f.password_field :password_confirmation, :class => 'textbox' %>
+		</fieldset>
+
+		<fieldset<% if @user.errors.on(:email) %> class="errorfieldlabel"<% end %>>
+			<legend>Email</legend>
+			<label for="user_email">Enter your email address:</label><%= f.text_field :email %>
+			<p class="fieldtip">Birdstack will never sell your email address.</p>
+			<label for="user_email_confirmation">Re-type your email address:</label><%= f.text_field :email_confirmation, :autocomplete => 'off', :class => 'textbox' %>
+		</fieldset>
+
+		<fieldset<% if @user.errors.on(:time_zone) || @user.errors.on(:time_24_hr) || @user.errors.on(:time_day_first) %> class="errorfieldlabel"<% end %>>
+			<legend>Time Preferences</legend>
+			<label for="time_zone">Select your time zone (daylight saving changes will be made automatically):</label> <%= f.time_zone_select :time_zone %>
+			<label for="time_24_hr">Do you prefer to see times in 24-hour format or 12-hour (AM/PM) format?</label> <%= f.select 'time_24_hr', [['24-hour format (22:00)', true],['12-hour format (10:00 PM)', false]] %>
+			<label for="time_day_first">Select preferred position of month and day in dates:</label> <%= f.select 'time_day_first', [['Day first (1 January)', true],['Month first (January 1)', false]] %>
+		</fieldset>
+
+		<fieldset>
+			<legend>Email Notifications</legend>
+			<p style="margin: 10px 0 5px 0"><b>I would like to receive notifications for...</b></p>
+                        <% User::NOTIFICATION_TYPES.sort {|a,b| a[1][:sort] <=> b[1][:sort] }.each do |n| %>
+                          <div class="checkbox"><%= f.check_box n[0] %><label for="user_<%= h(n[0].to_s) %>" class="checkbox"><%= h(n[1][:desc].capitalize) %></label></div>
+                        <% end %>
+		</fieldset>
+
+		<fieldset>
+			<legend>Privacy Defaults</legend>
+			<div class="checkbox"><%= f.check_box 'default_observation_private' %><label for="user_default_observation_private" class="checkbox">Mark new observations as private by default.</label></div>
+			<label for="user_default_user_location_private">Mark new locations as <%= f.select 'default_user_location_private', [['Public', 0],['Hide latitude/longitude only', 1],['Fully Private', 2]] %> by default.</label>
+			<div class="checkbox"><%= f.check_box 'default_trip_private' %><label for="user_default_trip_private" class="checkbox">Mark new trips as private by default.</label></div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Photo Defaults</legend>
+                        <label for="user_default_photo_license">License new photos as <%= f.select 'default_photo_license', User.available_photo_licenses %> by default.</label>
+                        <a href="http://creativecommons.org/about/licenses">Explanation of the Creative Commons licenses</a>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag('Save changes', :class => 'button') %>
+		</fieldset>
+
+	<%- end -%>

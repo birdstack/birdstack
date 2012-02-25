@@ -1,0 +1,9 @@
+				<ul>
+				<%- for adm1 in @adm1s do -%>
+					<li><%= h(adm1.name) %></li>
+				<%- end -%>
+				</ul>
+				<%- if (@adm1s_count - @adm1s.size > 0) -%>
+					<hr />
+					<p style="margin: 0 0 5px 3px;"><%= h(@adm1s_count - @adm1s.size)%> additional states/provinces not shown. Continue typing to narrow your search.</p>
+				<%- end -%>

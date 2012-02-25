@@ -1,0 +1,21 @@
+	<%- @page_title = 'Recover lost username/password' -%>
+
+	<h1>Recover your username/password</h1>
+
+	<%- form_tag do -%>
+
+		<fieldset>
+			<legend>User information</legend>
+
+			<p>If you know your username, please enter it below. You will receive an email containing instructions for resetting your password.</p>
+			<p>If you have forgotten your username, then enter the email address you used when you signed up for your Birdstack account. You will receive an email with further instructions.</p>
+
+			<label for="login_or_email">Username or email address:</label><%= text_field_tag 'login_or_email', nil, :size => '30' %>
+
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Recover my login info', :class => 'button' %>
+		</fieldset>
+
+	<%- end -%>

@@ -1,0 +1,16 @@
+<% trip_photo = comment.comment_collection.trip_photo %>
+<% trip = trip_photo.trip %>
+Photo title: <%= trip_photo.title %>
+Trip: <%= trip.name %>
+
+User: <%= comment.user.login %>
+
+##########
+
+<%= Birdstack::strip_tags(comment.comment) %>
+
+##########
+
+DO NOT REPLY to this email. <%= comment.user.login %> won't see your reply.
+To post a response to <%= comment.user.login %>'s comment, use this link:
+<%= SITE_URL_PREFIX %><%= trip_photo_path(:user => trip.user.login, :trip_id => trip.id, :id => trip_photo.id) %>

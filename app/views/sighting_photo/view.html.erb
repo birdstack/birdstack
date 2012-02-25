@@ -1,0 +1,32 @@
+        <%- @sighting_photo.publicize!(current_user) %>
+        <%- @sighting.publicize!(current_user) -%>
+
+	<%- @page_title = h(@sighting_photo.title) -%>
+
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @sighting.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @sighting.user.login %><%- else -%><%= link_to h(@sighting.user.login), :controller => 'people', :action => 'view', :login => @sighting.user.login %><%- end -%> > Observations > <%= link_to h(@sighting.species.english_name), :controller => 'sighting', :action => 'view', :id => @sighting.id %> > Photo</p>
+
+	<h1><%= h(@sighting_photo.title) %></h1>
+
+	<p style="text-align: center;"><img src="<%= @sighting_photo.photo(:full) %>" alt="<%= h(@sighting_photo.title) %>" title="<%= h(@sighting_photo.title) %>" /></p>
+        <p style="text-align: right; font-size: 90%; color: #888;"><%= render :partial => 'shared_photo/photo_license', :locals => {:license => @sighting_photo.license} %></p>
+
+	<%- if @sighting_photo.description -%><div style="text-align: center;"><%= birdstack_sanitize(@sighting_photo.description) %></div><%- end -%>
+
+	<p>Observation: <a href="<%= observation_url(:user => @sighting.user.login, :id => @sighting.id) %>"><%= h(@sighting.species.english_name) %></a></p>
+
+
+        <%- if @sighting.date_year or @sighting.time_hour -%>
+          <p><%- if @sighting.date_year -%>Date<%- end -%><%- if @sighting.date_year and @sighting.time_hour %> and <% end -%><%- if @sighting.time_hour -%>Time<%- end -%>: <%= render :partial => 'shared/observation_date.html.erb', :locals => {:sighting => @sighting} %><%- if @sighting.date_year and @sighting.time_hour -%>, <% end -%><%- if @sighting.time_hour -%><%= render :partial => 'shared/observation_time.html.erb', :locals => {:sighting => @sighting} %><%- end -%></p>
+        <%- end -%>
+
+        <%- if @sighting.user_location -%><%- location = @sighting.user_location.publicize!(current_user) -%><p>Location: <%= link_to h(location.name), location_url(:user => location.user.login, :id => location.id) %><%- if location.location? or location.adm2? or location.adm1? or location.cc?-%> (<%= h([location.location, location.adm2, location.adm1, CountryCode.country_name(location.cc)].reject {|i| i.blank? }.join(', ')) %>)<%- end -%></p><%- end -%>
+        <%- if @sighting.trip -%><%- trip = @sighting.trip.publicize!(current_user) -%><p>Trip:	<%= link_to h(trip.name), trip_url(:user => trip.user.login, :id => trip.id) %><%- for ancestor_trip in @sighting.trip.public_ancestors(current_user).reverse -%><%- ancestor_trip.publicize!(current_user) -%> &lt; <%= link_to h(ancestor_trip.name), trip_url(:user => ancestor_trip.user.login, :id => ancestor_trip.id) %><%- end -%></p>
+        <%- end -%>
+
+	<%- if current_user == @sighting.user then -%>
+	  <p><a href="<%= observation_photo_url(:user => @sighting.user.login, :sighting_id => @sighting.id, :id => @sighting_photo.id, :action => 'edit') %>">Edit</a></p>
+	<%- end -%>
+
+        <%- @sighting_photo.comment_collection.publicize!(current_user) -%>
+        <%= render :partial => 'shared/comments_comment', :locals => { :comment_collection => @sighting_photo.comment_collection, :goto => observation_photo_path(:user => @sighting_photo.user.login, :sighting_id => @sighting.id, :id => @sighting_photo.id) } %>
+        <%- add_to_head(auto_discovery_link_tag(:atom, url_for(:controller => 'comments', :action => 'feed', :id => @sighting_photo.comment_collection.id), {:title => @sighting_photo.comment_collection.title})) unless @sighting_photo.comment_collection.private -%>

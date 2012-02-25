@@ -1,0 +1,14 @@
+	<%- @page_title = h(@forum.name) + ' Forum' -%>
+
+	<p class="breadcrumb"><%= link_to 'The Birdstack Forums', :controller => 'forums', :action => 'index' %> &gt; <%= h(@forum.name) %></p>
+
+	<h1 style="display: inline; margin: 0 10px 0 0;"><%= h(@forum.name) %></h1><p style="display: inline;"><%= link_to(image_tag("feed-icon-14x14.png", :size => "14x14", :alt => "feed"), url_for(:controller => 'forums', :action => 'feed', :forum => @forum.url)) %></p>
+	<%- add_to_head(auto_discovery_link_tag(:atom, url_for(:controller => 'forums', :action => 'feed', :forum => @forum.url), {:title => @forum.name})) -%>
+
+	<p><%= h(@forum.description) %></p>
+
+	<div id="threadlist">
+		<%= render :partial => 'threadlist' %>
+	</div>
+
+	<%= link_to 'Start a new discussion', :controller => 'forums', :forum => @forum.url, :action => 'newthread' %>

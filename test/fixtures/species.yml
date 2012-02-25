@@ -1,0 +1,31 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+american_robin:
+  id: 1
+  sort_order: 1
+  sort_after: NULL
+  genus_id: 1
+  english_name: American Robin
+  english_name_search_version: americanrobin
+  latin_name: migratorius
+  breeding_subregions: Alaska and Canada to Guatemala
+
+american_avocet:
+  id: 2
+  sort_order: 2
+  sort_after: NULL
+  genus_id: 2
+  english_name: American Avocet
+  english_name_search_version: americanavocet
+  latin_name: americana
+  breeding_subregions: e, wc, w
+  nonbreeding_regions: s USA, MA
+
+wild_monkey:
+  sort_order: 3
+  sort_after: 2
+  genus_id: 2
+  english_name: Wild Monkey
+  english_name_search_version: wildmonkey
+  latin_name: monkeyius
+  breeding_subregions: e, wc, w
+  nonbreeding_regions: s USA, MA

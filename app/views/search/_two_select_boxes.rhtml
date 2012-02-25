@@ -1,0 +1,32 @@
+					<% fields_for section_id.to_sym do |f| %>
+						<%= text_field_tag "#{section_id}_available_options_search", nil, :class => 'text' %><br />
+						<%= select_tag "#{section_id}_available_box", [], :multiple => true, :size => 15 %><br />
+					</td>
+					<td>
+						<input id="<%= section_id %>_add_button" type="button" value="&gt;&gt;" class="button" title="Add selected items to search." /><br />
+						<input id="<%= section_id %>_remove_button" type="button" value="&lt;&lt;" class="button" title="Remove selected items from search." />
+					</td>
+					<td style="vertical-align: bottom;">
+						Selected search parameters:<br />
+						<%= f.select(:id, available_options.find_all {|i| selected_options.include?(i[1]) }, {:selected => nil}, {:multiple => true, :size => 15}) %>
+					</td>
+					<td style="vertical-align: top;">
+						<input type="button" value="-" onClick="remove_<%= section_id %>()" class="button" title="Remove this section from your search." style="margin-top: 14px;" />
+					<% end %>
+						<script type="text/javascript">
+						//<![CDATA[
+							<%= section_id %>_available_options = <%= available_options.to_json %>
+
+							<%= section_id %>_available_box = document.getElementById('<%= section_id %>_available_box')
+							<%= section_id %>_selected_box = document.getElementById('<%= section_id %>_id')
+							<%= section_id %>_add_button = document.getElementById('<%= section_id %>_add_button')
+							<%= section_id %>_remove_button = document.getElementById('<%= section_id %>_remove_button')
+
+							Event.observe('observation_search', 'submit', function() { selectAll(<%= section_id %>_selected_box) })
+							Event.observe(<%= section_id %>_available_box, 'change', function() { canSelect(<%= section_id %>_available_box, <%= section_id %>_selected_box, <%= section_id %>_add_button) })
+							Event.observe(<%= section_id %>_add_button, 'click', function() { addOption(<%= section_id %>_available_box, <%= section_id %>_selected_box, <%= section_id %>_add_button) })
+							Event.observe(<%= section_id %>_remove_button, 'click', function() { removeOption(<%= section_id %>_available_box, <%= section_id %>_selected_box, <%= section_id %>_add_button) })
+							Event.observe(window, 'load', function() { updateAvailableOptions('', <%= section_id %>_available_options, <%= section_id %>_available_box)})
+							new Form.Element.Observer('<%= section_id %>_available_options_search', 0.2, function(element, value) {updateAvailableOptions(value, <%= section_id %>_available_options, <%= section_id %>_available_box)})
+						//]]>
+						</script>

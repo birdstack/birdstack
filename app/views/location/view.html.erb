@@ -1,0 +1,94 @@
+	<%- unless @location -%>
+		<%- @page_title = 'Error accessing location' -%>
+		<h1>Error</h1>
+		<p>The location does not exist or is not accessible.</p>
+	<%- else -%>
+		<%- @location.publicize!(current_user) -%>
+
+		<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @location.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @location.user.login %><%- else -%><%= link_to h(@location.user.login), :controller => 'people', :action => 'view', :login => @location.user.login %><%- end -%> > <%= link_to 'Locations', locations_url(:user => @location.user.login) %> > <%= h(@location.name) %></p>
+
+		<%- if @location.latitude and @location.longitude -%>
+			<%- add_to_head(render(:partial => 'view_header', :locals => {:location => @location})) -%>
+			<%- add_to_body_params(:onload => "load()", :onunload => "GUnload()") -%>
+		<%- end -%>
+
+		<%- @page_title = h(@location.name) + ' - ' + h(@location.user.login) + '\'s birding spot' -%>
+		<h1><%= h(@location.name) %></h1>
+		
+		<p>
+		<% unless @location.cc.blank? %>Country: <%= h(CountryCode.country_name(@location.cc)) %><br /><% end %>
+		<% unless @location.adm1.blank? %>State or province: <%= h(@location.adm1) %><br /><% end %>
+		<% unless @location.adm2.blank? %>County, parish, or district: <%= h(@location.adm2) %><br /><% end %>
+		<% unless @location.location.blank? %>City, town, or village: <%= h(@location.location) %><br /><% end %>
+		<% unless @location.latitude.blank? %>Latitude: <%= h(@location.latitude) %><br /><% end %>
+		<% unless @location.longitude.blank? %>Longitude: <%= h(@location.longitude) %><br /><% end %>
+		<% unless @location.elevation_ft.blank? -%>Elevation: <%= h(@location.elevation_m) %> metres (<%= h(@location.elevation_ft) %> feet)<br /><%- end -%>
+		<% unless @location.ecoregion.blank? -%>Ecoregion: <%= h(@location.ecoregion) %><br /><%- end -%>
+		<%- unless @location.link.blank? -%>
+			Link:</b> <a href="<%= h(@location.link) %>" rel="nofollow"><%= h(@location.link.length > 45 ? @location.link.first(45) + '...' : @location.link) %></a><br/>
+		<%- end -%>
+		</p>
+		
+		<%- if current_user == @location.user -%>
+			<%- if @location.private == 1 %>
+				<p>This location is public, but the map and latitude/longitude coordinates are hidden from everyone else.</p>
+			<%- elsif @location.private == 2 -%>
+				<p>This is a private location (no one else can see it).</p><%- else -%><p>This is a public location (everyone can see it).</p>
+			<%- end -%>
+		<%- else -%>
+			<p><%= link_to 'Add this to My Locations', :controller => 'location', :action => 'add', :from => @location.id %></p>
+		<%- end -%>
+		
+		<%- unless @location.notes.blank? -%><p style="margin: 0;">Notes:</p><div class="notes"><%= birdstack_sanitize(@location.notes) %></div><%- end -%>
+
+		<% if @user == current_user %>
+			<table style="margin-top: 10px;"><tr><td><%= button_to 'Add an observation', :controller => 'sighting', :action => 'select_species', :prefill => {:location => @location.id} %></td>
+			<td><%= button_to 'Edit this location', {:controller => 'location', :action => 'edit', :id => @location.id}, {:method => 'get'} %></td>
+                      <td><% form_tag({:controller => 'location', :action => 'delete', :id => @location.id}, {:onsubmit => 'return confirm("Do you really want to delete this location and any photos attached to it? (This cannot be undone!)") && greySubmits();'}) do %><%= submit_tag 'Delete this location' %><% end %></td></tr></table>
+		<% end %>
+
+		<% if @location.latitude and @location.longitude %>
+			<br />
+			<div id="map" style="width: 570px; height: 300px"></div>
+		<% end %>
+
+		<%- if @location.user_location_photo.size > 0 || current_user == @location.user -%><h2 style="margin-top: 15px;">Photos</h2><%- end -%>
+
+		<%- if @location.user_location_photo.size > 0 -%><%- x = 0 -%><table>
+                <%- @location.user_location_photo.all.each do |user_location_photo| -%>
+                  <% user_location_photo.publicize!(current_user) %>
+		  <%- if x%3 == 0 -%><tr><%- end -%>
+                  <td style="width: 33%; text-align: center;"><a href="<%= location_photo_url(:user => @location.user.login, :location_id => @location.id, :id => user_location_photo.id) %>"><img src="<%= user_location_photo.photo(:thumb) %>" alt="<%= h(user_location_photo.title) %>" title="<%= h(user_location_photo.title) %>" /></a><br />
+                  <%= h(user_location_photo.title) %></td>
+		  <%- if x%3 == 2 -%></tr><%- end -%>
+		  <%- x = x+1 -%>
+                <%- end -%>
+		<%- if (x-1)%3 != 2 -%></tr><%- end -%></table><%- end -%>
+
+                <%- if current_user == @location.user then -%>
+                  <p><%= link_to 'Add a photo', {:controller => 'user_location_photo', :action => 'new', :location_id => @location.id} %></p>
+                <% end %>
+
+                <%- sighting_photos = (current_user == @location.user) ? @location.sighting_photos : @location.sighting_photos(true) -%>
+                <%- if sighting_photos.size > 0 -%>
+                <h2 style="margin-top: 15px;">Birds photographed at this location</h2>
+
+		<%- x = 0 -%><table>
+                <%- sighting_photos.each do |sighting_photo| -%>
+                  <% sighting_photo.publicize!(current_user) %>
+		  <%- if x%3 == 0 -%><tr><%- end -%>
+                  <td style="width: 33%; text-align: center;"><a href="<%= observation_photo_url(:user => @location.user.login, :sighting_id => sighting_photo.sighting_id, :id => sighting_photo.id) %>"><img src="<%= sighting_photo.photo(:thumb) %>" alt="<%= h(sighting_photo.title) %>" title="<%= h(sighting_photo.title) %>" /></a><br />
+                  <%= h(sighting_photo.title) %></td>
+		  <%- if x%3 == 2 -%></tr><%- end -%>
+		  <%- x = x+1 -%>
+                <%- end -%>
+		<%- if (x-1)%3 != 2 -%></tr><%- end -%></table><%- end -%>
+
+		<h2 style="margin: 20px 0 5px 0;">Birds observed at <%= h(@location.name) %>:</h2>
+
+		<%= render :partial => 'observations_pagination/location_observations', :locals => {:location => @location.id} %>
+
+		<%- @location.comment_collection.publicize!(current_user) -%>
+		<%= render :partial => 'shared/comments_comment', :locals => { :comment_collection => @location.comment_collection, :goto => location_path(:user => @location.user.login, :id => @location.id) } %>
+		<%- add_to_head(auto_discovery_link_tag(:atom, url_for(:controller => 'comments', :action => 'feed', :id => @location.comment_collection.id), {:title => @location.comment_collection.title})) unless @location.comment_collection.private -%>
+	<%- end -%>

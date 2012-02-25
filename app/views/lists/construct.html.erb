@@ -1,0 +1,27 @@
+	<%- @page_title = 'Create a stack for "' + h(@saved_search.name) + '"' -%>
+
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @saved_search.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- else -%><%= link_to h(@saved_search.user.login), :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- end -%> > <%= link_to 'Lists', lists_url(:user => @saved_search.user.login) %> > <%= link_to h(@saved_search.name), list_url(:user => current_user.login, :id => @saved_search.id, :format => 'html') %> > Stacks</p>
+
+	<h1>Create a stack for "<%= h(@saved_search.name) %>"</h1>
+
+	<p>A stack is a customizable widget that you can post on your own website or blog. Your visitors will always see your most recent observations. So what are you waiting for? Get stackin'!</p>
+
+	<table style="width: 100%;"><tr>
+		<td style="vertical-align: top;">
+			<% form_for :list, :url => {:controller => 'lists', :action => 'construct', :id => @saved_search.id} do |f| %>
+				<fieldset style="border: none; margin: 0; padding: 0;">
+					<p><b>Set stack options:</b></p>
+					<label for="list_limit">Observations:</label><%= f.select('limit', [['5','5'],['10','10'],['15','15'],['20','20']]) %>
+					<label for="list_width">Width:</label><%= f.select('width', [['165 pixels','165'],['200 pixels','200'],['220 pixels','220']]) %>
+					<label for="list_highlight_color">Highlight:</label><%= f.select('highlight_color', [['Gray','gray'],['Green','green'],['Blue','blue'],['Pink','pink']]) %><br /><br />
+					<%= submit_tag 'Create stack code' %>
+				</fieldset>
+			<% end %>
+			<%- if @list_url -%>
+				<p style="margin-top: 15px;"><b>Copy this code and paste it into your webpage:</b></p>
+                                <textarea style="width: 340px" rows="5" cols="50" id="codebox"><%= h("<script src=\"#{h(@list_url)}\" type=\"text/javascript\"></script><noscript><p style=\"margin: 0; border: 0; padding: 0;\"><a href=\"http://birdstack.com\" style=\"border: 0; background: none;\"><img src=\"#{SITE_URL_PREFIX + '/images/logo100.gif'}\" style=\"margin: 5px auto 0 auto; border: 0; width: 100px; height: 13px;\" title=\"Birdstack: Create and share world bird lists online, for free.\" alt=\"Birdstack: Create and share world bird lists online, for free.\" /></a></p></noscript>")%></textarea>
+			<% end %>
+		</td>
+
+		<td style="width: 230px; vertical-align: top;"><%- if @list_url -%><p><b>Preview:</b></p><script src="<%= h(@list_url) %>" type="text/javascript"></script><%- end -%></td>
+	</tr></table>

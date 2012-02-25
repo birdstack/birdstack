@@ -1,0 +1,37 @@
+	<%- unless @saved_search -%>
+		<%- @page_title = 'Error accessing list' -%>
+		<h1>Error</h1>
+		<p>The list does not exist or is not accessible.</p>
+	<%- else -%>
+		<%- @saved_search.publicize!(current_user) -%>
+
+		<%- @page_title = h(@saved_search.name) + ' - ' + h(@saved_search.user.login) + '\'s bird list' -%>
+
+		<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @saved_search.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- else -%><%= link_to h(@saved_search.user.login), :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- end -%> > <%= link_to 'Lists', lists_url(:user => @saved_search.user.login) %> > <%= h(@saved_search.name) %></p>
+
+		<h1><%= h(@saved_search.name) %></h1>
+
+		<%- if @saved_search.user == current_user -%><p><%- if @saved_search.private -%>This list is private (only you can see it).<%- else -%>This list is public (everyone can see it).<%- end -%> (<%= link_to 'Help', :controller => 'help', :action => 'searches', :anchor => 'privacy' %>)</p><%- end -%>
+
+		<%- if @saved_search.user == current_user -%>
+			<table><tr><td><%= button_to 'Edit this list', {:controller => 'search', :action => 'observation', :id => @saved_search.id}, {:method => 'get'} %></td>
+                        <td><% form_tag({:controller => 'search', :action => 'delete', :id => @saved_search.id}, {:onsubmit => 'return confirm("Are you sure?  This action will NOT delete any observations.") && greySubmits();'}) do %><%= submit_tag 'Delete this list' %><% end %></td></tr></table>
+		<%- end -%>
+
+		<p style="margin: 0 0 5px 0; text-align: right;">Available formats:
+		<%- unless @saved_search.private -%>
+			<%- add_to_head(auto_discovery_link_tag(:atom, list_url(:format => 'atom'), {:title => @saved_search.name})) -%>
+			<%= link_to 'Atom', list_url(:format => 'atom') %> <%= link_to(image_tag("feed-icon-14x14.png", :size => "14x14", :alt => "feed"), list_url(:format => 'atom')) %> |
+			<%= link_to 'HTML', list_url(:format => 'html') %>
+			<% if current_user == @saved_search.user %>
+				| <%= link_to 'Stack it!', :controller => 'lists', :action => 'construct', :id => params[:id] %> |
+			<% end %>
+		<% end %>
+		<% if current_user == @saved_search.user %>
+			<%= link_to 'Export', :controller => 'lists', :action => 'export', :id => params[:id] %>
+		<% end %>
+		</p>
+
+		<%= render :partial => 'observations_pagination/list_observations', :list => @saved_search.id %>
+
+	<%- end -%>

@@ -1,0 +1,22 @@
+	<%- @page_title = 'Species in the genus ' + h(@species.first.genus.latin_name) -%>
+
+	<%= render :partial => 'breadcrumbs' %>
+
+	<h1 class="taxonpage">Species in the genus <span class="latin"><%= h(@species.first.genus.latin_name) %></span></h1>
+
+	<% unless @genus.note.blank? %><p style="margin-bottom: 0;"><b>IOC note:</b></p><%= birdstack_sanitize(@genus.note) %><% end %>
+
+	<ul class="taxalist">
+	<%- for species in @species -%>
+		<li><%= link_to h(species.english_name), 
+			:controller => :ioc,
+			:order => species.genus.family.order.latin_name.downcase,
+			:family => species.genus.family.latin_name.downcase,
+			:genus => species.genus.latin_name.downcase,
+			:species => species.latin_name.downcase, 
+			:action => :species
+		%> (<span class="latin"><%= h(species.genus.latin_name + ' ' + species.latin_name) %></span>) (<%= link_to 'Add observation', :controller => 'sighting', :action => 'add', :id => species.id %>)</li>
+	<%- end -%>
+	</ul>
+	
+	<p>Taxonomic source: <a href="http://www.worldbirdnames.org/">IOC World Bird Names</a></p>

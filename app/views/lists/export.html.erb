@@ -1,0 +1,22 @@
+	<%- @page_title = 'Export "' + h(@saved_search.name) + '"' -%>
+
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @saved_search.user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- else -%><%= link_to h(@saved_search.user.login), :controller => 'people', :action => 'view', :login => @saved_search.user.login %><%- end -%> > <%= link_to 'Lists', lists_url(:user => @saved_search.user.login) %> > <%= link_to h(@saved_search.name), list_url(:user => current_user.login, :id => @saved_search.id, :format => 'html') %> > Export</p>
+
+	<h1>Export "<%= h(@saved_search.name) %>"</h1>
+
+	<h2>CSV or XML</h2>
+
+	<p>You can download your list in CSV (Comma Separated Values) and XML (eXtensible Markup Language) formats. You will receive full taxonomic and observational data, as well as full information about any locations and trips associated with the observations in this list.</p>
+
+	<p>Depending on the size of your list and the speed of your internet connection, these files might take awhile to generate and download.</p>
+
+	<p>Both files are encoded as UTF-8, so you <em>must</em> open them using UTF-8, or some characters will be destroyed.</p>
+
+	<p><%= link_to('Export as CSV', :controller => 'lists', :action => 'export', :id => params[:id], :format => 'csv') %><br />
+	<%= link_to('Export as XML', :controller => 'lists', :action => 'export', :id => params[:id], :format => 'xml') %></p>
+
+	<h2>eBird</h2>
+
+	<p>You can export relevant, qualifying records to <a href="http://ebird.org/">eBird</a>, a scientific database for the Western Hemisphere. <%= link_to h('Learn how'), :controller => 'help', :action => 'ebird' %>
+
+	<p><%= link_to('Find records to export to eBird', :controller => 'ebird', :action => 'generate', :id => params[:id]) %></p>

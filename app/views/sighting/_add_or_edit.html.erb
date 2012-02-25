@@ -1,0 +1,134 @@
+	<%- if @sighting.trip and @sighting.trip.science_trip? -%><h2>Observations must fall between <%= h(@sighting.trip.date_time_start.strftime("%H:%M on %d %b %y")) %> and <%= h(@sighting.trip.date_time_end.strftime("%H:%M on %d %b %y")) %></h2>
+	<%- elsif @sighting.trip and @sighting.trip.date_data_present? -%><h2>Observations must fall between <%= h(@sighting.trip.date_start.strftime("%d %b %y")) %> and <%= h(@sighting.trip.date_end.strftime("%d %b %y")) %></h2><%- end -%>
+		<%- if @sighting.errors.count > 0 then -%>
+			<h2>Your sighting cannot be submitted until the following errors are corrected:</h2>
+			<ul class="errormessage">
+				<%# 'date' is a special variable used for errors about the date in general %>
+				<% if @sighting.errors.on(:date) then %><li>Date <%= h(@sighting.errors.on(:date).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:date_day) then %><li>Day <%= h(@sighting.errors.on(:date_day).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:date_month) then %><li>Month <%= h(@sighting.errors.on(:date_month).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:date_year) then %><li>Year <%= h(@sighting.errors.on(:date_year).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:base) then %><li><%= h(@sighting.errors.on(:base).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:time_hour) then %><li>Hour <%= h(@sighting.errors.on(:time_hour).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:time_minute) then %><li>Minute <%= h(@sighting.errors.on(:time_minute).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:species_count) then %><li>Number observed <%= h(@sighting.errors.on(:species_count).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:age_sex) then %><li>Age and sex information <%= h(@sighting.errors.on(:age_sex).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:trip_id) then %><li>Trip <%= h(@sighting.errors.on(:trip_id).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:user_location_id) then %><li>Location <%= h(@sighting.errors.on(:user_location_id).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:datetime) then %><li>Date and time <%= h(@sighting.errors.on(:datetime).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:tag_list) then %><li>Tags <%= h(@sighting.errors.on(:tag_list).to_a.first) %>.</li><% end %>
+				<% if @sighting.errors.on(:link) then %><li>Link <%= h(@sighting.errors.on(:link).to_a.first) %>.</li><% end %>
+			</ul>
+		<%- end -%>
+
+	<%- form_for :sighting, :html => { :name => 'sighting', :onsubmit => 'greySubmits();' } do |f| -%> 
+		<fieldset class="actionbuttons" style="margin-bottom: 5px;">
+			<%= submit_tag 'Save this observation', :class => 'button', :id => 'submit_top' %>
+		</fieldset>
+
+		<fieldset>
+
+			<legend><%= h(@sighting.species.english_name) %> (optional details)</legend>
+
+			<%= f.hidden_field(:species_id, :value => @sighting.species.id) %>
+
+			<label style="font-weight: bold;" for="sighting_user_location_id">Location:</label><%= f.select(:user_location_id, [['Select a location', ''], ['Add a new location', 0]] + current_user.user_locations.collect {|i| [i.name, i.id] }) %>
+			<p class="fieldtip">If you need to create a new location, select "Add a new location", and continue filling out this form. After you click "Record", you will be taken to a new page to create a location for this observation.</p>
+
+			<p style="margin: 0; font-weight: bold;">Date:</p>
+			<table>
+				<tr style="color: #888; text-align: center;">
+					<td>YYYY</td>
+					<td>MM</td>
+					<td>DD</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><%= f.text_field('date_year', :style => 'width: 40px;') %></td>
+					<td><%= f.text_field('date_month', :style => 'width: 20px;') %></td>
+					<td><%= f.text_field('date_day', :style => 'width: 20px;') %></td>
+					<td><%= link_to_function '(today)', "$('sighting_date_year').value = (new Date()).getFullYear(); $('sighting_date_month').value = (new Date()).getMonth() + 1; $('sighting_date_day').value = (new Date()).getDate();" %></td>
+				</tr>
+			</table>
+			<p class="fieldtip">Enter four digits for the year, two digits for the month, and two digits for the day.</p>
+
+				<label for="sighting_trip_id" style="font-weight: bold;">Trip:</label><%= f.select(:trip_id, [['None', nil],['Add a new trip', 0]] + Birdstack::trips_options(current_user)) %>
+				<p class="fieldtip">If you need to create a new trip, select "Add a new trip", and continue filling out this form. After you click "Record", you will be taken to a page to create a new trip.</p>
+
+				<p style="margin: 10px 0 0 0; font-weight: bold;">Time:</p>
+				<table>
+					<tr style="color: #888; text-align: center;">
+						<td>HH</td>
+						<td>:</td>
+						<td>MM</td>
+					</tr>
+					<tr>
+						<td><%= f.text_field('time_hour', :style => 'width: 20px;') %></td>
+						<td>:</td>
+						<td><%= f.text_field('time_minute', :style => 'width: 20px;') %></td>
+					</tr>
+				</table>
+				<p class="fieldtip">Enter a two-digit hour using 24-hour time. (Add 12 to each hour after noon: 7:30 p.m. is 19:30.)</p>
+				<label style="font-weight: bold;" for="sighting_species_count">Number observed:</label><%= f.text_field('species_count') %>
+				<p style="margin: 10px 0 0 0; font-weight: bold;">Age and sex information:</p>
+				<table>
+					<tr style="color: #888; text-align: center;">
+						<td></td>
+						<td><abbr title="Male">M</abbr>:</td>
+						<td><abbr title="Female">F</abbr>:</td>
+						<td><abbr title="Unknown">Unk</abbr>:</td>
+					</tr>
+					<tr>
+						<td  style="color: #888; text-align: right;">Juvenile:</td>
+						<td><%= f.text_field('juvenile_male', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('juvenile_female', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('juvenile_unknown', :style => 'width: 30px;') %></td>
+					</tr>
+					<tr>
+						<td style="color: #888; text-align: right;">Immature:</td>
+						<td><%= f.text_field('immature_male', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('immature_female', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('immature_unknown', :style => 'width: 30px;') %></td>
+					</tr>
+					<tr>
+						<td style="color: #888; text-align: right;">Adult:</td>
+						<td><%= f.text_field('adult_male', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('adult_female', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('adult_unknown', :style => 'width: 30px;') %></td>
+					</tr>
+					<tr>
+						<td style="color: #888; text-align: right;">Unknown:</td>
+						<td><%= f.text_field('unknown_male', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('unknown_female', :style => 'width: 30px;') %></td>
+						<td><%= f.text_field('unknown_unknown', :style => 'width: 30px;') %></td>
+					</tr>
+				</table>
+				<p class="fieldtip">If you want record age/sex information, enter numbers in the appropriate fields. Fields may be left blank. Default is unknown/unknown. Total cannot exceed the total in "Number observed" above.</p>
+
+				<label style="font-weight: bold;" for="sighting_tag_list">Tags:</label><%= f.text_field('tag_list', :style => 'width: 570px;') %>
+				<p class="fieldtip">Separate tags with commas.</p>
+
+				<label style="font-weight: bold;" for="sighting_link">Link:</label><%= f.text_field('link', :style => 'width: 570px;') %>
+				<p class="fieldtip">If you like, you can include a link to a blog post, trip report, externally hosted image, etc.</p>
+
+				<label style="font-weight: bold;" for="sighting_notes">Notes:</label><%= f.text_area('notes', :style => 'width: 570px; height: 150px;') %>
+				<p class="fieldtip"><%= render :partial => 'shared/permitted_xhtml_tags.html.erb' %></p>
+
+				<div class="checkbox"><%= f.check_box 'private' %><label for="sighting_private" class="checkbox">Mark this observation as private. If an observation is private, only you can see it. (<%= link_to 'Help', :controller => 'help', :action => 'privacy' %>)</label></div>
+
+		</fieldset>
+
+			<%- if params[:action] == 'edit' -%>
+				<fieldset>
+					<legend>Change species</legend>
+					<table><tr><td style="width: 335px;"><label for="species_english_name">Species name:</label>
+					<%= render :partial => 'shared/add_sighting_box_fields' %></td>
+					<td style="vertical-align: bottom;"><p style="color: #888; font-size: 90%; margin: 0;">To see additional results, click "Save this observation" below to continue.</td></tr></table>	
+				</fieldset>
+			<%- end -%>
+
+		<%= render :partial => 'shared/prefill_fields' %>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save this observation', :class => 'button', :id => 'submit_bottom' %>
+		</fieldset>
+	<%- end -%>

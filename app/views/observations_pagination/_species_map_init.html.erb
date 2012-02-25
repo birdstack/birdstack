@@ -1,0 +1,42 @@
+<%# Expects species id to be passed in the 'species' variable %>
+<% add_to_head(<<EOT
+
+	<script type="text/javascript">
+//<![CDATA[
+	var species_map;
+	var species_map_markers = new Array();
+
+	function load() {
+		if (GBrowserIsCompatible()) {
+			species_map = new GMap2(document.getElementById("map"));
+
+			species_map.addControl(new GLargeMapControl());
+			species_map.addControl(new GMapTypeControl());
+
+			species_map.setMapType(G_HYBRID_MAP);
+
+			var center = new GLatLng(0, 0);
+			species_map.setCenter(center, 1);
+		}
+	}
+//]]>
+	</script>
+EOT
+)%>
+<% add_to_body_params(:onload => 'load()', :onunload => 'GUnload()') %>
+
+<%- url = {:controller => 'observations_pagination', :action => 'species_map', :id => species} -%>
+
+<h2 style="display: inline;"><%- if logged_in? -%><div class="pagination-map" style="display: inline;"><%= link_to 'Everyone\'s observations', url.merge({:source => 'all'}) %> | <%= link_to 'My observations', url.merge({:source => 'user' }) %>&nbsp;&nbsp;</div><% else %>Observations&nbsp;&nbsp;<% end %> </h2><p style="display: inline;"><%= link_to 'Add an observation', :controller => 'sighting', :action => 'add', :id => @species.id %></p>
+
+	<div id="map" style="width: 570px; height: 300px; margin-top: 5px;"></div>
+	<div id="pagination-working-map" style="position: relative; top: -300px; display: none; width: 0px; height: 0px;">
+		<p>
+		<%= image_tag("loading-round-bg.png", :size => "64x64", :alt => "loading...", :title => "loading...", :style => "position: relative; top: 116px; left: 253px;") %>
+		<%= image_tag("loading-round.gif", :size => "32x32", :alt => "loading...", :title => "loading...", :style => "position: relative; top: 66px; left: 269px;") %>
+		</p>
+	</div>
+
+<p style="font-size: 90%; color: #888; margin-bottom: 3px;">Note: Observations are submitted by Birdstack members and have not necessarily been reviewed.</p>
+
+<%= render :partial => 'observations_pagination/species_map', :locals => {:species => species} %>

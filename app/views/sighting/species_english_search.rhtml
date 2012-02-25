@@ -1,0 +1,56 @@
+	<%- @page_title = 'Search for "' + h(@ioc_search.term) + '"' -%>
+	
+	<%= render :partial => 'shared/workflow' %>
+
+	<h1>Search for "<%= h(@ioc_search.term) %>"</h1>
+
+	<%- if @ioc_search.errors.count > 0  -%>
+		<h2>Unable to perform search.</h2>
+		<ul class="errormessage">
+			<% if @ioc_search.errors.on(:term) then %><li>Your query <%= h(@ioc_search.errors.on(:term).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_tag url_for(:controller => :sighting, :action => :species_english_search) do -%>
+		<fieldset>
+			<table><tr><td style="width: 335px;"><label for="species_english_name">Species observed:</label>
+			<%= render(:partial => 'shared/add_sighting_box_fields') %> <br />
+			<%= render(:partial => 'shared/prefill_fields') %>
+			<td style="vertical-align: bottom;"><%= submit_tag 'Continue' %></td></tr></table>
+		</fieldset>
+	<%- end -%>
+
+	<%- unless @ioc_search.errors.count > 0 -%>
+		<p>We found <%= h(pluralize(@results[:species_count], 'match')) + ' for "' + h(@ioc_search.term.to_s) + '" in the database.' %><%- if @results[:species_count] > 0 -%> Select a species from the list below, or try a new search.<%- end -%></p>
+		<ul>
+		<%- for species in @results[:species] -%>
+			<li><%= link_to h(species.english_name), :prefill => params[:prefill], :id => species.id %> (<i><%= h(species.genus.latin_name) + ' ' + h(species.latin_name) %></i>). <%= render :partial => 'shared/range_info', :locals => {:species => species}%> (<%= link_to 'more info', :controller => 'ioc', :action => 'species', :order => species.genus.family.order.latin_name.downcase, :family => species.genus.family.latin_name.downcase, :genus => species.genus.latin_name.downcase, :species => species.latin_name %>)</li>
+		<%- end -%>
+		</ul>
+
+		<%- if @results[:alternate_names].size > 0 -%>
+			<p>We found <%= h(pluralize(@results[:alternate_names].size, 'alternate name result') + ' for "' + @ioc_search.term.to_s + '."') %> Select a species from the list below, or try a new search.</p>
+			<ul>
+			<%- for alternate_name in @results[:alternate_names] -%>
+				<li><%= link_to h(alternate_name.name), :action => 'alternate_name', :prefill => params[:prefill], :id => alternate_name.search_name %></li>
+			<%- end -%>
+			</ul>
+		<%- end -%>
+
+		<%- if @results[:spell_check_search] and @results[:spell_check_search].size > 0 -%>
+			<p>Spelling suggestions:</p>
+			<ul>
+			<%- for species in @results[:spell_check_search] -%>
+				<li><b><%= link_to h(species.english_name), :prefill => params[:prefill], :id => species.id %></b> (<i><%= h(species.genus.latin_name) + ' ' + h(species.latin_name) %></i>). <%= render :partial => 'shared/range_info', :locals => {:species => species}%> (<%= link_to 'more info', :controller => 'ioc', :action => 'species', :order => species.genus.family.order.latin_name.downcase, :family => species.genus.family.latin_name.downcase, :genus => species.genus.latin_name.downcase, :species => species.latin_name %>)</li>
+			<%- end -%>
+			</ul>
+		<%- end -%>
+	<%- end -%>
+
+	<%- if @trip -%>
+		<h2>Other observations you made on this trip:</h2>
+		<%= render :partial => 'observations_pagination/trip_observations', :locals => {:trip => @trip.id} %>
+	<% elsif @location %>
+		<h2>Other observations you've made at this location:</h2>
+		<%= render :partial => 'observations_pagination/location_observations', :locals => {:location => @location.id} %>
+	<%- end -%>

@@ -1,0 +1,16 @@
+<% user_location_photo = comment.comment_collection.user_location_photo %>
+<% user_location = user_location_photo.user_location %>
+Photo title: <%= user_location_photo.title %>
+Location: <%= user_location.name %>
+
+User: <%= comment.user.login %>
+
+##########
+
+<%= Birdstack::strip_tags(comment.comment) %>
+
+##########
+
+DO NOT REPLY to this email. <%= comment.user.login %> won't see your reply.
+To post a response to <%= comment.user.login %>'s comment, use this link:
+<%= SITE_URL_PREFIX %><%= location_photo_path(:user => user_location.user.login, :location_id => user_location.id, :id => user_location_photo.id) %>

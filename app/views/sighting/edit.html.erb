@@ -1,0 +1,9 @@
+	<%- @page_title = 'Edit your observation of ' + h(@sighting.species.english_name) -%>
+	
+	<h1>Edit your observation of <%= h(@sighting.species.english_name) %> (<i><%= h(@sighting.species.genus.latin_name) + ' ' + h(@sighting.species.latin_name) %></i>)</h1>
+
+	<%= render :partial => 'add_or_edit' %>
+
+	<hr style="width: 40%; margin-bottom: 11px; text-align: center;" />
+
+	<div style="text-align: center;"><%= button_to 'Delete this observation', {:controller => 'sighting', :action => 'delete', :id => @sighting.id}, {:confirm => "Do you really want to delete this observation? (This cannot be undone!)"} %></div>

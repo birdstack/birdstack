@@ -1,0 +1,55 @@
+	<%- @page_title = 'Flag notification on ' + h(@notification.species.english_name) -%>
+
+	<h1>Flag notification on <%= h(@notification.species.english_name) %></h1>
+
+	<%- if @notification_flag.errors.count > 0 then -%>
+		<h2>Your message cannot be sent until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @notification_flag.errors.on(:name) then %><li>Name <%= h(@notification_flag.errors.on(:name).to_a.first) %>.</li><% end %>
+			<% if @notification_flag.errors.on(:email) then %><li>Email address <%= h(@notification_flag.errors.on(:email).to_a.first) %>.</li><% end %>
+			<% if @notification_flag.errors.on(:body) then %><li>Message <%= h(@notification_flag.errors.on(:body).to_a.first) %>.</li><% end %>
+			<% if @notification_flag.errors.on(:captcha) then %><li>Verification <%= h(@notification_flag.errors.on(:captcha).to_a.first) %>.</li><% end %>
+			<% if @notification_flag.errors.on(:base) then %><li><%= h(@notification_flag.errors.on(:base).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<p>Here's the original notification:</p>
+
+	<hr />
+
+	<p>The name "<%= h(@notification.species.english_name) %>" may also refer to the following species:</p>
+	<ul>
+	<%- for potential_species in @notification.potential_species -%>
+		<li><%= link_to(h(potential_species.english_name), :controller => 'ioc', :action => 'species', :species => potential_species.latin_name, :genus => potential_species.genus.latin_name.downcase, :family => potential_species.genus.family.latin_name.downcase, :order => potential_species.genus.family.order.latin_name.downcase) %></li>
+	<%- end -%>
+	</ul>
+	<%= birdstack_sanitize(@notification.description) %>
+
+	<hr />
+
+	<p>If you believe this notification is incorrect or misleading, please explain exactly why, citing sources when possible. A moderator will review the notification based on your feedback.</p>
+	
+	<%- form_for :notification_flag do |f| -%>
+
+	<fieldset <% if @notification_flag.errors.on(:name) or @notification_flag.errors.on(:email) or @notification_flag.errors.on(:body) %>class="errorfieldlabel"<% end %>>
+		<legend>Feedback</legend>
+		<p class="fieldtip" style="margin-top: 10px;">All fields are required. We will protect your email address.</p>
+		<label for="notification_flag_name">Name:</label><%= f.text_field :name, :class => 'textbox' %>
+		<label for="notification_flag_email">Email address:</label><%= f.text_field :email, :class => 'textbox' %>
+		<label for="notification_flag_body">Message:</label><%= f.text_area :body, :class => 'textbox' %>
+	</fieldset>
+
+	<% if !logged_in? %>
+		 <fieldset <% if @notification_flag.errors.on(:captcha) %>class="errorfieldlabel"<% end %>>
+			<legend>Verification</legend>
+			<label for="notification_flag_captcha_code">Enter the letters shown below:</label><%= f.text_field :captcha, :value => '', :autocomplete => 'off', :class => 'textbox' %>
+			<%= show_simple_captcha_plain(:object => 'notification_flag') %>
+		</fieldset>
+	<% end %>
+
+	<fieldset class="actionbuttons">
+		<%= submit_tag 'Send', :class => 'button' %>
+	</fieldset>
+
+	<%- end -%>
+

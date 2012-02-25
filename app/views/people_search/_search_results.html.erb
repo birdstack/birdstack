@@ -1,0 +1,21 @@
+<% if params[:user_search] and @user_search.errors.size == 0 %>
+	<h2>Search results</h2>
+	<% if @results and @results.size > 0 %>
+		<p><%= h(@results.total_entries) %> results</p>
+
+		<div id="pagination-working" style="display: none; text-align: center;"><p style="margin-top: 50px;">Loading...</p><p><%= image_tag("loading-big.gif", :size => "32x32", :alt => "loading...", :title => "loading...") %></p></div>
+		<div id="pagination-content">
+			<%= will_paginate @results, :params => {:user_search => {:location => @user_search.location, :cc => @user_search.cc, :login => @user_search.login}} %>
+			<table>
+			<% for user in @results %>
+				<tr><td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => user.login %>"><%= image_tag(user.profile_pic.url(:small), :alt => h(user.login), :title => h(user.login)) %></a></td>
+				<td><p style="margin-bottom: 2px;"><b><%= link_to h(user.login), :controller => 'people', :action => 'view', :login => user.login %></b></p>
+				<p style="margin-left: 10px;"><%= h(CountryCode.country_name(user.cc)) %><% if user.location and user.cc %><br /><% end %><%= h(user.location) %></p></td></tr>
+			<% end %>
+			</table>
+			<%= will_paginate @results, :params => {:user_search => {:location => @user_search.location, :cc => @user_search.cc, :login => @user_search.login}} %>
+		</div><br />
+	<% else %>
+		<p>0 results</p>
+	<% end %>
+<% end %>

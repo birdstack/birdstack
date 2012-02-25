@@ -1,0 +1,15 @@
+<% trip ||= params[:id] %>
+<% trip = Trip.find_by_id(trip) %>
+<% if trip.andand.user != current_user %>
+	<% trip = Trip.find_public_by_id(trip.id) %>
+<% end %>
+
+<% if trip %>
+	<% cache :controller => 'observations_pagination', :action => 'trip_observations', :user => trip.user.id, :id => trip.id, :type => params[:type], :sort => params[:sort], :no_display_change => params[:no_display_change], :page => params[:page] || 1, :render_for => logged_in? ? current_user.id : 'public' do %>	
+		<% search = Birdstack::Search.new(trip.user, {:observation_trip => {:id => [trip.id]}}, false, current_user) %>
+
+		<%= render :partial => 'shared/observations_frame', :locals => {:url => {:controller => 'observations_pagination', :action => 'trip', :id => trip.id}, :search => search} %>
+	<% end %>
+<% else %>
+	Unable to find trip
+<% end %>

@@ -1,0 +1,13 @@
+Forum thread: <%= comment.comment_collection.title %>
+
+User: <%= comment.user.login %>
+
+##########
+
+<%= Birdstack::strip_tags(comment.comment) %>
+
+##########
+
+DO NOT REPLY to this email. <%= comment.user.login %> won't see your reply.
+To post a response to <%= comment.user.login %>'s comment, use this link:
+<%= SITE_URL_PREFIX %><%= url_for(:controller => 'forums', :forum => comment.comment_collection.forum.url, :action => 'thread', :id => comment.comment_collection.id) %>

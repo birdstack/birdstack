@@ -1,0 +1,13 @@
+	<%- @page_title = 'Sent items' -%>
+
+	<p style="text-align: center;"><%= link_to 'Inbox', :action => 'index' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sent items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'Start new', :action => 'start' %></p>
+
+	<h1>Sent items</h1>
+
+	<div id="sent">
+		<% if @message_references.size > 0 %>
+			<%= render :partial => 'sent', :locals => {:message_references => @message_references } %>
+		<% else %>
+			<p>No messages.</p>
+		<% end %>
+	</div>

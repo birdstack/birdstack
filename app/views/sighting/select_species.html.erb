@@ -1,0 +1,39 @@
+	<%= render :partial => 'shared/workflow' %>
+
+	<%- if @trip -%>
+		<%- @page_title = 'Add an observation to ' + h(@trip.name) -%>
+		<h1>Add an observation to <%= h(@trip.name) %></h1>
+	<% elsif @location %>
+		<%- @page_title = 'Add an observation to ' + h(@location.name) -%>
+		<h1>Add an observation to <%= h(@location.name) %></h1>
+	<%- else -%>
+		<%- @page_title = 'Record an observation' -%>
+		<h1>Record an observation</h1>
+	<%- end -%>
+
+	<p>Begin by finding the name of the bird that you observed. Our autocomplete and suggestion features will kick in automatically if you need help. After you have selected a bird name, you will be able to enter additional information about your observation. (<%= link_to 'Help', :controller => 'help', :action => 'observations' %>)</p>
+	<p>Abbreviations after species names refer to <%= link_to 'general breeding ranges', main_url(:action => 'abbreviations') %>.</p>
+
+	<%- form_tag url_for(:controller => :sighting, :action => :species_english_search) do -%>
+		<fieldset>
+			<table><tr><td style="width: 335px;"><label for="species_english_name">Species observed:</label>
+                        <%- add_to_body_params(:onLoad => "$('species_english_name').focus()") -%>
+			<%= render(:partial => 'shared/add_sighting_box_fields') %>
+			<%= render(:partial => 'shared/prefill_fields') %></td>
+			<td style="vertical-align: bottom;"><%= submit_tag 'Continue' %></td></tr></table>
+		</fieldset>
+	<%- end -%>
+
+	<%- if @trip -%>
+		<p><%= link_to 'I am finished adding observations to ' + h(@trip.name), trip_url(:user => current_user.login, :id => @trip.id) %></p>
+		<h2>Other observations you made on this trip:</h2>
+		<%= render :partial => 'observations_pagination/trip_observations', :locals => {:trip => @trip.id} %>
+	<%- elsif @location -%>
+		<p><%= link_to 'I am finished adding observations to ' + h(@location.name), location_url(:user => current_user.login, :id => @location.id) %></p>
+		<h2>Other observations you've made at this location:</h2>
+		<%= render :partial => 'observations_pagination/location_observations', :locals => {:location => @location.id} %>
+	<%- else -%>
+		<br /><br />
+		<h2>Import observations</h2>
+		<p>You can <%= link_to('import observations in bulk', :controller => 'import', :action => 'index') %> from other sources.</p>
+	<%- end -%>

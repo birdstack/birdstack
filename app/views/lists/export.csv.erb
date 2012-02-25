@@ -1,0 +1,33 @@
+<%- csv_sighting_fields = [:date_day, :date_month, :date_year, :species_count, :juvenile_male, :juvenile_female, :juvenile_unknown, :immature_male, :immature_female, :immature_unknown, :adult_male, :adult_female, :adult_unknown, :unknown_male, :unknown_female, :unknown_unknown, :notes, :time_hour, :time_minute, :private, :tag_list, :link] -%>
+<%- csv_location_fields = [:cc, :adm1, :adm2, :location, :name, :notes, :latitude, :longitude, :zoom, :source, :ecoregion, :elevation_ft, :elevation_m, :private] -%>
+<%- csv_trip_fields = [:name, :description, :time_hour_start, :time_minute_start, :protocol, :number_observers, :duration_hours, :duration_minutes, :distance_traveled_mi, :distance_traveled_km, :area_covered_acres, :area_covered_sqmi, :area_covered_sqkm, :date_day_start, :date_month_start, :date_year_start, :all_observations_reported, :date_day_end, :date_month_end, :date_year_end, :private] -%>
+<%= CSV.generate_line(['order', 'family_latin', 'family_english', 'genus', 'species_latin', 'species_english'] + csv_sighting_fields.collect {|i| 'observation_' + i.to_s} + csv_location_fields.collect {|i| 'location_' + i.to_s} + csv_trip_fields.collect {|i| 'trip_' + i.to_s}) %>
+<%- @sightings.each do |sighting| -%>
+	<%-
+		row = []
+		row << sighting.species.genus.family.order.latin_name
+		row << sighting.species.genus.family.latin_name
+		row << sighting.species.genus.family.english_name
+		row << sighting.species.genus.latin_name
+		row << sighting.species.latin_name
+		row << sighting.species.english_name
+		csv_sighting_fields.each do |field|
+			row << sighting.send(field)
+		end
+		csv_location_fields.each do |field|
+			row << if sighting.user_location then
+				       sighting.user_location.send(field)
+				else
+					nil
+				end
+		end
+		csv_trip_fields.each do |field|
+			row << if sighting.trip then
+				       sighting.trip.send(field)
+				else
+					nil
+				end
+		end
+	-%>
+<%= CSV.generate_line(row) %>
+<%- end -%>

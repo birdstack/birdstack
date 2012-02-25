@@ -1,0 +1,19 @@
+	<%- @page_title = 'Validate "' + h(@pending_import.filename) + '"' -%>
+
+	<p class="breadcrumb"><%= link_to 'Import', :action => 'index' %> &gt; <%= h(@pending_import.filename) %></p>
+
+	<h1>Validate "<%= h(@pending_import.filename) %>"</h1>
+
+	<p>Your file was uploaded successfully and must now be validated (checked for structural errors).</p>
+
+	<script type="text/javascript">
+//<![CDATA[
+		function greyButtons() {
+			$('submit_button').disable()
+		}
+//]]>
+	</script>
+
+	<% form_tag({:action => 'revalidate', :id => @pending_import.id}, {:onsubmit => 'greyButtons()'}) do %>
+		<%= submit_tag 'Validate file and continue', :id => 'submit_button' %>
+	<% end %>

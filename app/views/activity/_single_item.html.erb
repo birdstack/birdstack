@@ -1,0 +1,3 @@
+			<span class="whois"><% if current_user == activity.user %><%= link_to 'You', :controller => 'people', :action => 'view', :login => activity.user.login %><% else %><%= link_to h(activity.user.login), :controller => 'people', :action => 'view', :login => activity.user.login %><% end %></span> added 
+
+                        <%= render :partial => 'activity/single_item_' + activity.class.name.tableize.singularize, :locals => {:activity => activity} %>

@@ -1,0 +1,89 @@
+	<% @page_title = 'Dashboard' %>
+
+	<h1>Welcome, <%= h(current_user.login) %>!</h1>
+
+	<div id="feedControl"></div>
+
+	<h2>Export your data</h2>
+	<ul>
+		<li><strong><%= link_to('Export Data', :controller => 'export') %></strong></li>
+	</ul>
+
+	<h2>Add observations</h2>
+	<ul>
+		<li><%= link_to 'Record an observation', :controller => 'sighting', :action => 'select_species' %></li>
+		<li><%= link_to 'Import observations in bulk', :controller => 'import', :action => 'index' %></li>
+	</ul>
+
+	<h2>Communitize</h2>
+	<ul>
+		<li><% if current_user.unread_messages > 0 %><strong><%= link_to "Conversations (#{h(current_user.unread_messages)} new message#{if current_user.unread_messages >1 then 's' end})", :controller => 'conversations', :action => 'index' %></strong><% else %><%= link_to 'Conversations', :controller => 'conversations', :action => 'index' %><% end %></li>
+		<% if current_user.pending_friend_requests > 0 %><strong><li><%= link_to "#{h(pluralize(current_user.pending_friend_requests, 'pending friend request'))}", :controller => 'friends', :action => 'pending' %></strong></li><% end %>
+		<li><%= link_to 'Invite your friends to Birdstack!', :action => 'invite' %></li>
+	</ul>
+
+	<h2>Your account</h2>
+	<ul>
+		<li><%= link_to 'Edit your account settings', :controller => 'people', :action => 'account', :login => current_user.login %></li>
+		<li><%= link_to 'Edit your profile', :controller => 'people', :action => 'edit', :login => current_user.login %></li>
+		<li><%= link_to 'View your profile', :controller => 'people', :action => 'view', :login => current_user.login %></li>
+		<% if current_user.pending_taxonomy_changes %><li><strong><%= link_to('You have pending taxonomic updates', :controller => 'taxonomy_management', :action => 'index') %></strong></li><% end %>
+                <li>You've uploaded <%= h(current_user.num_photos) %> photos (of <%= h(current_user.photo_upload_limit) %> allowed<% if !current_user.supporting_member %> - <%= link_to 'upgrade', :controller => 'main', :action=>'supporting-members' %><% end %>)</li>
+	</ul>
+
+	<p style="clear:both;" />
+
+        <h2>Your <%= link_to 'friends', :controller => 'friends', :action => 'index' %> (<%= h(current_user.friends.size) %>)</h2>
+
+	<%= render :partial => 'friends/random_friends', :locals => {:u => current_user} %>
+
+	<% if current_user.friends.size > 0 and @activity %><table>
+		<% if @activity.is_a?(SightingPhotoActivity) %><tr>
+			<td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => @activity.user.login %>"><%= image_tag(@activity.user.profile_pic.url(:small), :alt => h(@activity.user.login), :title => h(@activity.user.login)) %></a></td>
+			<td><p>On <%= render :partial => 'shared/timestamp_day_month', :locals => {:timestamp => @activity.occurred_at} %>, <%= render :partial => 'activity/single_item', :locals => {:activity => @activity} %></p>
+				<p style="text-align: center;"><strong><%= link_to 'See what else your friends have been up to...', :controller => 'friends', :action => 'activity' %></td>
+		</tr>
+		<% else %><tr>
+			<td style="width: 150px; height: 150px; text-align: center;"><a href="<%= url_for :controller => 'people', :action => 'view', :login => @activity.user.login %>"><%= image_tag(@activity.user.profile_pic.url(:normal), :alt => h(@activity.user.login), :title => h(@activity.user.login)) %></a></td>
+			<td><p>On <%= render :partial => 'shared/timestamp_day_month', :locals => {:timestamp => @activity.occurred_at} %>, <%= render :partial => 'activity/single_item', :locals => {:activity => @activity} %></p>
+				<p style="text-align: center;"><strong><%= link_to 'See what else your friends have been up to...', :controller => 'friends', :action => 'activity' %></td>
+		</tr><% end %>
+	</table><% end %>
+
+	<h2>Your lists</h2>
+	<ul>
+	<%- for list in @saved_searches -%>
+		<li><%= link_to h(list.name), list_url(:user => list.user.login, :id => list.id, :format => 'html') %></li>
+	<%- end -%>
+	<li><%= link_to '...', lists_url(:user => current_user.login) %></li>
+	</ul>
+
+	<p style="margin-left: 40px;"><%= link_to 'Create a new list', :controller => 'search', :action => 'observation' %></p>
+
+	<h2>Your locations</h2>
+	<ul>
+	<%- for location in current_user.user_locations.find(:all, :order => 'created_at DESC', :limit => 10) -%>
+		<li><%= link_to h(location.name), location_url(:user => current_user.login, :id => location.id) %></li>
+	<%- end -%>
+		<li><%= link_to '...', locations_url(:user => current_user.login) %></li>
+	</ul>
+
+	<p style="margin-left: 40px;"><%= link_to 'Create a new location', :controller => 'location', :action => 'add' %></p>
+
+	<h2>Your <%= link_to 'photos', :controller => 'people', :action => 'photos', :login => current_user.login %></h2>
+
+	<h2>Your tags</h2>
+	<%= render :partial => 'tags/tag_cloud', :locals => {:tags => @tags, :user => current_user} %>
+	<p><%= link_to 'All tags', observations_tags_url(:user => current_user.login) %></p>
+
+	<h2>Your trips</h2>
+	<ul>
+	<%- for trip in current_user.trips.find(:all, :order => 'created_at DESC', :limit => 10) -%>
+		<li><%= link_to h(trip.name), trip_url(:user => current_user.login, :id => trip.id) %></li>
+	<%- end -%>
+	<li><%= link_to '...', trips_url(:user => current_user.login) %></li>
+	</ul>
+
+	<p style="margin-left: 40px;"><%= link_to 'Create a new trip', :controller => 'trip', :action => 'add' %></p>
+
+	<%= render :partial => 'observations_pagination/user_observations', :locals => {:user => current_user.id} %>

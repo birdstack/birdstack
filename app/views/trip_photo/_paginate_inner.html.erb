@@ -1,0 +1,41 @@
+<%# Local vars: user %>
+<%- url = {:controller => 'trip_photo', :action => 'paginate', :user => user.login} -%>
+
+<%- trip_photos = [] -%>
+
+<%- if(user != nil) then -%>
+  <%- per_page = 6 -%>
+  <%- if user == current_user then -%>
+    <%- trip_photos = user.trip_photos.paginate(:order => 'trip_photos.created_at DESC', :page => params[:page], :per_page => per_page) -%>
+  <%- else -%>
+    <%- trip_photos = user.trip_photos.public.paginate(:order => 'trip_photos.created_at DESC', :page => params[:page], :per_page => per_page) -%>
+  <%- end -%>
+<%- end -%>
+
+<div id="pagination-working-trip-photos" style="display: none; text-align: center;">
+  <p style="margin-top: 50px;">Loading...</p><p><%= image_tag("loading-big.gif", :size => "32x32", :alt => "loading...", :title => "loading...") %></p>
+</div>
+
+<div id="pagination-content-trip-photos">
+
+  <%- if trip_photos.size > 0 -%>
+    <%- x = 0 -%>
+    <table style="margin-bottom: 5px;">
+    <% trip_photos.each do |trip_photo| %>
+      <% trip_photo.publicize!(current_user) %>
+      <%- if x%3 == 0 -%><tr><%- end -%>
+      <td style="width: 33%; text-align: center;">
+        <a href="<%= trip_photo_url(:user => trip_photo.user.login, :trip_id => trip_photo.trip.id, :id => trip_photo.id) %>"><img src="<%= trip_photo.photo(:thumb) %>" alt="<%= h(trip_photo.title) %>" title="<%= h(trip_photo.title) %>" /></a><br />
+        <%= h(trip_photo.title) %>
+      </td>
+      <%- if x%3 == 2 -%></tr><%- end -%>
+      <%- x = x+1 -%>
+    <% end %>
+    </table>
+
+    <%= will_paginate trip_photos, :params => url, :class => 'pagination-trip-photos' %>
+  <% else %>
+    <p>None yet</p>
+  <% end %>
+
+</div>

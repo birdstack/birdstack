@@ -1,0 +1,15 @@
+	<%- @page_title = 'Families in the order ' + h(@order.latin_name) -%>
+
+	<%= render :partial => 'breadcrumbs' %>
+
+	<h1 class="taxonpage">Families in the order <%= h(@order.latin_name) %></h1>
+
+	<% unless @order.note.blank? %><p style="margin-bottom: 0;"><b>IOC note:</b></p><%= birdstack_sanitize(@order.note) %><% end %>
+
+	<ul class="taxalist">
+	<%- for family in @families -%>
+		<li><%= link_to h(family.english_name), :controller => :ioc, :order => @order.latin_name.downcase, :family => family.latin_name.downcase, :action => :family %> (<%= h(family.latin_name) %>)</li>
+	<%- end -%>
+	</ul>
+	
+	<p>Taxonomic source: <a href="http://www.worldbirdnames.org/">IOC World Bird Names</a></p>

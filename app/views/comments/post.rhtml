@@ -1,0 +1,38 @@
+	<%- @comment.comment_collection.publicize!(current_user) -%>
+
+        <% title = @comment.comment_collection.title %>
+        <% if @comment.comment_collection.is_a?(SightingPhotoCommentCollection) %>
+          <% title = @comment.comment_collection.sighting_photo.title %>
+        <% end %>
+
+	<%- @page_title = 'Post a response to ' + h(title) -%>
+
+	<h1>Post a response to <%= h(title) %></h1>
+
+	<%- unless @comment.comment.blank? -%>
+		<p><b>Comment preview:</b></p>
+		<%= birdstack_sanitize(@comment.comment) %>
+	<%- end -%>
+
+	<%- if @comment.errors.count > 0 then -%>
+		<h2>Your comment cannot be posted until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<%- if @comment.errors.on(:comment) then -%><li>Comment <%= h(@comment.errors.on(:comment).to_a.first) %>.</li><%- end -%>
+		</ul>
+	<%- end -%>
+
+        <%- form_for :comment do |f| -%>
+		<fieldset <%- if @comment.errors.on(:comment) -%>class="errorfieldlabel"<%- end -%>>
+			<legend>Comment</legend>
+			<label for="comment_comment">Comment:</label><%= f.text_area :comment, :class => 'textbox', :style => 'width: 570px;' %>
+			<p class="fieldtip">Permitted <abbr>(X)HTML</abbr> tags are &lt;a&gt;, &lt;b&gt;, &lt;blockquote&gt;, &lt;em&gt;,  &lt;i&gt;, &lt;img&gt;, &lt;strong&gt;, and &lt;u&gt;</p>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Preview', :class => 'button' %>
+			<%= submit_tag 'Submit comment', :class => 'button' %>
+		</fieldset>
+
+		<fieldset style="border: 0;"><%= hidden_field_tag('goto', params[:goto]) %></fieldset>
+
+	<%- end -%>

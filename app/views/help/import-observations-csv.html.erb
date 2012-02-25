@@ -1,0 +1,134 @@
+	<%- @page_title = 'File format for importing observations' -%>
+
+	<h1 id="top">File format for importing observations</h1>
+	
+	<p>You can <%= link_to 'import', :controller => 'import', :action => 'index' %> records into Birdstack from a comma-separated values (CSV) file. Many programs, including popular spreadsheet programs, allow you to export or save your data in CSV format. (Look under "File > Save as..." or "File > Export" menu options.)</p>
+
+	<p>Birdstack uses a flexible column import system to make importing your data easier. We have a list of <a href="#supported-columns">supported columns</a> to give you flexibility in things like date format and the amount of detail you can provide. The order of columns in the file is not important, and the only required column is <strong>English name</strong>.</p>
+
+	<p>Here are five simple rules:</p>
+
+	<ol>
+		<li>You must submit a valid CSV file. No delimiters other than commas (e.g., tabs or pipes) are permitted.</li>
+		<li>Your CSV file must contain a <%= link_to 'header row', image_path("help/header-row.png") %> as the first row in the file.</li>
+		<li>Column names must come from the list of <a href="#supported-columns">supported column names</a>.</li>
+		<li>The file must contain an <strong>English name</strong> column. All other columns are optional.</li>
+		<li>The file cannot be larger than 150 kilobytes (yes, there is a good reason). If your file exceeds this limit, you will need to split it into two or more files.</li>
+	</ol>
+	
+	<p>And here's a slightly more complicated rule: Your CSV file <em>must be encoded either as ASCII or as Unicode/UTF-8</em>. If you upload a file that contains some sort of operating system-specific character encoding, special characters from Microsoft Office (like curly quotes), or anything else weird, it will break. Look for an option to encode as UTF-8 under advanced options on your export dialog.</p>
+
+	<p>Following is an in-depth explanation of each column:</p>
+
+	<h2>Bird names</h2>
+	
+	<p>Currently, Birdstack can import observations based only on English species name. So, your file must contain a column titled <strong>English name</strong> that has English species names for each of your observations. We hope to add support for scientific names soon.</p>
+	
+	<p>If your file contains species names that don't match those in the Birdstack database (it probably will), we will make spell check and alternate name results available during the import process to help you map your observations to the correct species.</p>
+
+	<h2>Locations</h2>
+
+	<p>You can include a column called <strong>Location name</strong>. If the name of a location matches exactly one of the locations you have already created in Birdstack (i.e., one you can access from <%= link_to 'My Locations', :controller => 'location', :action => 'index' %>), the associated observations will be added to that Birdstack location.</p>
+
+	<p>Otherwise, new locations will automatically be created from the names in this column. After you finish import, you can edit the new locations to add country information, latitude and longitude, etc.</p>
+
+	<h2>Trips</h2>
+
+	<p>Similarly, you can include a column called <strong>Trip name</strong>. If the name of a trip matches exactly one of the trips you have already created in Birdstack (i.e., one you can access from <%= link_to 'My Trips', :controller => 'trip', :action => 'index' %>), the associated observations will be added to that Birdstack trip.</p>
+
+	<p>Otherwise, new trips will automatically be created from the names in this column. After you finish import, you can edit the new trips to add dates, notes, and other information.</p>
+
+	<h2>Dates</h2>
+
+	<p>You can choose <em>one</em> of four options to import date information:</p>
+
+	<h3 style="font-size: 100%">Single column, Month/Day/Year (MDY)</h3>
+	
+	<p>This column is named <strong>MDY date</strong> and must be formatted as follows: MM/DD/YYYY (two digits for month, forward slash, two digits for day, forward slash, four digits for year). Example: 01/28/2007</p>
+	
+	<h3 style="font-size: 100%">Single column, Day/Month/Year (DMY)</h3>
+	
+	<p>This column is named <strong>DMY date</strong> and must be formatted as follows: DD/MM/YYYY (two digits for day, forward slash, two digits for month, forward slash, four digits for year). Example: 28/01/2007</p>
+
+	<h3 style="font-size: 100%">Single column, Year-Month-Day (ISO)</h3>
+	
+	<p>This column is named <strong>ISO date</strong> and must be formatted as follows: YYYY-MM-DD (four digits for year, hyphen, two digits for month, hyphen, two digits for day). Note that this field must <em>not</em> include time information, which is technically part of the ISO standard. Example: 2007-01-28</p>
+
+	<h3 style="font-size: 100%">Separate columns for Year, Month, and Day</h3>
+	
+	<p>If you like, you can have three columns, <strong>Year</strong>, <strong>Month</strong>, and <strong>Day</strong>. Each must contain valid year, month, and day values in numbers (i.e., spelling out months -- "May," "Sept.," -- is <em>not</em> allowed).</p>
+
+	<h2>Time</h2>
+
+	<p>You have three choices for importing time:</p>
+	
+	<h3 style="font-size: 100%">Single column with 12-hour time (a.m., p.m.)</h3>
+	
+	<p>This column is named <strong>12-hour time</strong> and must be formatted as follows: HH:MM a.m./p.m. (two digits for hour, two digits for minute, plus either "a.m." or "p.m."). Example: 4:30 p.m.</p>
+
+	<h3 style="font-size: 100%">Single column with 24-hour time</h3>
+
+	<p>This column is named <strong>24-hour time</strong> and must be formatted as follows: HH:MM (two digits for hour, two digits for minute). Example: 16:30</p>
+
+	<h3 style="font-size: 100%">Separate for columns 24-hour hour and Minute</h3>
+	
+	<p>You can have two columns, <strong>24-hour hour</strong> and <strong>Minute</strong>. Each must contain valid hour and minute values in numbers. In this format, you can't indicate a.m. or p.m., so hours must be written 00-23, not 12-12.</p>
+
+	<h2>Number observed (plus age and sex info)</h2>
+	
+	<p>You can include a column named <strong>Number observed</strong> to record the number of birds recorded during each observation. If you have more fine-grained detail, you can also include any of the following columns (mix and match to your heart's delight): <strong>juvenile_male, juvenile_female, juvenile_unknown, immature_male, immature_female, immature_unknown, adult_male, adult_female, adult_unknown, unknown_male, unknown_female, unknown_unknown</strong>.</p>
+
+	<p>Values in these fields must either be empty or contain digits -- no letters or other characters are allowed. The one exception is that "Number observed" can contain a single <i>X</i> to denote presence. Birdstack does not use an <i>X</i> in its records, so the <i>X</i> will not appear anywhere after it is imported, but it will not impede upload either.</p>
+
+	<h2>Link</h2>
+	
+	<p>The column called <strong>Link</strong> is for a website address (typically beginning with http:// or www) to a blog post, external website, or externally hosted image gallery.</p>
+
+	<h2>Tags</h2>
+	
+	<p>The column called <strong>Tags</strong> can be used to label and categorize your observations in a variety of ways. Separate tags with commas.</p>
+
+	<h2>Notes</h2>
+	
+	<p>The column called <strong>Notes</strong> is for free-text notes. <%= render :partial => 'shared/permitted_xhtml_tags' %>.</p>
+
+	<h2>Omit</h2>
+
+	<p>If you name a column <strong>Omit</strong>, it will be skipped during import. You may find this helpful if your source file contains columns that Birdstack can't use during import, like scientific names. A file may contain one or more 'omit' columns.</p>
+
+	<h2 id="supported-columns">Supported column names</h2>
+	
+	<ul>
+		<li>English name</li>
+		<li>Location name</li>
+		<li>Trip name</li>
+		<li>Notes</li>
+		<li>Link</li>
+		<li>Tags</li>
+		<li>MDY date</li>
+		<li>DMY date</li>
+		<li>ISO date</li>
+		<li>Year</li>
+		<li>Month</li>
+		<li>Day</li>
+		<li>12-hour time</li>
+		<li>24-hour time</li>
+		<li>24-hour hour</li>
+		<li>Minute</li>
+		<li>Number observed</li>
+		<li>juvenile_male</li>
+		<li>juvenile_female</li>
+		<li>juvenile_unknown</li>
+		<li>immature_male</li>
+		<li>immature_female</li>
+		<li>immature_unknown</li>
+		<li>adult_male</li>
+		<li>adult_female</li>
+		<li>adult_unknown</li>
+		<li>unknown_male</li>
+		<li>unknown_female</li>
+		<li>unknown_unknown</li>
+		<li>Omit</li>
+	</ul>
+	
+	<p><a href="#top">Back to top</a> | <%= link_to 'Continue to instructions for processing uploaded file >>', :action => 'import-observations-process' %></p>

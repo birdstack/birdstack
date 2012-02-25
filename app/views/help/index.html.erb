@@ -1,0 +1,33 @@
+	<%- @page_title = 'Help' -%>
+
+	<h1>Help</h1>
+
+	<p>After you have read the documentation below, you can also ask for help in the <%= link_to 'Birdstack forums', :controller => 'forums', :action => 'index' %>.</p>
+	
+	<h2>General information</h2>
+	<ul>
+		<li><%= link_to 'Understanding and recording observations', :action => 'observations' %></li>
+		<li><%= link_to 'Creating and using locations', :action => 'locations' %></li>
+		<li><%= link_to 'Creating and using trips', :action => 'trips' %></li>
+		<li><%= link_to 'Working with searches and lists', :action => 'searches' %></li>
+		<li><%= link_to 'Privacy settings', :action => 'privacy' %></li>
+		<li><%= link_to 'Publishing and exporting your observations', :action => 'output' %></li>
+		<li><%= link_to 'Contributing observations to eBird', :action => 'ebird' %></li>
+	</ul>
+
+	<h2>Photos - NEW!</h2>
+	<ul>
+		<li><%= link_to 'Photos', :action => 'photos' %></li>
+	</ul>
+
+	<h2>Taxonomic updates</h2>
+	<ul>
+		<li><%= link_to 'Managing taxonomic updates', :action => 'taxonomic-updates' %></li>
+		<li><%= link_to 'Screencast: Taxonomic updates', :controller => 'screencasts', :action => 'taxonomic-updates' %></li>
+	</ul>
+	
+	<h2>Importing observations</h2>
+	<ul>
+		<li><%= link_to 'How do I format my file(s) for import?', :action => 'import-observations-csv' %></li>
+		<li><%= link_to 'What happens after I upload my file?', :action => 'import-observations-process' %></li>
+	</ul>

@@ -1,0 +1,3 @@
+<%= render :partial => @comment.comment_collection.class.to_s.underscore, :locals => {:comment => @comment} %>
+
+<%= render :partial => 'shared/mail_footer', :locals => {:user => @user, :notification => User::NOTIFICATION_TYPES[@comment.comment_collection.class.notify_property]} %>

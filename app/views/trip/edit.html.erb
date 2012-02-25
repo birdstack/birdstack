@@ -1,0 +1,9 @@
+	<%- @page_title = 'Edit trip "' + h(@trip.name) + '"' -%>
+
+	<h1>Edit trip "<%= h(@trip.name) %>"</h1>
+
+	<%= render :partial => 'add_or_edit' %>
+	
+	<hr style="width: 40%; margin-bottom: 11px; text-align: center;" />
+
+	<div style="text-align: center;"><%= button_to 'Delete this trip', {:controller => 'trip', :action => 'delete', :id => @trip.id}, {:confirm => "Do you really want to delete this trip? (This cannot be undone!)"} %></div>

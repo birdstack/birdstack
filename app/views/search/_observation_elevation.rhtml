@@ -1,0 +1,33 @@
+			<% section_id = 'observation_elevation' %>
+				<tr id="<%= section_id %>" <% if @observation_elevation.blank? %>style="display: none;"<% end %>>
+					<td>
+						<label for="<%= section_id %>">Elevation:</label>
+
+						<% fields_for section_id.to_sym do |f| %>
+							<p style="margin: 10px 0 0 0;">Units:</p>
+							<%= f.select('elevation_units', [['Select unit of measurement', nil],['metres', 'm'],['feet', 'ft']], {}, :style => 'margin: 0;') %>
+
+							<p style="margin: 10px 0 0 0;">Above (and including):</p>
+							<%= f.text_field('elevation_start') %>
+
+							<p style="margin: 10px 0 0 0;">Below (and including):</p>
+							<%= f.text_field('elevation_end') %>
+						<% end %>
+
+					</td>
+					<td></td>
+					<td></td>
+					<td style="text-align: right; vertical-align: top;">
+						<input type="button" value="-" onClick="remove_<%= section_id %>()" class="button" title="Remove this section from your search." style="margin-top: 14px;" />
+						<script type="text/javascript">
+						//<![CDATA[
+							function remove_<%= section_id %>() {
+								document.getElementById('<%= section_id %>_elevation_start').value = ''
+								document.getElementById('<%= section_id %>_elevation_end').value = ''
+								document.getElementById('<%= section_id %>_elevation_units').selectedIndex = 0
+								removeSearch(document.getElementById('<%= section_id %>'))
+							}
+						//]]>
+						</script>
+					</td>
+				</tr>

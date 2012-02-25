@@ -1,0 +1,186 @@
+			<label for="searchtype">Add search criteria:</label>
+			<select id="searchtype" onChange="updateSearches()">
+				<option>Search by...</option>
+				<option>----------</option>
+				<option value="observation_location_name">Location names</option>
+				<option value="observation_location_location">Cities and towns</option>
+				<option value="observation_location_adm2">Counties and districts</option>
+				<option value="observation_location_adm1">States and provinces</option>
+				<option value="observation_location_cc">Nations and territories</option>
+				<option>----------</option>
+				<option value="observation_date">Dates</option>
+				<option>----------</option>
+				<option value="observation_trip">Trips</option>
+				<option value="observation_ecoregion">Ecoregions</option>
+				<option value="observation_elevation">Elevation</option>
+				<option>----------</option>
+				<option value="observation_tag">Tags</option>
+				<option>----------</option>
+				<option value="observation_order">Orders</option>
+				<option value="observation_family">Families</option>
+				<option value="observation_genus">Genera</option>
+				<option value="observation_species">Species</option>
+			</select>
+
+			<script type="text/javascript">
+			//<![CDATA[
+				function updateSearches() {
+					searchtype = document.getElementById('searchtype')
+					elementID = searchtype.value
+					element = document.getElementById(elementID)
+
+					if (elementID != '') {
+						if(element.style.display == 'none') {
+							Element.show(element);
+						}
+					}
+
+					searchtype.selectedIndex = 0
+				}
+
+				function removeSearch(search) {
+					Element.hide(search);
+				}
+
+				function clearSelectBox(selectbox) {
+					for(i in selectbox.options) {
+						selectbox.options[i].selected = null
+					}
+				}
+
+				function clearSelectBoxOptions(selectbox) {
+					selectbox.options.length = 0
+				}
+
+				function updateAvailableOptions(value, available_options, available_options_box) {
+					available_options_box.options.length = 0
+
+					search_regexp = new RegExp(value, 'i')
+					for(i = 0; i < available_options.length; i++) {
+						if(available_options[i][0].match(search_regexp)) {
+							opt = document.createElement('option')
+							opt.text = available_options[i][0]
+							opt.title = available_options[i][0]
+							opt.value = available_options[i][1]
+
+							try {
+								available_options_box.add(opt, null)
+							} catch(ex) {
+								// Yay, IE!
+								available_options_box.add(opt)
+							}
+						}
+					}
+				}
+
+				function canSelect(availableSpeciesBox, selectedSpeciesBox, addButton) {
+					for(i = 0; i < availableSpeciesBox.options.length; i++) {
+						if(availableSpeciesBox.options[i].selected) {
+							selectedOpt = availableSpeciesBox.options[i]
+
+							foundEqual = false
+							for(j = 0; j < selectedSpeciesBox.options.length; j++) {
+								if(selectedOpt.value == selectedSpeciesBox.options[j].value) {
+									foundEqual = true
+									break
+								}
+							}
+
+							if(foundEqual == false) {
+								addButton.disabled = false
+								return true
+							}
+						}
+					}
+
+					addButton.disabled = true
+					return false
+				}
+
+				function addOption(availableSpeciesBox, selectedSpeciesBox, addButton) {
+					if(!canSelect(availableSpeciesBox, selectedSpeciesBox, addButton))
+						return
+
+					for(i = 0; i < availableSpeciesBox.options.length; i++) {
+						if(availableSpeciesBox.options[i].selected) {
+							selectedOpt = availableSpeciesBox.options[i]
+
+							foundEqual = false
+							for(j = 0; j < selectedSpeciesBox.options.length; j++) {
+								if(selectedOpt.value == selectedSpeciesBox.options[j].value) {
+									foundEqual = true
+									break
+								}
+							}
+
+							if(foundEqual == false) {
+								opt = document.createElement('option')
+								opt.text = selectedOpt.text
+								opt.title = selectedOpt.title
+								opt.value = selectedOpt.value
+
+								try {
+									selectedSpeciesBox.add(opt, selectedSpeciesBox.options[0])
+								} catch(ex) {
+									// IE case for when there are no options in the box
+									selectedSpeciesBox.add(opt)
+								}
+							}
+						}
+					}
+
+					// Refresh the status of the button
+					canSelect(availableSpeciesBox, selectedSpeciesBox, addButton)
+				}
+
+				function removeOption(availableSpeciesBox, selectedSpeciesBox, addButton) {
+					for(i = (selectedSpeciesBox.options.length - 1); i >= 0; i--) {
+						if(selectedSpeciesBox.options[i].selected == true)
+							selectedSpeciesBox.remove(i)
+					}
+
+					// Refresh the Add button
+					canSelect(availableSpeciesBox, selectedSpeciesBox, addButton)
+				}
+
+				function selectAll(selectedBox) {
+					for(i = 0; i < selectedBox.options.length; i++) {
+						selectedBox.options[i].selected = true
+					}
+
+					return true
+				}
+
+
+			//]]>
+			</script>
+
+			<table class="search">
+				<%= render :partial => 'observation_location_name' %>
+				<%= render :partial => 'observation_location_location' %>
+				<%= render :partial => 'observation_location_adm2' %>
+				<%= render :partial => 'observation_location_adm1' %>
+				<%= render :partial => 'observation_location_cc' %>
+				<%= render :partial => 'observation_date' %>
+				<%= render :partial => 'observation_trip' %>
+				<%= render :partial => 'observation_ecoregion' %>
+				<%= render :partial => 'observation_elevation' %>
+				<%= render :partial => 'observation_tag' %>
+				<%= render :partial => 'observation_order' %>
+				<%= render :partial => 'observation_family' %>
+				<%= render :partial => 'observation_genus' %>
+				<%= render :partial => 'observation_species' %>
+			</table>
+			
+			<hr />
+			
+			<label>Search type:</label>
+			<%= radio_button 'observation_search_type', 'type', 'all', :class => 'checkbox' %><label for="observation_search_type_type_all" class="checkbox">All matching observations.</label><br />
+			<%= radio_button 'observation_search_type', 'type', 'earliest', :class => 'checkbox' %><label for="observation_search_type_type_earliest" class="checkbox">First observation of each matching species (e.g., for year lists or province lists).</label><br />
+			<%= radio_button 'observation_search_type', 'type', 'latest', :class => 'checkbox' %><label for="observation_search_type_type_latest" class="checkbox">Most recent observation of each matching species (e.g., for recent observations).</label><br />
+
+			<label for="observation_search_display_sort">Sort by...</label>
+			<%= select 'observation_search_display', 'sort', [['Date - newest first', 'date_desc'],['Date - oldest first', 'date_asc'],['English name - A-Z', 'species_english_asc'],['English name - Z-A','species_english_desc'],['Scientific name - A-Z', 'scientific_asc'],['Scientific name - Z-A','scientific_desc'],['Taxonomic order','species_taxonomic']] %><br />
+
+			<label for="observation_search_display_type">Display type:</label>
+			<%= select 'observation_search_display', 'type', [['Table', 'table'],['Report', 'report']] %><br/>

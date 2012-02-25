@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+ <head>
+
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+
+	<title>Birdstack: <%= h(@page_title) %></title>
+	<% if @meta_description %><meta name="description" content="<%= h(@meta_description) %>" /><% end %>
+
+	<%= stylesheet_link_tag 'birdstack-general' %>
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+        <script src="http://www.google.com/jsapi"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script>
+          jQuery.noConflict();
+          google.load("jqueryui","1.7.2");
+          google.load("prototype", "1.6");
+          google.load("scriptaculous", "1.8.2");
+        </script>
+
+        <%= javascript_include_tag 'application.js', :cache => true %>
+
+	<%= add_to_head_string %>
+
+ </head>
+
+
+ <body <%= body_params_string %> <% if ENV['RAILS_ENV'] == 'development' %>style="background: lightblue;"<% end %>>
+
+  <div id="container">
+
+   <div id="head">
+
+	<p class="logo"><%= link_to(image_tag("logo.png", :size => "385x57", :alt => "Birdstack: Create and share world bird lists online, for free.", :title => "Birdstack: Create and share world bird lists online, for free."), :controller => 'main', :action => 'index') %></p>
+
+	<%- if logged_in? -%>
+		<p><% if current_user.pending_taxonomy_changes %><%= link_to(image_tag("notifiers/tax_update_on.gif", :size => '16x16', :alt => '1', :title => 'You have pending taxonomic updates.'), :controller => 'taxonomy_management', :action => 'index') %><% else %><%= link_to(image_tag("notifiers/tax_update_off.gif", :size => '16x16', :alt => '0', :title => 'No pending taxonomic updates'), :controller => 'taxonomy_management', :action => 'index') %><% end %>
+		<% if current_user.pending_friend_requests > 0 %><%= link_to(image_tag("notifiers/friend_on.gif", :size => '16x16', :alt => '1', :title => "#{h(pluralize(current_user.pending_friend_requests, 'pending friend request'))}"), :controller => 'friends', :action => 'pending') %><% else %><%= link_to(image_tag("notifiers/friend_off.gif", :size => '16x16', :alt => '0', :title => 'Your friends'), :controller => 'friends', :action => 'index') %><% end %>
+		<% if current_user.unread_messages > 0 %><%= link_to(image_tag("notifiers/message_on.gif", :size => '16x16', :alt => '1', :title => "#{h(pluralize(current_user.unread_messages, 'message'))}"), :controller => 'conversations', :action => 'index') %><% else %><%= link_to(image_tag("notifiers/message_off.gif", :size => '16x16', :alt => '0', :title => 'No unread messages'), :controller => 'conversations', :action => 'index') %><% end %>
+		&nbsp;&nbsp;&nbsp;
+		You're signed in as <span class="whois"><%= link_to h(current_user.login), :controller => 'people', :action => 'view', :login => current_user.login %></span>.<br /><%= link_to('Sign out', :controller => :account, :action => :logout) %></p>
+	<%- else -%>
+		<script type="text/javascript">
+//<![CDATA[
+			function sf() {
+				document.getElementById('signinbar_login').focus();
+			}
+
+			var signinBarShown = false
+			function showSigninBar() {
+				if(!signinBarShown) {
+					<%= visual_effect(:blind_down, 'signinbar', :duration => 0.25, :afterFinish => 'sf') %>
+					signinBarShown = true
+				} else {
+					sf()
+				}
+			}
+//]]>
+		</script>
+
+		<p>You aren't signed in.<br /><%= link_to_function('Sign in', 'showSigninBar()', :href => url_for(:controller => 'account', :action => 'login')) %> or <%= link_to 'create a free account', :controller => 'account', :action => 'signup' %></p>
+	<%- end -%>
+
+   </div>
+
+   <%- if !logged_in? -%>
+   <div id="signinbar" style="display: none;">
+	<%- form_tag(:controller => 'account', :action => 'login') do -%>
+		<fieldset>
+			<label for="signinbar_login">Username:</label><%= text_field_tag 'login', nil, :class => 'textbox', :id => 'signinbar_login' %>
+			<label for="password">Password:</label><%= password_field_tag 'password', nil, :class => 'textbox' %>
+			<%= check_box_tag 'remember_me', 1, true, :class => 'checkbox' %><label for="remember_me">Remember me!</label>
+			<%= submit_tag 'Sign in', :class => 'button' %>
+			<%= link_to('Lost password?', :controller => 'recover_password', :action => 'index') %>
+		</fieldset>
+	<%- end -%>
+   </div>
+   <%- end -%>
+
+
+   <div id="navbar">
+	<ul>
+		<li><%= link_to('Home', main_url(:action => 'index')) %></li>
+		<li><%= link_to('Birds', :controller => 'ioc') %></li>
+		<li><%= link_to('People', main_url(:action => 'people')) %></li>
+		<li><%= link_to('Events', main_url(:action => 'events')) %></li>
+		<li><%= link_to('Forums', :controller => 'forums') %></li>
+		<li><%= link_to('Contact', main_url(:action => 'contact')) %></li>
+		<li><%= link_to('About', main_url(:action => 'about')) %></li>
+		<li><%= link_to('Help', main_url(:action => 'help')) %></li>
+	</ul>
+   </div>
+
+   <div id="content">
+
+	<%- if flash[:warning] -%>
+		<div class="flashwarning"><%= h(flash[:warning]) %></div>
+	<%- end -%>
+	<%- if flash[:message] -%>
+		<div class="flashmessage"><%= h(flash[:message]) %></div>
+	<%- end -%>
+	<%- if flash[:notice] -%>
+		<div class="flashnotice"><%= h(flash[:notice]) %></div>
+	<%- end -%>
+
+	<%= yield :layout %>
+
+   </div>
+
+   <div id="sidebar">
+
+	<%= render(:partial => 'shared/usernav') %>
+
+	<%# Read in the news partial, if it exists.  The static file should be fast, and it prevents caching.  Preventing caching is good(ish) because we want the ability to change the newsbar without restarting the app servers. %>
+	<%= begin; File.open("#{RAILS_ROOT}/system_data/_news.html").read; rescue Exception => e; ''; end %>
+
+<% unless logged_in? and current_user.supporting_member %>
+<% end %>
+
+	<%= render(:partial => 'shared/sidebar_stack') %>
+
+  </div>
+
+   <div id="footer">
+
+	<ul>
+		<li><%= link_to('Home', main_url(:action => 'index')) %></li>
+		<li><%= link_to('Terms of Service', main_url(:action => 'terms')) %></li>
+		<li><%= link_to('Privacy Policy', main_url(:action => 'privacy')) %></li>
+		<li><%= link_to('About', main_url(:action => 'about')) %></li>
+		<li><%= link_to('Contact Us', main_url(:action => 'contact')) %></li>
+		<li><%= link_to('Help', main_url(:action => 'help')) %></li>
+	</ul>
+
+	<p class="copyright">Copyright &copy; 2007-<%= h(Time.now.strftime('%Y')) %> <a href="http://kapikpik.com">Kapikpik, LLC</a>. All rights reserved.</p>
+
+   </div>
+
+  </div>
+
+ </body>
+
+</html>

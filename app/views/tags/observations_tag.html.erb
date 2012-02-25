@@ -1,0 +1,15 @@
+	<% unless @tag %>
+		<%- @page_title = 'The tag does not exist or is not accessible.' -%>
+		<h1>Error</h1>
+		<p>The tag does not exist or is not accessible.</p>
+	<% else %>
+		<%- @page_title = h(@user.login) + '\'s observations tagged \'' + h(@tag) + '\'' -%>
+
+		<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @user.login %><%- else -%><%= link_to h(@user.login), :controller => 'people', :action => 'view', :login => @user.login %><%- end -%> > <%= link_to 'Tags', observations_tags_url(:user => @user.login) %> > <%= h(@tag) %></p>
+
+		<h1><%= h(@tag) %></h1>
+
+		<h2 style="margin: 20px 0 0 0;">Observations:</h2>
+
+		<%= render :partial => 'observations_pagination/tag_observations', :locals => {:tag => @tag, :user => @user} %>
+	<% end %>

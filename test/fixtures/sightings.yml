@@ -1,0 +1,102 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+genericbird:
+  id: 1
+  species_id: 1
+  user_id: 1
+  comment_collection: sightingcomments1
+birdonatrip:
+  id: 2
+  species_id: 1
+  user_id: 1
+  trip_id: 1
+  comment_collection: sightingcomments2
+carefultripbird:
+  id: 3
+  species_id: 1
+  user_id: 1
+  trip_id: 2
+  comment_collection: sightingcomments3
+correcttripbird:
+  id: 4
+  species_id: 1
+  user_id: 1
+  trip_id: 4
+  date_day: 3
+  date_month: 3
+  date_year: 1985
+  comment_collection: sightingcomments4
+dayspantripbirdambiguoustimeday2:
+  id: 5
+  species_id: 1
+  user_id: 1
+  trip_id: 5
+  date_day: 4
+  date_month: 3
+  date_year: 1985
+  comment_collection: sightingcomments5
+dayspantripbirdunambiguoustime:
+  id: 6
+  species_id: 1
+  user_id: 1
+  trip_id: 5
+  date_day: 4
+  date_month: 3
+  date_year: 1985
+  time_hour: 1
+  time_minute: 0
+  comment_collection: sightingcomments6
+dayspantripbirdambiguoustimeday1:
+  id: 7
+  species_id: 1
+  user_id: 1
+  trip_id: 5
+  date_day: 3
+  date_month: 3
+  date_year: 1985
+  comment_collection: sightingcomments7
+almostcorrecttripbird:
+  species_id: 1
+  user_id: 1
+  trip: nonsciencetripwithsightingoutsiderange
+  date_day: 3
+  date_month: 4
+  date_year: 1985
+  comment_collection: sightingcomments8
+correctnodatetripbird:
+  species_id: 1
+  user_id: 1
+  trip: nonsciencetripwithsightingnodate
+  comment_collection: sightingcomments9
+noadm1:
+  species_id: 1
+  user_id: 1
+  user_location: noadm1reno
+  comment_collection: sightingcomments10
+blankadm1:
+  species_id: 1
+  user_id: 1
+  user_location: blankadm1reno
+  comment_collection: sightingcomments11
+privatesighting:
+  species_id: 1
+  user_id: 1
+  time_hour: 1
+  time_minute: 41
+  private: 1
+  comment_collection: sightingcomments12
+gettheidright:
+  species: wild_monkey
+  user: joe
+  time_hour: 1
+  time_minute: 42
+  comment_collection: sightingcomments13
+ebirdable:
+  species: wild_monkey
+  user_id: 1
+  time_hour: 1
+  time_minute: 42
+  date_day: 3
+  date_month: 3
+  date_year: 1985
+  comment_collection: sightingcomments14
+  user_location: ebirdablelocation

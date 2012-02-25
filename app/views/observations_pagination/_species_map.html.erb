@@ -1,0 +1,75 @@
+<%- species ||= params[:id] -%>
+<%- url = {:controller => 'observations_pagination', :action => 'species_map', :id => species} -%>
+
+<%- source = params[:source] ? params[:source] : 'all' -%>
+<%- source = 'all' unless logged_in? -%>
+<%- per_page = 50 -%>
+
+<% if species %>
+	<% page = params[:page] || 1 %>
+        <%# TODO If we ever add any sort of user-configurable date display to this page, we need to add a :render_for field to the cache key %>
+	<% cache :controller => 'observations_pagination', :action => 'species_map', :id => species, :source => source, :page => page, :user => (source == 'user' ? current_user.id : nil) do %>
+
+		<div id="species_map" style="clear: both;">
+		<%- sightings = [] -%>
+		<%- if source == 'user' -%>
+			<%- sightings = Sighting.paginate_for_map_for_user(species, current_user.id, :page => page, :per_page => per_page) -%>
+		<%- else -%>
+			<%- sightings = Sighting.paginate_for_map(species, :page => page, :per_page => per_page) -%>
+		<%- end -%>
+
+		<div id="pagination-content-map">
+			<%= will_paginate sightings, :params => url, :class => 'pagination-map' %><br />
+
+			<%- load_points = Hash.new -%>
+			<%- sightings.each do |s| -%>
+				<%- load_points[s.user_location] ||= [] -%>
+				<%- load_points[s.user_location] << s -%>
+			<%- end -%>
+			<%- if load_points.keys.size > 0 -%>
+				<%- min_lat = load_points.keys.min {|a,b| a.latitude <=> b.latitude }.latitude - 5 -%>
+				<%- max_lat = load_points.keys.max {|a,b| a.latitude <=> b.latitude }.latitude + 5 -%>
+				<%- min_lon = load_points.keys.min {|a,b| a.longitude <=> b.longitude }.longitude - 5 -%>
+				<%- max_lon = load_points.keys.max {|a,b| a.longitude <=> b.longitude }.longitude + 5 -%>
+				<%- cen_lat = (max_lat + min_lat)/2.0 -%>
+				<%- cen_lon = (max_lon + min_lon)/2.0 -%>
+			<%- end -%>
+		</div>
+
+
+		<script type="text/javascript">
+//<![CDATA[
+			var loadPoints = function() {
+				species_map.clearOverlays();
+				species_map_markers = new Array();
+				<%- load_points.collect do |k,v| -%>
+					species_map_markers[<%= k.id %>] = new GMarker(new GLatLng(<%= k.latitude %>, <%= k.longitude %>));
+					species_map_markers[<%= k.id %>].bindInfoWindowHtml(<%= render(:partial => 'observations_pagination/species_map_infowindow', :locals => {:sightings => v}).to_json %>, {maxWidth:400,maxHeight:165,autoScroll:true});
+					species_map.addOverlay(species_map_markers[<%= k.id %>]);
+				<%- end -%>
+				<%- if load_points.size > 0 -%>
+					var center = new GLatLng(<%= cen_lat %>, <%= cen_lon %>);
+					var sw = new GLatLng(<%= max_lat %>, <%= max_lon %>);
+					var ne = new GLatLng(<%= min_lat %>, <%= min_lon %>);
+
+					var zoom = species_map.getBoundsZoomLevel(new GLatLngBounds(ne, sw));
+
+					species_map.setCenter(center, zoom);
+				<%- end -%>
+			};
+
+			if(species_map) {
+				loadPoints();
+				$('pagination-working-map').hide();
+			} else {
+				Event.observe( window, 'load', function () {
+					loadPoints();
+				});
+			}
+//]]>
+		</script>
+		</div>
+	<% end %>
+<% else %>
+	Unable to find species
+<% end %>

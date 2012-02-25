@@ -1,0 +1,15 @@
+<%- message ||= nil -%>
+        <%- form_for :message, :url => {:action => 'reply', :id => conversation.id} do |f| -%>
+		<fieldset <% if !conversation.errors.empty? or (message and !message.errors.empty?) %>class="errorfieldlabel"<% end %>>
+			<legend>Reply</legend>
+			<%- send_to_users = conversation.users.reject {|u| u == current_user} -%>
+			<p style="margin-top: 10px;">To: <% send_to_users.each do |u| %><span class="whois"><%= h(u.login) %></span><% if u != send_to_users.last %>, <% end %><% end %></p>
+			<label for="message_body">Body:</label><%= f.text_area :body, :class => 'textbox', :style => 'width: 570px;' %>
+   			<div class="fieldtip"><%= render :partial => 'shared/permitted_xhtml_tags' %></div>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Preview', :class => 'button' %>
+			<%= submit_tag 'Post', :class => 'button' %>
+		</fieldset>
+	<%- end -%>

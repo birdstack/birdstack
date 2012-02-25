@@ -1,0 +1,23 @@
+				<ul>
+				<% for species in @species do -%>
+					<li><%= h(species.english_name) %><span class="informal" style="font-size: 80%"> - <%- for region in species.regions -%><%= h(region.code) %><% if region != species.regions.last %>, <% end %><%- end -%></span></li>
+				<% end -%>
+				<% if @alternate_names %>
+					<% for alternate_name in @alternate_names %>
+						<li><%= h(alternate_name.name) %><span class="informal"> *</span></li>
+					<% end %>
+				<% end %>
+				<%- if @spell_check_search -%>
+					<% for species in @spell_check_search do -%>
+						<li><%= h(species.english_name) %></li>
+					<% end -%>
+				<% end %>
+				</ul>
+				<%- if @species_count > @species.size -%>
+					<hr />
+					<p style="margin: 0 3px 5px 3px;"><%= h(@species_count - @species.size) %> additional result<%- if @species_count - @species.size > 1 -%>s<%- end -%> not shown. Keep typing to narrow your search, or click "Continue" to browse all results.</p>
+				<%- end -%>
+				<% if @spell_check_search %>
+					<hr />
+					<p style="margin: 0 3px 5px 3px;">Suggested spellings</p>
+				<% end %>

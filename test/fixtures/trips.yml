@@ -1,0 +1,102 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+awesometrip:
+  id: 1
+  user_id: 1
+  name: awesome
+  lft: 1
+  rgt: 2
+  parent_id: NULL
+  comment_collection: tripcomments1
+carefultrip:
+  id: 2
+  user_id: 1
+  name: Careful trip
+  lft: 3
+  rgt: 4
+  parent_id: NULL
+  date_year_start: 1985
+  date_month_start: 3
+  date_day_start: 3
+  date_year_end: 1985
+  date_month_end: 3
+  date_day_end: 3
+  time_hour_start: 1
+  time_minute_start: 1
+  protocol: stationary
+  duration_hours: 1
+  duration_minutes: 1
+  comment_collection: tripcomments2
+sightinglesstrip:
+  id: 3
+  user_id: 1
+  name: No sightings here!
+  lft: 5
+  rgt: 6
+  parent_id: NULL
+  comment_collection: tripcomments3
+correcttrip:
+  id: 4
+  user_id: 1
+  name: correct trip
+  lft: 7
+  rgt: 8
+  parent_id: NULL
+  date_year_start: 1985
+  date_month_start: 3
+  date_day_start: 3
+  date_year_end: 1985
+  date_month_end: 3
+  date_day_end: 3
+  time_hour_start: 1
+  time_minute_start: 1
+  protocol: stationary
+  duration_hours: 1
+  duration_minutes: 1
+  comment_collection: tripcomments4
+dayspantrip:
+  id: 5
+  user_id: 1
+  name: late night birding action!
+  lft: 9
+  rgt: 10
+  parent_id: NULL
+  date_year_start: 1985
+  date_month_start: 3
+  date_day_start: 3
+  date_year_end: 1985
+  date_month_end: 3
+  date_day_end: 4
+  time_hour_start: 23
+  time_minute_start: 59
+  protocol: stationary
+  duration_hours: 5
+  duration_minutes: 0
+  comment_collection: tripcomments5
+nonsciencetripwithsightingoutsiderange:
+  user_id: 1
+  name: almost correct trip
+  lft: 11
+  rgt: 12
+  parent_id: NULL
+  date_year_start: 1985
+  date_month_start: 3
+  date_day_start: 3
+  date_year_end: 1985
+  date_month_end: 3
+  date_day_end: 3
+  protocol: casual
+  comment_collection: tripcomments6
+nonsciencetripwithsightingnodate:
+  user_id: 1
+  name: correct trip with no dates
+  lft: 13
+  rgt: 14
+  parent_id: NULL
+  date_year_start: 1985
+  date_month_start: 3
+  date_day_start: 3
+  date_year_end: 1985
+  date_month_end: 3
+  date_day_end: 3
+  protocol: casual
+  comment_collection: tripcomments7

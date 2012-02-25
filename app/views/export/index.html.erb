@@ -1,0 +1,28 @@
+	<%- @page_title = 'Export Your Birdstack Data' -%>
+
+	<h1>Export Your Birdstack Data</h1>
+
+  <p>You can create an export file that contains all your Birdstack data, including your observations, your trips and locations, and your photos. The file is a ZIP file that contains your data formatted in CSV (comma-separated values) format, which can be opened and processed by many common computer programs, including Excel and other spreadsheet programs. You can also export qualifying records in <%= link_to 'eBird format', :controller => 'help', :action => 'ebird' %>.</p>
+
+  <% if @export and not @export_started %>
+    <p>You created an export file on <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => Time.zone.at(@export.updated_at), :separator => ', at '} %>.</p>
+  <p><strong><%= link_to 'Download your export file', :action => 'download' %></strong></p>
+  <% end %>
+
+  <% if @export_started %>
+    <p>An export has been started at on <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => @export_started, :separator => ', at '} %>. This may take several minutes.</p>
+    <p><%= image_tag("loading-big.gif", :size => "32x32", :alt => "loading...", :title => "loading...") %></p>
+
+    <div id="export-update"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+      updater = new Ajax.PeriodicalUpdater('export-update', "<%= url_for(:action => 'export_update') %>", {
+    frequency: 2,
+    evalScripts: true,
+    method: 'get',
+      });
+    //]]>
+    </script>
+  <% else %>
+    <%= button_to 'Create New Export', :action => 'create' %>
+  <% end %>

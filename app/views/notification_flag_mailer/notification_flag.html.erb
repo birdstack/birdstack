@@ -1,0 +1,13 @@
+Sent at: <%= Time.now.to_s %>
+<% if @notification_flag.user %>
+Logged in as: <%= @notification_flag.user.login %>
+Account email: <%= @notification_flag.user.email %>
+<% end %>
+Name: <%= @notification_flag.name %>
+Email: <%= @notification_flag.email %>
+
+<%= @notification_flag.body %>
+
+---
+
+Notification ID: <%= @notification_flag.notification.id %>

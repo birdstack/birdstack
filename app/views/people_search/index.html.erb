@@ -1,0 +1,35 @@
+	<%- @page_title = 'Find other Birdstack members' -%>
+
+	<h1>Find other Birdstack members</h1>
+
+	<div id="search_results">
+		<%= render(:partial => 'search_results') %>
+	</div>
+
+	<%- if @user_search.errors.count > 0 then -%>
+		<h2>Your search cannot be performed until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @user_search.errors.on(:login) then %><li>Username <%= h(@user_search.errors.on(:login).to_a.first) %>.</li><% end %>
+			<% if @user_search.errors.on(:cc) then %><li>Country <%= h(@user_search.errors.on(:cc).to_a.first) %>.</li><% end %>
+			<% if @user_search.errors.on(:location) then %><li>Location <%= h(@user_search.errors.on(:location).to_a.first) %>.</li><% end %>
+			<% if @user_search.errors.on(:tags) then %><li>Interests <%= h(@user_search.errors.on(:tags).to_a.first) %>.</li><% end %>
+			<% if @user_search.errors.on(:base) then %><li>Search <%= h(@user_search.errors.on(:base).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_for :user_search do |f| -%>
+		<fieldset <% if @user_search.errors.count > 0 %>class="errorfieldlabel"<% end %>>
+			<legend>People search</legend>
+			<p class="fieldtip" style="margin-top: 10px;">You can use one or more of the fields below to search for other Birdstackers. Let's communitize!</p>
+			<label for="user_search_login">Username (or part of a username):</label><%= f.text_field('login') %>
+			<label for="user_cc">Country:</label><%= f.select('cc', ([CountryCode.new('cc' => '', 'name' => 'Select a Country')] + @countries).collect {|i| [i.name, i.cc] }) %>
+			<label for="user_location">Location:</label><%= f.text_field('location') %>
+			<label for="user_tags">Interests:</label><%= f.text_field('tags') %>
+			<p class="fieldtip">Separate multiple interests with commas.</p>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag('Search', :class => 'button') %>
+		</fieldset>
+
+	<%- end -%>

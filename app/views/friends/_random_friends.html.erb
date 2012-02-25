@@ -1,0 +1,11 @@
+	<%- if (random_friends = u.random_friends(15)).size > 0 -%>
+		<table>
+			<tr>
+			<%- random_friends.each do |friend| -%>
+				<td style="vertical-align: middle; width: 32px; text-align: center;"><a href="<%= url_for :controller => 'people', :action => 'view', :login => friend.login %>"><%= image_tag(friend.profile_pic.url(:small), :alt => h(friend.login), :title => h(friend.login)) %></a></td>
+			<% end -%>
+			</tr>
+		</table>
+	<%- else -%>
+		<p><% if current_user == u %>You don't<% else %><%= h(u.login) %> doesn't<% end %> have any friends yet.</p>
+	<%- end -%>

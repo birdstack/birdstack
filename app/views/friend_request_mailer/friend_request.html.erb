@@ -1,0 +1,17 @@
+<%= @friend_request.potential_friend.login %> sent you a friend request on Birdstack.
+You need to confirm this request if you want to be friends on Birdstack.
+
+<% if !@friend_request.message.blank? -%>
+##########
+
+<%= Birdstack::strip_tags(@friend_request.message) %>
+
+##########
+
+<%- end -%>
+To confirm <%= @friend_request.potential_friend.login %>'s request, use this link:
+<%= SITE_URL_PREFIX %><%= url_for(:controller => 'friends', :action => 'pending') %>
+
+DO NOT REPLY to this email. <%= @friend_request.potential_friend.login %> won't see your reply.
+
+<%= render :partial => 'shared/mail_footer', :locals => {:user => @user, :notification => User::NOTIFICATION_TYPES[:notify_friend_request]} %>

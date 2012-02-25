@@ -1,0 +1,58 @@
+<%- unless @saved_search -%>
+	Could not find list.
+<%- else -%>
+	<%# # As far as publicize! and friends are concerned, the user is always someone other than the owner %>
+	<%- @saved_search.publicize!(:false) -%>
+	<%- search = Birdstack::Search.new(@saved_search.user, @saved_search.search, true, :false) -%>
+
+	<%- limit = params[:limit].blank? ? 10 : params[:limit].to_i -%>
+	<%- limit = 20 if limit > 20 -%>
+
+	<%# We decided to hard code this for now -%>
+	<%- font_color = '#000'; bg_color = '#fff' -%>
+
+	<%- params[:width] ||= '165' -%>
+	<%- if params[:width] == '200' -%>
+		<%- width = '200px' -%>
+	<%- elsif params[:width] == '220' -%>
+		<%- width = '220px' -%>
+	<%- else -%>
+		<%- width = '165px' -%>
+	<%- end -%>
+
+	<%- params[:highlight_color] ||= 'gray' -%>
+	<%- if params[:highlight_color] == 'green' -%>
+		<%- highlight_color = '#00f100' -%>
+	<%- elsif params[:highlight_color] == 'blue' -%>
+		<%- highlight_color = '#4018f3' -%>
+	<%- elsif params[:highlight_color] == 'pink' -%>
+		<%- highlight_color = '#f10079' -%>
+	<%- else -%>
+		<%- highlight_color = '#c0c0c0' -%>
+	<%- end -%>
+
+	<%- sightings = search.search_no_paginate('created_at_desc', limit) -%>
+
+	<style>.birdstack-stack a:link, .birdstack-stack a:visited { color: <%= font_color %>; text-decoration: none; } .birdstack-stack a:hover, .birdstack-stack a:active { color: <%= font_color %>; text-decoration: underline; }</style>	
+	
+	<div style="border: 0; padding: 0; width: <%= width %>; background: transparent; color: <%= font_color %>; text-align: center; font: 12px verdana, sans-serif;">
+		<b style="display: block; height: 1px; overflow: hidden; font-size: .01em; border-left: 1px solid <%= highlight_color %>; border-right: 1px solid <%= highlight_color %>; margin: 0 5px; padding: 0; background: <%= highlight_color %>;"></b>
+		<b style="display: block; height: 1px; overflow: hidden; font-size: .01em; margin: 0 3px; border-left: 2px solid <%= highlight_color %>; border-right: 2px solid <%= highlight_color %>; padding: 0; background: <%= bg_color %>;"></b>
+		<b style="display: block; height: 1px; overflow: hidden; font-size: .01em; border-left: 1px solid <%= highlight_color %>; border-right: 1px solid <%= highlight_color %>;margin: 0 2px; padding: 0; background: <%= bg_color %>;"></b>
+		<b style="border-left: 1px solid <%= highlight_color %>; border-right: 1px solid <%= highlight_color %>;display: block; margin: 0 1px; height: 2px; background: <%= bg_color %>; padding: 0; overflow: hidden; font-size: .01em;"></b>
+		<div class="birdstack-stack" style="margin: 0; padding: 0; border-left: 1px solid <%= highlight_color %>; border-right: 1px solid <%= highlight_color %>; border-top: 0; border-bottom: 0; background: <%= bg_color %>;">
+			<p style="margin: 0 0 6px; font-weight: bold;"><%= link_to h(@saved_search.name), list_url(:user => @saved_search.user.login, :id => @saved_search.id, :format => 'html'), :style => 'background: none; color: #000;' %></p>
+			<table style="margin: 0; width: 100%; border-collapse: collapse; font-size: 100%;"><tbody style="border: 0;">
+			<%- for sighting in sightings -%>
+				<%- sighting.publicize!(:false) -%>
+				<tr><td style="padding: 2px 0 2px 5px; border-bottom: 1px solid <%= highlight_color %>; width: 1%; text-align: right; vertical-align: top;"><img src="<%= SITE_URL_PREFIX + image_path("exclaim.gif") %>" style="height: 16; width: 16; margin: 0; border: 0;", alt="!" /></td><td style="padding: 2px 2px 2px 5px; border-bottom: 1px solid <%= highlight_color %>; text-align: left; vertical-align: middle;"><a href="<%= observation_url(:user => sighting.user.login, :id => sighting.id) %>" style="font-weight: normal; color: #000; border: 0; background: none;"><%= h(sighting.species.english_name) %></a> <%- if sighting.date_year -%>(<%- if sighting.date_year -%><%= h(sighting.date_year) %><%- end -%><%- if sighting.date_month -%>-<%= h(sighting.date_month) %><%- end -%><%- if sighting.date_day -%>-<%= h(sighting.date_day) %><%- end -%>)<%- end -%></td></tr>
+			<%- end -%>
+			</tbody></table>
+			<p style="margin: 0; border: 0; padding: 0; text-align: center;"><a href="http://birdstack.com" style="margin: 0; border: 0; padding: 0; background: none;"><img src="<%= SITE_URL_PREFIX + image_path("logo100.gif") %>" style="margin: 5px auto 0 auto; border: 0; padding: 0; width: 100px; height: 13px;" title="Birdstack: Create and share world bird lists online, for free." alt="Birdstack: Create and share world bird lists online, for free." /></a></p>
+		</div>
+		<b style="border-left: 1px solid <%= highlight_color %>; border-right: 1px solid <%= highlight_color %>;display: block; margin: 0 1px; height: 2px; background: <%= bg_color %>; overflow: hidden; padding: 0; font-size: .01em;"></b>
+		<b style="display: block; height: 1px; overflow: hidden; font-size: .01em; border-left: 1px solid <%= highlight_color %>; border-right: 1px solid <%= highlight_color %>;margin: 0 2px; padding: 0; background: <%= bg_color %>;"></b>
+		<b style="display: block; height: 1px; overflow: hidden; font-size: .01em; margin: 0 3px; border-left: 2px solid <%= highlight_color %>; border-right: 2px solid <%= highlight_color %>; padding: 0; background: <%= bg_color %>;"></b>
+		<b style="display: block; height: 1px; overflow: hidden; font-size: .01em; border-left: 1px solid <%= highlight_color %>; border-right: 1px solid <%= highlight_color %>; margin: 0 5px; padding: 0; background: <%= highlight_color %>;"></b>
+	</div>
+<%- end -%>

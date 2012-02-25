@@ -1,0 +1,20 @@
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @user.login %><%- else -%><%= link_to h(@user.login), :controller => 'people', :action => 'view', :login => @user.login %><%- end -%> > Photos</p>
+
+	<% if @user == current_user %>
+		<%- @page_title = 'Your photos' -%>
+		<h1>Your photos</h1>
+                <p>You have uploaded <%= h(current_user.num_photos) %> photos (of <%= h(current_user.photo_upload_limit) %> allowed<% if !current_user.supporting_member %> - <%= link_to 'upgrade', :controller => 'main', :action => 'supporting-members' %><% end %>).</p>
+		<p>You can attach photos to your observations, locations, and trips. Look for the "Add a photo" link on each observation, location, or trip page. <%= link_to 'Help.', :controller => 'help', :action => 'photos' %></p>
+	<% else %>
+		<%- @page_title = h(@user.login) + '\'s photos' -%>
+		<h1><%= h(@user.login) %>'s photos</h1>
+	<% end %>
+
+	<h2 style="margin-bottom: 5px;"><% if current_user == @user %>Your<% else %><%= h(@user.login) %>'s<% end %> observation photos</h2>
+	<%= render :partial => 'sighting_photo/paginate', :locals => {:user => @user} %>
+
+	<h2 style="margin-bottom: 5px;"><% if current_user == @user %>Your<% else %><%= h(@user.login) %>'s<% end %> location photos</h2>
+	<%= render :partial => 'user_location_photo/paginate', :locals => {:user => @user} %>
+
+	<h2 style="margin-bottom: 5px;"><% if current_user == @user %>Your<% else %><%= h(@user.login) %>'s<% end %> trip photos</h2>
+	<%= render :partial => 'trip_photo/paginate', :locals => {:user => @user} %>

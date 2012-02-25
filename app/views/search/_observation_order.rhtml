@@ -1,0 +1,28 @@
+			<% section_id = 'observation_order' %>
+				<tr id="<%= section_id %>" <% if @observation_order.blank? %>style="display: none;"<% end %>>
+					<td>
+						<label for="<%= section_id %>_available_options_search">Orders:</label>
+						<%= render :partial => 'two_select_boxes',
+							:locals => {
+								:section_id => section_id,
+								:available_options => current_user.searchable_orders.collect do |option|
+									[
+										option.latin_name,
+										Birdstack::Search.obj_to_csv(option, section_id),
+									]
+								end,
+								:selected_options => Set.new(@observation_order)
+							}
+						%>
+
+						<script type="text/javascript">
+						//<![CDATA[
+							function remove_<%= section_id %>() {
+								clearSelectBoxOptions(document.getElementById('<%= section_id %>_id'))
+
+								removeSearch(document.getElementById('<%= section_id %>'))
+							}
+						//]]>
+						</script>
+					</td>
+				</tr>

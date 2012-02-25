@@ -1,0 +1,7 @@
+	<%- @page_title = 'Previous eBird exports' -%>
+
+	<h1>Previous eBird exports</h1>
+
+	<% for export in @exports %>
+		<%= link_to h(export.filename), :controller => 'ebird', :action => 'download', :id => export.id %> (<%= h(sprintf("%.1f", export.size / 1.kilobyte)) %> KB)<br />
+	<% end %>

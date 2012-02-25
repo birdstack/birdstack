@@ -1,0 +1,12 @@
+<% tag ||= params[:id] %>
+<% user ||= User.find_by_login(params[:user]) %>
+
+<% if tag and user %>
+	<% cache :controller => 'observations_pagination', :action => 'tag_observations', :user => user.id, :id => tag, :type => params[:type], :sort => params[:sort], :no_display_change => params[:no_display_change], :page => params[:page] || 1, :render_for => logged_in? ? current_user.id : 'public' do %>	
+		<% search = Birdstack::Search.new(user, {:observation_tag => {:id => [tag]}}, false, current_user) %>
+
+		<%= render :partial => 'shared/observations_frame', :locals => {:url => {:controller => 'observations_pagination', :action => 'tag', :id => tag, :user => user.login}, :search => search} %>
+	<% end %>
+<% else %>
+	Unable to find tag
+<% end %>

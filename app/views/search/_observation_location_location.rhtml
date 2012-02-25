@@ -1,0 +1,28 @@
+			<% section_id = 'observation_location_location' %>
+				<tr id="<%= section_id %>" <% if @observation_location_location.blank? %>style="display: none;"<% end %>>
+					<td>
+						<label for="<%= section_id %>_available_options_search">Cities and towns:</label>
+						<%= render :partial => 'two_select_boxes',
+							:locals => {
+								:section_id => section_id,
+								:available_options => current_user.searchable_location_locations.collect do |option|
+									[
+										[option.location, option.adm2, option.adm1, CountryCode.country_name(option.cc)].reject {|i| i.blank? }.join(', '),
+										Birdstack::Search.obj_to_csv(option, section_id),
+									]
+								end,
+								:selected_options => Set.new(@observation_location_location)
+							}
+						%>
+
+						<script type="text/javascript">
+						//<![CDATA[
+							function remove_<%= section_id %>() {
+								clearSelectBoxOptions(document.getElementById('<%= section_id %>_id'))
+
+								removeSearch(document.getElementById('<%= section_id %>'))
+							}
+						//]]>
+						</script>
+					</td>
+				</tr>

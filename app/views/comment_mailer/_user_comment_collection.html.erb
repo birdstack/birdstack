@@ -1,0 +1,11 @@
+User: <%= comment.user.login %>
+
+##########
+
+<%= Birdstack::strip_tags(comment.comment) %>
+
+##########
+
+DO NOT REPLY to this email. <%= comment.user.login %> won't see your reply.
+To post a response to <%= comment.user.login %>'s comment, use this link:
+<%= SITE_URL_PREFIX %><%= url_for(:controller => 'people', :action => 'view', :login => comment.comment_collection.user.login) %>

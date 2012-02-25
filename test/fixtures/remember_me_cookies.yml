@@ -1,0 +1,16 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+quentin:
+  id: 1
+  user_id: 1
+  token: blahblah
+  expires_at: <%= (Time.now + REMEMBER_ME_COOKIE_DURATION).to_s :db %>
+  created_at: <%= 5.days.ago.to_s :db %>
+  updated_at: <%= 5.days.ago.to_s :db %>
+
+quentin_expired:
+  id: 2
+  user_id: 1
+  token: blahblahasd
+  expires_at: <%= (Time.now - REMEMBER_ME_COOKIE_DURATION).to_s :db %>
+  created_at: <%= 5.days.ago.to_s :db %>
+  updated_at: <%= 5.days.ago.to_s :db %>

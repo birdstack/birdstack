@@ -1,0 +1,28 @@
+<%= @user.login %>,
+
+Welcome to Birdstack! Your account has been activated. Please save
+this email for future reference.
+
+If you're ready to dive right in, you can....
+* Add observations (<%= SITE_URL_PREFIX + url_for(:controller => :sighting, :action => :select_species) %>)
+* Add locations (<%= SITE_URL_PREFIX + url_for(:controller => :location, :action => :add) %>)
+* Add trip lists (<%= SITE_URL_PREFIX + url_for(:controller => :trip, :action => :add) %>)
+
+Or, you can start off by reading some helpful information about
+Birdstack: <%= SITE_URL_PREFIX + url_for(:controller => :help, :action => :index) %>
+
+Don't forget to stop by the forums if you have a question,
+or just to say hi!
+<%= SITE_URL_PREFIX + url_for(:controller => :forums, :action => :index) %>
+
+Your username is <%= @user.login %>. If you ever lose your password,
+you will need to get a new one here:
+<%= SITE_URL_PREFIX + url_for(:controller => :recover_password, :action => :index) %>
+
+Thanks, and good birding!
+
+Birdstack
+<%= SITE_URL_PREFIX + url_for(:controller => :main, :action => :index) %>
+
+Please do not reply to this email. It is sent automatically from a box
+that is not monitored.

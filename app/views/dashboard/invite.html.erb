@@ -1,0 +1,32 @@
+	<%- @page_title = 'Invite friends to Birdstack' -%>
+
+	<h1>Invite friends to Birdstack</h1>
+
+	<%- if @invite.errors.count > 0 then -%>
+		<h2>Your message cannot be sent until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @invite.errors.on(:name) then %><li>Name <%= h(@invite.errors.on(:name).to_a.first) %>.</li><% end %>
+			<% if @invite.errors.on(:to_email) then %><li>Friend's email <%= h(@invite.errors.on(:to_email).to_a.first) %>.</li><% end %>
+			<% if @invite.errors.on(:subject) then %><li>Subject <%= h(@invite.errors.on(:subject).to_a.first) %>.</li><% end %>
+			<% if @invite.errors.on(:body) then %><li>Body <%= h(@invite.errors.on(:body).to_a.first) %>.</li><% end %>
+			<% if @invite.errors.on(:base) then %><li><%= h(@invite.errors.on(:base).to_a.first) %>.</li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_for :invite do |f| -%>
+
+	<fieldset <% if @invite.errors.on(:name) or @invite.errors.on(:subject) or @invite.errors.on(:body) %>class="errorfieldlabel"<% end %>>
+		<legend>Invitation</legend>
+		<label for="invite_name">Your name:</label><%= f.text_field :name, :class => 'textbox' %>
+		<label for="invite_email">Friends' email addresses (separated by commas):</label><%= f.text_field :to_email, :class => 'textbox' %>
+		<p class="fieldtip">We will not use these addresses for any purpose other than to send this invitation.</p>
+		<label for="invite_subject">Subject:</label><%= f.text_field :subject, :class => 'textbox' %>
+		<label for="invite_body">Message:</label><%= f.text_area :body, :class => 'textbox' %>
+	</fieldset>
+
+	<fieldset class="actionbuttons">
+		<%= submit_tag 'Send', :class => 'button' %>
+	</fieldset>
+
+	<%- end -%>
+

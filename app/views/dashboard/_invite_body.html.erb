@@ -1,0 +1,9 @@
+Hi,
+
+I've been using Birdstack to keep track of my observations and to communitize with other birders around the world.
+
+I thought you'd like to give it a try too. Just go to <%= SITE_URL_PREFIX + url_for(:controller => 'main', :action => 'index') %> and sign up for an account to get started.
+
+Here's my Birdstack profile: <%= SITE_URL_PREFIX + url_for(:controller => 'people', :action => 'view', :login => current_user.login) %>
+
+<%= h(current_user.login) %>

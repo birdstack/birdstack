@@ -1,0 +1,48 @@
+	<%- @page_title = 'Privacy options' -%>
+
+	<h1 id="top">Privacy options</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#observations">Observations</a> | <a href="#locations">Locations</a> | <a href="#trips">Trips</a> | <a href="#lists">Lists</a></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p>While we hope that you'll share as much observational data as possible, we recognize that some people may prefer to keep some or all of their data private. Birdstack has several privacy settings to help you share what you want to share and protect what you want to protect.</p>
+
+	<p>When you mark something private, we will make every reasonable effort to keep it from showing up somewhere that it doesn't belong, but frankly, we don't have bank-level security at this time, and we cannot be held responsible for any unintended consequences if your private data were to become public.</p>
+
+	<p>Each of the privacy options below can be set on a per-item basis, but you can set defaults on your <%- if logged_in? -%><%= link_to 'account management page', :controller => 'people', :action => 'account', :login => current_user.login %><%- else -%>account management page<%- end -%>.</p>
+
+	<p>One important thing to remember is that privacy settings are <strong>not</strong> inheritable. In other words, you can have a private location, but the individual observations from that location are <em>not</em> necessarily private, unless you set them that way. The privacy system was designed this way deliberately to allow for maximum flexibility.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="observations">Observations</h2>
+	
+	<p>Individual observations can be marked as either public or private. If you mark an observation as private, it will not show up in any lists or Stacks that you may have posted elsewhere, nor will it count toward your rankings on any ranking pages that Birdstack may publish.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="locations">Locations</h2>
+	
+	<p>You have three privacy options for locations:</p>
+
+	<ul>
+		<li><b>Fully public.</b></li>
+		<li><b>Coordinates private.</b> This means that others will be able to see the location, but they will not have access to the latitude/longitude coordinates (and hence, the map).</li>
+		<li><b>Fully private.</b> No one but you can see the location. Observations from this location will be public unless you mark them as private. Public observations will simply show up without any location information at all, as if you didn't put one in.</li>
+	</ul>
+	
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="observations">Trips</h2>
+	
+	<p>Trips can be marked as public or private. Private trips cannot contain public sub-trips. Remember that individual observations within the trips do not automatically inherit privacy settings from the containing trip. If you want them to be private, you must set them individually.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="lists">Lists</h2>
+
+	<p>When you create and save a list, you have an option to mark it private. This means that you can't turn it into a Stack, and you can't direct others to its URL. Again, individual observations in the list do <em>not</em> inherit privacy settings from the list. They carry their own privacy settings.</p>
+
+	<p><a href="#top">[top]</a></p>
+

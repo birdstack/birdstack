@@ -1,0 +1,16 @@
+<% sighting_photo = comment.comment_collection.sighting_photo %>
+<% sighting = sighting_photo.sighting %>
+Photo title: <%= sighting_photo.title %>
+Species observed: <%= sighting.species.english_name %>
+
+User: <%= comment.user.login %>
+
+##########
+
+<%= Birdstack::strip_tags(comment.comment) %>
+
+##########
+
+DO NOT REPLY to this email. <%= comment.user.login %> won't see your reply.
+To post a response to <%= comment.user.login %>'s comment, use this link:
+<%= SITE_URL_PREFIX %><%= observation_photo_path(:user => sighting.user.login, :sighting_id => sighting.id, :id => sighting_photo.id) %>

@@ -1,0 +1,9 @@
+				<ul class="auto_complete">
+				<%- for adm2 in @adm2s do -%>
+				<li><%= h(adm2.name) %><span class="informal"><br />(<span class="latitude"><%= h(adm2.latitude) %></span>, <span class="longitude"><%= h(adm2.longitude) %></span>)</span></li>
+				<%- end -%>
+				</ul>
+				<%- if (@adm2s_count - @adm2s.size > 0) -%>
+					<hr />
+					<p style="margin: 0 0 5px 3px;"><%= h(@adm2s_count - @adm2s.size)%> additional counties/districts not shown. Continue typing to narrow your search.</p>
+				<%- end -%>

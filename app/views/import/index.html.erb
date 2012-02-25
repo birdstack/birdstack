@@ -1,0 +1,17 @@
+	<%- @page_title = 'Import observations' -%>
+	
+	<h1>Import observations</h1>
+	
+	<p>If you have lists in other formats, like a spreadsheet program, you can import these data into Birdstack. Import is a complex process that will require patience and care. Before you start, read  the <%= link_to 'instructions for formatting your file', :controller => 'help', :action => 'import-observations-csv' %> and the  <%= link_to 'instructions for processing imported observations', :controller => 'help', :action => 'import-observations-process' %>.</p>
+
+	<h2 style="margin: 0;">Upload a new file</h2>
+
+	<p><%= link_to 'Upload a file', :action => 'upload' %></p>
+
+	<h2 style="margin: 0;">Pending datasets</h2>
+	<%- if @pending_imports.size == 0 -%><p><i>None</i></p><%- end -%>
+	<ul>
+	<%- for pending_import in @pending_imports -%>
+		<li><%= link_to(h(pending_import.filename), :action => 'valid', :id => pending_import.id) %> (<%= link_to('Delete', {:action => 'delete', :id => pending_import.id}, {:method => 'post', :confirm => 'Are you sure? Some observations may not yet be imported. This action cannot be undone.'}) %>) <%- if pending_import.description? -%> -- <%= h(pending_import.description) %><%- end -%></li>
+	<%- end -%>
+	</ul>

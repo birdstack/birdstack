@@ -1,0 +1,17 @@
+	<%- @page_title = 'Observation details for ' + h(@sighting.species.english_name) -%>
+
+	<%= render :partial => 'shared/workflow' %>
+
+	<h1>Observation details for <%= h(@sighting.species.english_name) %> (<i><%= h(@sighting.species.genus.latin_name) + ' ' + h(@sighting.species.latin_name) %></i>)</h1>
+
+	<%= render :partial => 'add_or_edit' %>
+
+	<br />
+
+	<%- if @sighting.trip -%>
+		<h2>Other observations you made on this trip:</h2>
+		<%= render :partial => 'observations_pagination/trip_observations', :locals => {:trip => @sighting.trip.id} %>
+	<% elsif @sighting.user_location %>
+		<h2>Other observations you've made at this location:</h2>
+		<%= render :partial => 'observations_pagination/location_observations', :locals => {:location => @sighting.user_location.id} %>
+	<%- end -%>

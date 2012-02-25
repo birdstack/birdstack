@@ -1,0 +1,22 @@
+	<%- @page_title = 'Edit location "' +  h(@user_location.name) + '"' -%>
+
+	<h1>Edit location "<%= h(@user_location.name) %>"</h1>
+
+	<p>Our autocomplete geocoding features will help you find locations on the interactive map.<br />You can zoom in and click on the map to provide more precise detail.<br />All fields except "Location name" are <strong>optional</strong>. (<%= link_to 'Help', :controller => 'help', :action => 'locations' %>)</p>
+
+	<%= render :partial => 'add_or_edit' %>
+	
+	<hr style="width: 40%; margin-bottom: 11px; text-align: center;" />
+
+	<div style="text-align: center;">
+		<% form_tag({:controller => 'location', :action => 'merge', :id => @user_location.id}, {:onsubmit => "return confirm('Do you really want to merge this location? (This cannot be undone!)')"}) do %>
+			<fieldset class="actionbuttons">
+			Merge this location into another one (<%= link_to 'Help', :controller => 'help', :action => 'locations', :anchor => 'merge' %>): <%= select_tag 'new_location', options_for_select(current_user.user_locations.collect {|l| [l.name, l.id]}.reject {|l| l[1] == @user_location.id} ), {:style => "width: 85%;"} %>
+			<%= submit_tag 'Merge' %>
+			</fieldset>
+		<% end %>
+	</div>
+
+	<hr style="width: 40%; margin-bottom: 11px; text-align: center;" />
+
+	<div style="text-align: center;"><%= button_to 'Delete this location', {:controller => 'location', :action => 'delete', :id => @user_location.id}, {:confirm => "Do you really want to delete this location? (This cannot be undone!)"} %></div>

@@ -1,0 +1,62 @@
+<%# Takes local variables publicize_for, url %>
+<%- url ||= {} -%>
+<%- publicize_for ||= current_user -%>
+
+<%# Default to table, then whatever was given in the param, then whatever was saved in the search %>
+<%- type = 'table' -%>
+<%- if params[:type] then -%>
+	<%- type = params[:type] -%>
+<%- elsif search and search.hash[:observation_search_display] and search.hash[:observation_search_display][:type] -%>
+	<%- type = search.hash[:observation_search_display][:type] -%>
+<%- end -%>
+
+<%# Default to date_desc, then whatever was given in the param, then whatever was saved in the search %>
+<%- sort = 'date_desc' -%>
+<%- if params[:sort] then -%>
+	<%- sort = params[:sort] -%>
+<%- elsif search and search.hash[:observation_search_display] and search.hash[:observation_search_display][:sort] -%>
+	<%- sort = search.hash[:observation_search_display][:sort] -%>
+<%- end -%>
+
+<%- per_page ||= type == 'report' ? 25 : 100 -%>
+
+<%- sightings = search.search(params[:page], per_page, sort) -%>
+
+		<div id="sightings" style="clear: both;">
+			<div id="pagination-working" style="display: none; text-align: center;"><p style="margin-top: 50px;">Loading...</p><p><%= image_tag("loading-big.gif", :size => "32x32", :alt => "loading...", :title => "loading...") %></p></div>
+			<div id="pagination-content">
+
+			<%- unless params[:no_display_change] -%>
+				<div class="pagination_form">
+					<%- form_tag(url, {:method => :get, :id => 'pagination_style_form'}) do -%>
+						<fieldset style="margin: 0; border: 0; padding: 0; text-align: right;">
+							<%= select_tag('type', options_for_select([['Table', 'table'],['Report','report']], type), :style => 'font-size: 75%;') %>
+							<%= select_tag('sort', options_for_select([['Date - newest first', 'date_desc'],['Date - oldest first', 'date_asc'],['English name - A-Z', 'species_english_asc'],['English name - Z-A','species_english_desc'],['Scientific name - A-Z', 'scientific_asc'],['Scientific name - Z-A','scientific_desc'],['Taxonomic order','species_taxonomic']], sort), :style => 'font-size: 75%;') %><%= submit_tag 'Change', :style => 'margin-left: 3px; font-size: 95%;' %>
+						</fieldset>
+					<script type="text/javascript">
+//<![CDATA[
+						<%# Handle not selecting the current thing after hitting the back button %>
+						$('pagination_style_form').reset()
+//]]>
+					</script>
+					<%- end -%>
+				</div>
+			<%- end -%>
+
+			<table style="width: 100%; margin-bottom: 5px;"><tr><td>Total observations: <b><%= h(sightings.total_entries) %></b></td>
+				<td style="text-align: right;">
+				<%- url[:format] = nil # setting format manually will mess up the html/js autodetection of the controller -%>
+				<%- url[:commit] = nil # there's no reason to include this.  It looks silly and messes with caching.  It only gets included because the form above uses a GET request -%>
+				<%- url[:login] = nil # there's no reason to include this.  It looks silly and messes with caching.  It only gets included because it's a part of the parameters on a user page -%>
+				<%= will_paginate sightings, :params => url %></td></tr></table>
+
+			<%- if type == 'report' -%>
+				<%= render :partial => 'shared/list_report', :locals => {:sightings => sightings, :publicize_for => publicize_for} %>
+			<%- else -%>
+				<%= render :partial => 'shared/list_table', :locals => {:sightings => sightings, :publicize_for => publicize_for} %>
+			<%- end -%>
+
+			<%= will_paginate sightings, :params => url %><br />
+
+			</div>
+		</div>

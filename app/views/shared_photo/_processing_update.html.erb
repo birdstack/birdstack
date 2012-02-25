@@ -1,0 +1,27 @@
+<script type="text/javascript">
+//<![CDATA[
+<% @processing_status.each_pair do |id, status| %>
+  <% if status == :processing %>
+    Element.update('new_photo_<%= h(id) %>', "<%= escape_javascript(image_tag("loading-big.gif", :size => "32x32", :alt => "loading...", :title => "loading...")) %>");
+  <% elsif status == :success %>
+    <% photo = @type.find_by_id(id).andand.publicize!(current_user) %>
+    <% if photo %>
+      Element.update('new_photo_<%= h(id) %>', "<%= escape_javascript(image_tag(photo.photo(:thumb))) %>");
+    <% else %>
+      Element.update('new_photo_<%= h(id) %>', 'Error while processing image');
+    <% end %>
+  <% else %><%# presumably :failure %>
+    Element.update('new_photo_<%= h(id) %>', 'Error while processing image');
+  <% end %>
+<% end %>
+<% if @processing_status.has_value?(:processing) %>
+  $('new_photo_completed_top').hide()
+  $('new_photo_completed').hide()
+<% else %>
+  $('new_photo_processing_top').hide()
+  $('new_photo_completed_top').show()
+  $('new_photo_completed').show()
+  updater.stop()
+<% end %>
+//]]>
+</script>

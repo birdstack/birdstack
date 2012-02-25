@@ -1,0 +1,27 @@
+
+			<script type="text/javascript">
+		//<![CDATA[
+
+			var map;
+			
+			function load() {
+				if (GBrowserIsCompatible()) {
+					map = new GMap2(document.getElementById("map"));
+
+					map.addControl(new GLargeMapControl());
+					map.addControl(new GMapTypeControl());
+
+					point = new GLatLng(<%= location.latitude %>, <%= location.longitude %>)
+					map.setCenter(point, <%= location.zoom || 1 %>);
+
+					sighting_marker = new GMarker(point);
+					map.addOverlay(sighting_marker);
+					point = sighting_marker.getPoint();
+					map.panTo(point);
+
+					map.setMapType(G_HYBRID_MAP);
+				}
+			}
+		//]]>
+			</script>
+

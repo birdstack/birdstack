@@ -1,0 +1,38 @@
+	<p class="breadcrumb" style="margin-bottom: 5px;">
+	<%- if @order or @results-%>
+		<%= link_to 'World Bird List', :controller => 'ioc', :action => 'index' %> &gt;
+	<%- else -%>
+		World Bird List
+	<%- end -%>
+
+	<%- if @results -%>Search<%- end -%>
+
+	<%- if @order and @family -%>
+		<%= link_to h(@order.latin_name), :controller => 'ioc', :action => 'order', :order => @order.latin_name.downcase %> &gt;
+	<%- elsif @order -%>
+		<%= h(@order.latin_name) %>
+	<%- end -%>
+
+	<%- if @family and @genus -%>
+		<%= link_to h(@family.latin_name), :controller => 'ioc', :action => 'family', :order => @order.latin_name.downcase, :family => @family.latin_name.downcase %> &gt;
+	<%- elsif @family -%>
+		<%= h(@family.latin_name) %>
+	<%- end -%>
+
+	<% # Nasty is_a hack needed because species doesn't have a plural %>
+	<%- if @genus and @species and !@species.is_a?(Array) -%>
+		<span class="latin"><%= link_to h(@genus.latin_name), :controller => 'ioc', :action => 'genus', :order => @order.latin_name.downcase, :family => @family.latin_name.downcase, :genus => @genus.latin_name.downcase %></span> &gt;
+	<%- elsif @genus -%>
+		<span class="latin"><%= h(@genus.latin_name) %></span>
+	<%- end -%>
+
+	<%- if @species and !@species.is_a?(Array) -%>
+		<span class="latin"><%= h(@genus.latin_name.first + '. ' + @species.latin_name) %></span>
+	<%- end -%>
+	</p>
+
+	<% form_tag(ioc_search_url) do %>
+		<fieldset style="margin: 0; border: 0; padding: 0; text-align: right;">
+			<%= text_field_tag 'term', "Search World Bird List", {:class => 'default-value'} %><%= submit_tag 'Search' %>
+		</fieldset>
+	<% end %>

@@ -1,0 +1,54 @@
+	<%- @page_title = 'Edit your profile' -%>
+
+	<h1>Edit your profile</h1>
+
+	<p><%= link_to 'View your profile as it appears to others', :action => 'view' %><br />
+	<%= link_to 'Return to your dashboard', :controller => 'dashboard', :action => 'index' %><br /><br /></p>
+
+	<%- if @user.errors.count > 0 or (@profile_pic and @profile_pic.errors.count > 0) then -%>
+		<h2>Your account cannot be updated until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<% if @user.errors.on(:gender) then %><li>Gender <%= h(@user.errors.on(:gender).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:location) then %><li>Location <%= h(@user.errors.on(:location).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:cc) then %><li>Country <%= h(@user.errors.on(:cc).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:website) then %><li>Website <%= h(@user.errors.on(:website).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:signature) then %><li>Signature <%= h(@user.errors.on(:signature).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:bio) then %><li>Bio <%= h(@user.errors.on(:bio).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:tag_list) then %><li>Interests <%= h(@user.errors.on(:tag_list).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:base) then %><li><%= h(@user.errors.on(:base).to_a.first) %>.</li><% end %>
+			<% if @user.errors.on(:profile_pic) then %><li>Picture <%= h(@user.errors.on(:profile_pic).to_a.first) %></li><% end %>
+		</ul>
+	<%- end -%>
+
+	<%- form_for :user, :html => {:multipart => true} do |f| -%>
+
+		<fieldset <% if @user.errors.on(:gender) or @user.errors.on(:location) or @user.errors.on(:website) or @user.errors.on(:signature) or @user.errors.on(:bio) %>class="errorfieldlabel"<% end %>>
+			<legend>Profile details</legend>
+			<p><br />Username: <b><%= h(@user.login) %></b></p>
+			<label for="user_gender">Gender:</label><%= f.select('gender', [['Male', 'm'], ['Female', 'f']], {:include_blank => true}) %>
+			<label for="user_cc">Country:</label><%= f.select('cc', ([CountryCode.new('cc' => '', 'name' => 'Select a Country')] + @countries).collect {|i| [i.name, i.cc] }) %>
+			<label for="user_location">Location:</label><%= f.text_field('location') %>
+			<label for="user_tag_list">Interests:</label><%= f.text_field('tag_list', :style => 'width: 570px;') %>
+			<p class="fieldtip">Separate interests with commas.</p>
+			<label for="user_website">Website:</label><%= f.text_field('website', :style => 'width: 570px;') %>
+			<label for="user_bio">About me:</label><%= f.text_area('bio') %>
+			<p class="fieldtip">Permitted <abbr>(X)HTML</abbr> tags are &lt;a&gt;, &lt;b&gt;, &lt;blockquote&gt;, &lt;em&gt;,  &lt;i&gt;, &lt;img&gt;, &lt;strong&gt;, and &lt;u&gt;</p>
+			<label for="user_signature">Signature (to appear on forum postings):</label><%= f.text_area('signature') %>
+			<p class="fieldtip">Permitted <abbr>(X)HTML</abbr> tags are &lt;a&gt;, &lt;b&gt;, &lt;blockquote&gt;, &lt;em&gt;,  &lt;i&gt;, &lt;img&gt;, &lt;strong&gt;, and &lt;u&gt;</p>
+		</fieldset>
+
+		<fieldset <% if @profile_pic and @profile_pic.errors.count > 0 %>class="errorfieldlabel"<% end %>>
+			<legend>Profile picture</legend>
+			<br />Current picture:<br />
+                        <%# If there were no errors on the profile pic, show the new one in @user.  If there were errors, show the unmodified one in the current_user object %>
+                        <img src="<%= (@user.errors.on(:profile_pic) ? current_user : @user).profile_pic.url(:normal) %>" alt="current profile picture" />
+			<label for="profile_pic_picture">Upload new picture:</label><%= f.file_field(:profile_pic) %>
+			<p class="fieldtip">Maximum file size is 10 MB. We support .jpg, .gif, and .png.</p>
+			<%= check_box_tag 'profile_pic_delete', 1, false, :name => 'profile_pic_delete', :class => 'checkbox' %><label for="profile_pic_delete" class="checkbox">Delete my profile picture</label>
+		</fieldset>
+
+		<fieldset class="actionbuttons">
+			<%= submit_tag('Save changes', :class => 'button') %>
+		</fieldset>
+
+	<%- end -%>

@@ -1,0 +1,19 @@
+<%= @message.user.login %> sent you a message on Birdstack.
+
+##########
+
+Subject: <%= @message.conversation.subject %>
+
+<%= Birdstack::strip_tags(@message.body) %>
+
+##########
+
+DO NOT REPLY to this email. <%= @message.user.login %> won't see your reply.
+To reply to <%= @message.user.login %>'s message, use this link:
+<%- if @message.conversation.messages.first == @message -%>
+<%= SITE_URL_PREFIX %><%= url_for(:controller => 'conversations', :action => 'view', :id => @message.conversation.id) %>
+<%- else -%>
+<%= SITE_URL_PREFIX %><%= url_for(:controller => 'conversations', :action => 'view', :id => @message.conversation.id, :anchor => @message.id) %>
+<%- end -%>
+
+<%= render :partial => 'shared/mail_footer', :locals => {:user => @user, :notification => User::NOTIFICATION_TYPES[:notify_message]} %>

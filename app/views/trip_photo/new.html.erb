@@ -1,0 +1,37 @@
+	<%- @page_title = 'Upload photos' -%>
+
+	<h1>Upload photos</h1>
+
+	<% form_for @trip, :url => { :action => 'create', :trip_id => @trip.id }, :html => {:multipart => true, :onsubmit => 'greySubmits();'} do |f| %>
+	  <%= f.error_messages %>
+          <% if current_user.photo_upload_limit - current_user.num_photos > 0 %>
+                  <p>You can upload <%= h(current_user.photo_upload_limit - current_user.num_photos) %> more photos. <%= link_to 'Help.', :controller => 'help', :action => 'photos' %></p>
+          <% else %>
+		  <p>You cannot upload any more photos.<% if !current_user.supporting_member %> (<%= link_to 'Upgrade', :controller => 'main', :action => 'supporting-members' %>)<% end %> <%= link_to 'Help.', :controller => 'help', :action => 'photos' %></p>
+          <% end %>
+	<fieldset>
+	  <legend>Photos</legend>
+	  <% new_photos = @trip.trip_photo.find_all {|sp| sp.new_record? } %>
+	  <% while(new_photos.size < 3) %>
+	    <% new_photos.push @trip.trip_photo.build %>
+	  <% end %>
+	  <% x = 0 %>
+	  <% new_photos.each do |photo| %>
+	    <% f.fields_for :trip_photo, photo do |sp| %>
+	      <label for="trip_trip_photo_attributes_<%= h(x) %>_photo">File:</label><%= sp.file_field :photo %>
+	      <p class="fieldtip">Maximum file size is 10 MB. We support .jpg, .gif, and .png.</p>
+	      <label for="trip_trip_photo_attributes_<%= h(x) %>_title">Title (required):</label><%= sp.text_field :title, :style => 'width: 570px' %>
+	      <label for="trip_trip_photo_attributes_<%= h(x) %>_description">Description:</label><%= sp.text_area :description, :style => 'width: 570px; height: 150px;' %>
+	      <p class="fieldtip"><%= render :partial => 'shared/permitted_xhtml_tags.html.erb' %></p>
+              <label for="trip_trip_photo_attributes_<%= h(x) %>_license">License:</label><%= sp.select :license, User.available_photo_licenses, :selected => photo.license.blank? ? current_user.default_photo_license : photo.license %>
+              <p class="fieldtip">You can set the default on your <%= link_to 'account settings', :controller => 'people', :action => 'account', :login => current_user.login %> page. <a href="http://creativecommons.org/about/licenses">Explanation of Creative Commons licenses.</a></p>
+	      <% if x < 2 %><hr /><% end %>
+	      <% x = x + 1 %>
+	    <% end %>
+	  <% end %>
+	</fieldset>
+	<fieldset class="actionbuttons">
+	  <p>I certify that I have the right to upload these images.</p>
+	  <%= f.submit %>
+	</fieldset>
+	<% end %>

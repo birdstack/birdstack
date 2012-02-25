@@ -1,0 +1,5 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+US:
+  id: 1
+  cc: US
+  name: United States

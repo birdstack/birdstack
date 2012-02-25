@@ -1,0 +1,5 @@
+<% if params[:prefill] %>
+	<% params[:prefill].each do |k,v| %>
+		<%= hidden_field_tag "prefill[#{k}]", v, :id => "prefill_#{k}" %>
+	<% end %>
+<% end %>

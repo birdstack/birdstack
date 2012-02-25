@@ -1,0 +1,40 @@
+	<%- @page_title = 'Add ambiguity notice for ' + h(@species.english_name) -%>
+
+	<h1>Add ambiguity notice for <%= h(@species.english_name) %></h1>
+
+	<p>Sometimes, one English name refers to more than one species. For example, "Bismarck Imperial Pigeon" has been used by some authors for <i>Ducula subflavescens</i> and by others for <i>Ducula melanochroa</i>. This problem is called polysemy. It can also happen in the wake of a split.</p>
+	
+	<p>Please help other Birdstack users choose the correct species for their lists by adding ambiguity notifications to names that are used for more than one species. (Note that this is <strong>not</strong> the same problem as multiple English names for one species.)</p>
+
+	<%- if @notification.errors.count > 0 then -%>
+		<h2>Your notification cannot be saved until the following errors are corrected:</h2>
+		<ul class="errormessage">
+			<%- if @notification.errors.on(:species_id) then -%><li>Species <%= h(@notification.errors.on(:species_id).to_a.first) %>.</li><%- end -%>
+			<%- if @notification.errors.on(:species_english_name) then -%><li>Species name <%= h(@notification.errors.on(:species_english_name).to_a.first) %>.</li><%- end -%>
+			<%- if @notification.errors.on(:description) then -%><li>Explanation <%= h(@notification.errors.on(:description).to_a.first) %>.</li><%- end -%>
+			<%- if @notification.errors.on(:base) then -%><li><%= h(@notification.errors.on(:base).to_a.first) %>.</li><%- end -%>
+		</ul>
+	<%- end -%>
+
+	<%- form_for :notification, :html => {:id => 'notification'} do |f| -%>
+		<fieldset>
+			<legend>Notification details</legend>
+			<label for="species_english_name"><b>What other species are called "<%= h(@species.english_name) %>"?</b></label>
+			<table><tr><td style="width: 335px;"><%= render :partial => 'shared/add_sighting_box_fields' %></td><td><%= submit_tag 'Add species' %></td></tr></table>
+			<%- if @notification.potential_species.size > 0 -%><p style="font-weight: bold; margin-bottom: 0;">Selected species:</p>
+				<ul style="margin-top: 0;">
+				<%- for @potential_species in @notification.potential_species -%>
+					<li><%= hidden_field 'potential_species[]', 'id' %><%= h(@potential_species.english_name) %> <%= link_to_function '[remove]', "document.getElementById('potential_species_#{@potential_species.id}_id').value = '';document.getElementById('notification').submit();" %></li>
+				<%- end -%>
+				</ul>
+			<%- end -%>
+			<label for="notification_description"><b>Explanation (please be thorough):</b></label>
+			<%= f.text_area 'description' %>
+			<p class="fieldtip">Required. Please try to use both scientific names and English names, and provide other helpful information, like species' geographic ranges. Cite sources if possible.<br />
+			<%= render :partial => 'shared/permitted_xhtml_tags' %></p>
+		</fieldset>
+		
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Save', :class => 'button' %>
+		</fieldset>
+	<%- end -%>

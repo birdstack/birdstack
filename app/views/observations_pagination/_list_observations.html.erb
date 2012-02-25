@@ -1,0 +1,15 @@
+<% list ||= params[:id] %>
+<% list = SavedSearch.find_by_id(list) %>
+<% if list.andand.user != current_user %>
+	<% list = SavedSearch.find_public_by_id(list.id) %>
+<% end %>
+
+<% if list %>
+        <% cache :controller => 'observations_pagination', :action => 'list_observations', :id => list.id, :user => list.user.id, :type => params[:type], :sort => params[:sort], :no_display_change => params[:no_display_change], :page => params[:page] || 1, :render_for => logged_in? ? current_user.id : 'public' do %>
+		<% search = Birdstack::Search.new(list.user, list.search, true, current_user) %>
+
+		<%= render :partial => 'shared/observations_frame', :locals => {:url => {:controller => 'observations_pagination', :action => 'list', :id => list.id, :no_display_change => params[:no_display_change]}, :search => search} %>
+	<% end %>
+<% else %>
+	Unable to find list
+<% end %>

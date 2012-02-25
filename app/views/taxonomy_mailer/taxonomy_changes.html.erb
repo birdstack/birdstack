@@ -1,0 +1,16 @@
+Birdstack's database has just been updated to correspond with the latest
+changes in bird names and taxonomy. You can use Birdstack's taxonomic
+update manager (<%= SITE_URL_PREFIX %><%= url_for(:controller => 'taxonomy_management') %>)
+to update your observations of the following species:
+
+<%- @changes.each do |c| -%>
+<%= c.species.english_name %>
+<%- end -%>
+
+For more on the update, see the blog post:
+<%= @url %>
+
+And here's a video tutorial about the update manager:
+<%= SITE_URL_PREFIX %>/screencasts/taxonomic-updates
+
+<%= render :partial => 'shared/mail_footer', :locals => {:user => @user, :notification => User::NOTIFICATION_TYPES[:notify_taxonomy_changes]} %>

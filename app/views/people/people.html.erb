@@ -1,0 +1,60 @@
+	<%- @page_title = 'People' -%>
+
+	<h1>People</h1>
+	
+	<p>Say hello to a few of your fellow Birdstackers!<% if logged_in? %> If you're enjoying Birdstack, <%= link_to 'invite more people', :controller => 'dashboard', :action => 'invite' %>!<% else %> If you like what you see, why not <%= link_to 'join the fun', :controller => 'account', :action => 'signup' %>?<% end %></p>
+
+	<p style="text-align: center;"><%= link_to 'Search for Birdstack members', :controller => 'people_search' %></p>
+
+	<table style="width: 100%">
+		<tr>
+		<%- for user in @random -%>
+			<td style="text-align: center; vertical-align: middle; width: 33%; height: 150px;"><a href="<%= url_for :controller => 'people', :action => 'view', :login => user.login %>"><%= image_tag(user.profile_pic.url(:normal), :alt => h(user.login), :title => h(user.login), :style => 'vertical-align: middle') %></a>
+			</td>
+		<%- end -%>
+		</tr>
+		<tr>
+		<%- for user in @random -%>
+			<td style="text-align: center; width: 33%">
+				<a href="<%= url_for :controller => 'people', :action => 'view', :login => user.login %>"><%= h(user.login) %></a><br />
+				<%= h(user.location) %>
+			</td>
+		<%- end -%>
+		</tr>
+	</table><br />
+
+	<h2 style="text-align: center; margin-bottom: 0;">Members' interests</h2>
+	<p style="text-align: center; line-height: 30px;">
+		<% tag_cloud @tags, %w(cloud1 cloud2 cloud3 cloud4) do |tag, css_class| %>
+			<span style="white-space: nowrap;"><%= link_to h(tag.name.downcase), { :controller => 'people_search', :user_search => {:tags => tag.name.downcase } }, :class => css_class %></span>
+		<% end %>
+	</p>
+
+	<% if logged_in? %><h2 style="text-align: center;">Your <%= link_to 'friends', :controller => 'friends', :action => 'index' %> (<%= h(current_user.friends.size) %>)</h2>
+	<%= render :partial => 'friends/random_friends', :locals => {:u => current_user} %><br /><% end %>
+
+	<div style="width: 50%; display: inline; float: left;">
+		<h2>Top reporters</h2>
+		<table>
+		<%- for user in @top -%>
+			<tr><td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => user.login %>"><%= image_tag(user.profile_pic.url(:small), :alt => h(user.login), :title => h(user.login)) %></a></td>
+				<td><p style="margin-bottom: 2px;"><b><%= link_to h(user.login), :controller => 'people', :action => 'view', :login => user.login %></b></p>
+				<p style="margin-left: 10px;"><%= h(user.public_observations) %> public observations</p></td></tr>
+		<%- end -%>
+		</table>
+		<h2>New members</h2>
+		<table>
+		<%- for user in @recent -%>
+			<tr><td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => user.login %>"><%= image_tag(user.profile_pic.url(:small), :alt => h(user.login), :title => h(user.login)) %></a></td>
+				<td><p style="margin-bottom: 2px;"><b><%= link_to h(user.login), :controller => 'people', :action => 'view', :login => user.login %></b></p>
+				<p style="margin-left: 10px;"><%= h(CountryCode.country_name(user.cc)) %><% if user.location and user.cc %><br /><% end %><%= h(user.location) %></p></td></tr>
+		<%- end -%>
+		</table>
+	</div>
+
+	<div style="width: 50%; display: inline; float: right;">
+		<h2>Everyone's recent activity</h2>
+		<%= render :partial => 'activity/feed_item', :locals => {:activities => @activities, :pic => 'true'} %>
+	</div>
+
+	<br style="clear: both;" />

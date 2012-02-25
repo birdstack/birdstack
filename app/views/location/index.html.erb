@@ -1,0 +1,62 @@
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @user.login %><%- else -%><%= link_to h(@user.login), :controller => 'people', :action => 'view', :login => @user.login %><%- end -%> > Locations</p>
+
+	<% if @user == current_user %>
+		<%- @page_title = "Your locations" -%>
+
+		<h1>Your locations</h1>
+	
+		<p>You can define locations to organize your observations geographically. (<%= link_to 'Help', :controller => 'help', :action => 'locations' %>)</p>
+
+		<p style="font-weight: bold;"><%= link_to 'Create a new location', :action => 'add' %></p>
+	<% else %>
+		<%- @page_title = h(@user.login) + '\'s locations' -%>
+
+		<h1><%= h(@user.login) %>'s locations</h1>
+	<% end %>
+
+	<%- old_cc = nil -%>
+	<%- old_adm1 = nil -%>
+	<%- old_adm2 = nil -%>
+	<%- open_ul = false -%>
+	<% for location in @locations %>
+		<%- location.publicize!(current_user) -%>
+		<%# The .to_s call is important because it makes NULL and '' the same %>
+		<%# downcase prevents case differences from being counted as different locations.  MySQL does the comparisons nicely, but Ruby will break on non-ascii strings.  Bleh. %>
+		<%- if old_cc.to_s.downcase != location.cc.to_s.downcase -%>
+			<%- if open_ul -%></ul><%- open_ul = false -%><%- end -%>
+			<%- if location.cc.blank? -%>
+				<h2 style="margin: 20px 0 10px 0; font-size: 130%;">Country unspecified</h2>
+			<%- else -%>
+				<h2 style="margin: 20px 0 10px 0; font-size: 130%;"><%= h(CountryCode.country_name(location.cc)) %></h2>
+			<%- end -%>
+			<%- old_cc = location.cc.to_s -%>
+			<%- old_adm1 = nil -%>
+			<%- old_adm2 = nil -%>
+		<%- end -%>
+		<%- if old_adm1.to_s.downcase != location.adm1.to_s.downcase -%>
+			<%- if open_ul -%></ul><%- open_ul = false -%><%- end -%>
+			<%- if location.adm1.blank? -%>
+				<h3 style="margin: 0 0 10px 15px; font-size: 115%;">State or province unspecified</h3>
+			<%- else -%>
+				<h3 style="margin: 0 0 10px 15px; font-size: 115%;"><%= location.adm1 %></h3>
+			<%- end -%>
+			<%- old_adm1 = location.adm1.to_s -%>
+			<%- old_adm2 = nil -%>
+		<%- end -%>
+		<%- if old_adm2.to_s.downcase != location.adm2.to_s.downcase -%>
+			<%- if open_ul -%></ul><%- open_ul = false -%><%- end -%>
+			<%- if location.adm2.blank? -%>
+				<h4 style="margin: 0 0 10px 35px; font-size: 100%;">County, parish, or district unspecified</h4>
+			<%- else -%>
+				<h4 style="margin: 0 0 10px 35px; font-size: 100%;"><%= location.adm2 %></h4>
+			<%- end -%>
+			<%- old_adm2 = location.adm2.to_s -%>
+		<%- end -%>
+		<%- if !open_ul -%><ul style="margin-top: 0;"><%- open_ul = true -%><%- end -%>
+		<li style="margin: 0 0 10px 20px;"><%= link_to h(location.name), location_url(:user => location.user.login, :id => location.id) %><%- if !location.location.blank? -%> (<%= h(location.location) %>)<%- end -%>
+		<%- if @user == current_user %>
+			(<%= link_to 'Add', :controller => 'sighting', :action => 'select_species', :prefill => {:location => location.id} %> | <%= link_to 'Edit', :controller => 'location', :action => 'edit', :id => location.id %> | <%= link_to 'Delete', {:controller => 'location', :action => 'delete', :id => location.id}, {:confirm => "Do you really want to delete this location? (This cannot be undone!)", :method => 'post'} %>)
+		<% end %>
+		</li>
+	<% end %>
+	<%- if open_ul -%></ul><%- open_ul = false -%><%- end -%>

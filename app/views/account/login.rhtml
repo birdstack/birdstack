@@ -1,0 +1,35 @@
+	<%- @page_title = 'Sign in' -%>
+	<%- add_to_body_params(:onLoad => "$('login').focus()") -%>
+	
+	<div id="signup">
+		<h2>Birdstack wants to change your life.</h2>
+		<p>Whether you are a world lister or a backyard birdwatcher, Birdstack has something for you:</p>
+		<ul>
+			<li>Create and maintain world bird lists</li>
+			<li>Publish your data to external sites</li>
+			<li>Communitize with other birders</li>
+			<li>Share knowledge and protect birds</li>
+		</ul>
+		<p>Interested? <%= link_to 'Take a tour', :controller => 'main', :action => 'tour' %> or <%= link_to 'create an account', :controller => 'account', :action => 'signup' %>.</p>
+	</div>
+
+	<%- form_tag url_for(:controller => :account, :action => :login), { :name => 'login_form', :class => 'signinblock' } do -%>
+		<fieldset>
+
+			<p>Sign in to Birdstack</p>
+
+			<label for="login">Username:</label><%= text_field_tag 'login' %><br />
+			<label for="password">Password:</label><%= password_field_tag 'password' %><br />
+			<%= check_box_tag 'remember_me', 1, true %> <label for="remember_me">Keep me signed in on this computer.</label><br />
+			<%= link_to('Lost username or password?', :controller => 'recover_password', :action => 'index') %> <%= submit_tag 'Sign in' %>
+
+			<% if session[:redirect_to] %>
+				<%= hidden_field_tag 'redirect_to', session[:redirect_to] %>
+				<%# We clear this out here so that the user is only redirected after the first time they come to this page
+				    if they do something else in between, they would probably just be confused if the system remembered
+				    what they were trying to do a long time ago %>
+				<% session[:redirect_to] = nil %>
+			<% end %>
+
+		</fieldset>
+	<%- end -%>

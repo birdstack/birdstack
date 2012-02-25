@@ -1,0 +1,25 @@
+	<%- @page_title = 'Add ' + h(@friend.login) + ' as a friend' -%>
+
+	<h1>Add <%= h(@friend.login) %> as friend</h1>
+
+	<p>When you send a friend request, <%= h(@friend.login) %> will be asked to confirm it.</p>
+
+        <%- if @friend_request.errors.count > 0 then -%>
+          <h2>Your friend request cannot be submitted until the following errors are corrected:</h2>
+          <ul class="errormessage">
+            <% if @friend_request.errors.on(:potential_friend) then %><li>User <%= h(@friend_request.errors.on(:potential_friend).to_a.first) %>.</li><% end %>
+          </ul>
+        <%- end -%>
+
+        <% form_for :friend_request, @friend_request, :html => {:onsubmit => 'greySubmits();'} do |f| %>
+		<fieldset class="actionbuttons" style="margin-bottom: 5px;">
+			<%= submit_tag 'Send friend request' %>
+		</fieldset>
+		<fieldset>
+			<legend style="margin-bottom: 5px;">Include a personal message (optional)</legend>
+			<%= f.text_area :message, :style => 'width: 570px; height: 150px;' %>
+		</fieldset>
+		<fieldset class="actionbuttons">
+			<%= submit_tag 'Send friend request' %>
+		</fieldset>
+	<% end %>

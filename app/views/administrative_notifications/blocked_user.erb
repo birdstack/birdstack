@@ -1,0 +1,8 @@
+User: <%= @user.login %>
+
+* URL       : <%= @request.request_uri %>
+* IP address: <%= @request.env["HTTP_X_FORWARDED_FOR"] || @request.env["REMOTE_ADDR"] %>
+* Parameters: <%= @request.parameters.inspect %>
+
+* session: <%= @request.session.inspect %>
+

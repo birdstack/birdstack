@@ -1,0 +1,13 @@
+		<%= will_paginate @threads %>
+
+		<%- for thread in @threads -%>
+			<%- thread.publicize!(current_user) -%>
+			<h2><%= link_to h(thread.title), :controller => 'forums', :forum => @forum.url, :action => 'thread', :id => thread.id %></h2><p class="forum-stats"> (<%= h(pluralize(thread.post_count.to_i > 1 ? thread.post_count - 1 : 0, 'reply')) %>)</p>
+			<p><% first_comment = thread.comments.find(:first) %>Started by <%= link_to h(first_comment.user.login), :controller => 'people', :action => 'view', :login => first_comment.user.login %> on <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => first_comment.created_at, :separator => ', at '} %><br />
+			<% if thread.post_count.to_i > 1 %>
+				Last post by <%= link_to h(thread.posted_by_user.login), :controller => 'people', :action => 'view', :login => thread.posted_by_user.login %> on <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => thread.posted_at, :separator => ', at '} %>
+			<% end %>
+			</p>
+		<%- end -%>
+
+		<%= will_paginate @threads %>

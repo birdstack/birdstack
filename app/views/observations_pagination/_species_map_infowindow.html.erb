@@ -1,0 +1,6 @@
+<%# TODO If we ever add any sort of user-configurable date display to this page, we need to add a :render_for field to the cache key in _species_map.html.erb %>
+<h2><%= h(sightings[0].user_location.name) %></h2>
+<% sightings.each do |s| %>
+	<p style="margin-bottom: 0;"><%= link_to("#{h(s.species.english_name)}", observation_path(:user => s.user.login, :id => s.id)) %> <% if s.date_year -%><%= h(s.date_year) %><%- end -%><%- if s.date_month -%>-<%= h(s.date_month) %><%- end -%><%- if s.date_day -%>-<%= h(s.date_day) %><%- end -%> (<%= h(s.user.login) %>)</p>
+	<%- former_location_name = s.user_location.name -%>
+<% end %>

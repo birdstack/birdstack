@@ -1,0 +1,29 @@
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @user.login %><%- else -%><%= link_to h(@user.login), :controller => 'people', :action => 'view', :login => @user.login %><%- end -%> > Lists</p>
+
+	<%- if @user == current_user -%>
+		<%- @page_title = "Your lists" -%>
+
+		<h1>Your lists</h1>
+	
+		<p>Lists in Birdstack are really queries that search your observations by criteria like dates and places. For that reason, you must <%= link_to 'record observations', :controller => 'sighting', :action => 'select_species' %> before you can create a list. This may seem backwards at first, but you will quickly learn how powerful the system is. (<%= link_to 'Learn more', :controller => 'help', :action => 'searches' %>)</p>
+
+		<p><b><%= link_to('Create a new list', :controller => 'search', :action => 'observation') %></b></p>
+
+		<h2>Lists</h2>
+	<%- else -%>
+		<%- @page_title = h(@user.login) + '\'s lists' -%>
+
+		<h1><%= h(@user.login) %>'s lists</h1>
+	<%- end -%>
+
+	<ul>
+	<%- @saved_searches.each do |search| -%>
+		<%- search.publicize!(current_user) -%>
+		<li><%= link_to h(search.name), list_url(:user => search.user.login, :id => search.id, :format => 'html') %><% if @user == current_user %> (<%= link_to 'Edit', :controller => 'search', :action => 'observation', :id => search.id %> | <%= link_to 'Delete', {:controller => 'search', :action => 'delete', :id => search.id}, {:method => 'post', :confirm => 'Are you sure?  This action will NOT delete any observations.'} %>)<% end %></li>
+	<%- end -%>
+	</ul>
+
+	<%- if @user == current_user -%>
+		<h2>eBird exports</h2>
+		<p><%= link_to h('View previously generated eBird export files'), :controller => 'ebird', :action => 'index' %></p>
+	<%- end -%>

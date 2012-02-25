@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+test_genus1:
+  id: 1
+  latin_name: testblah
+  family_id: 1
+  sort_order: 1
+  sort_after: NULL
+test_genus2:
+  id: 2
+  latin_name: blahtest
+  family_id: 1
+  sort_order: 2
+  sort_after: 1

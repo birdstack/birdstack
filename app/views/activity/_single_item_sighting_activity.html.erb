@@ -1,0 +1,37 @@
+			<% if activity.description[:num_sightings] == 1 %>an observation of 
+			<% elsif activity.description[:num_sightings] == 2 or activity.description[:num_sightings] == 3 %>observations of 
+			<% else %><%= h(pluralize(activity.description[:num_sightings], "observation")) %> including <% end %>
+
+			<% activity.description[:sightings].collect {|s| Sighting.find_by_id(s) }.each do |sighting| %>
+                          <%- next unless sighting -%>
+                          <%- begin -%>
+				<%- sighting.publicize! -%>
+				<%= link_to h(sighting.species.english_name), observation_path(:user => sighting.user.login, :id => sighting.id) %><% if sighting.id != activity.description[:sightings].last and activity.description[:sightings].size > 2 %>, <% end %><% if sighting.id == activity.description[:sightings][-2] %> and <% end %>
+                          <%- rescue -%>
+                          <%- end -%>
+			<% end %>
+
+			<% if activity.description[:num_locations] > 0 and activity.description[:num_locations] < 4 %> at 
+			<% elsif activity.description[:num_locations] > 3 %>at <%= h(pluralize(activity.description[:num_locations], "location")) %> including <% end %>
+
+			<% activity.description[:locations].collect {|l| UserLocation.find_by_id(l) }.each do |location| %>
+                          <%- next unless location -%>
+                          <%- begin -%>
+				<%- location.publicize! -%>
+				<%= link_to h(location.name), location_path(:user => location.user.login, :id => location.id) %><% if location.id != activity.description[:locations].last and activity.description[:locations].size > 2 %>, <% end %><% if location.id == activity.description[:locations][-2] %> and <% end %>
+                          <%- rescue -%>
+                          <%- end -%>
+			<% end %>
+
+			<% if activity.description[:num_trips] == 1 %> on a trip called
+			<% elsif activity.description[:num_trips] == 2 or activity.description[:num_trips] == 3 %> on trips called
+			<% elsif activity.description[:num_trips] > 3 %>on <%= h(pluralize(activity.description[:num_trips], "trip")) %> including <% end %>
+
+			<% activity.description[:trips].collect {|t| Trip.find_by_id(t) }.each do |trip| %>
+                          <%- next unless trip -%>
+                          <%- begin -%>
+				<%- trip.publicize! -%>
+				<%= link_to h(trip.name), trip_path(:user => trip.user.login, :id => trip.id) %><% if trip.id != activity.description[:trips].last and activity.description[:trips].size > 2 %>, <% end %><% if trip.id == activity.description[:trips][-2] %> and <% end %>
+                          <%- rescue -%>
+                          <%- end -%>
+			<% end %>

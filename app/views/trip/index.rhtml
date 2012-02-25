@@ -1,0 +1,34 @@
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @user.login %><%- else -%><%= link_to h(@user.login), :controller => 'people', :action => 'view', :login => @user.login %><%- end -%> > Trips</p>
+
+	<% if @user == current_user %>
+		<%- @page_title = 'Your trips' -%>
+
+		<h1>Your trips</h1>
+
+		<p>Organize your observations into trips! You can create trips within trips (e.g., a visit to a national park during a two-week tour), and you can keep records of more structured observations like feeder counts or nestbox trail monitoring. (<%= link_to 'Help', :controller => 'help', :action => 'trips' %>)</p>
+
+		<p><%= link_to('Create a new trip', :action => :add) %></p>
+	<% else %>
+		<%- @page_title = h(@user.login) + '\'s trips' -%>
+
+		<h1><%= h(@user.login) %>'s trips</h1>
+	<% end %>
+
+	<%- oldtripyear = -1 -%>
+	<%- for trip in @trips -%>
+		<%- trip.publicize!(current_user) -%>
+		<%- if trip.level == 0 -%>
+			<%- if oldtripyear != trip.date_year_start -%>
+				<%- if trip.date_year_start.blank? -%>
+					<h2 style="margin: 10px 0 0 0;">Not dated</h2>
+				<%- else -%>
+					<h2 style="margin: 10px 0 0 0;"><%= h(trip.date_year_start) %></h2>
+				<%- end -%>
+			<%- end -%>
+			<%- oldtripyear = trip.date_year_start -%>
+		<%- end -%>
+		
+		<%- margin_left = (trip.level+1)*10 -%>
+		<p style="margin: 0 0 0 <%= margin_left %>px;"><%= link_to h(trip.name), trip_url(:user => @user.login, :id => trip.id) %><%- if @user == current_user -%> (<%= link_to 'Add', :controller => 'sighting', :action => 'select_species', :prefill => {:trip => trip.id} %> | <%= link_to 'Edit', :controller => 'trip', :action => 'edit', :id => trip.id %> | <%= link_to 'Delete', {:controller => 'trip', :action => 'delete', :id => trip.id}, {:confirm => "Do you really want to delete this trip? (This cannot be undone!)", :method => 'post'} %>)<%- end -%></p>
+
+	<%- end -%>

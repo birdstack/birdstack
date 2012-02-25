@@ -1,0 +1,9 @@
+<%- if logged_in? == true and current_user.time_day_first == false -%>
+        <%- if sighting.date_month -%><%= sighting.date_month ? begin Time.gm(Time.now.year,sighting.date_month).strftime('%B') rescue '' end : '' %> <% end -%>
+	<%- if sighting.date_day -%><%= h(sighting.date_day) %>, <% end -%>
+	<%- if sighting.date_year -%><%= h(sighting.date_year) %><%- end -%>
+<%- else -%>
+	<%- if sighting.date_day -%><%= h(sighting.date_day) %> <% end -%>
+        <%- if sighting.date_month -%><%= sighting.date_month ? begin Time.gm(Time.now.year,sighting.date_month).strftime('%B') rescue '' end : '' %> <% end -%>
+	<%- if sighting.date_year -%><%= h(sighting.date_year) %><%- end -%>
+<%- end -%>

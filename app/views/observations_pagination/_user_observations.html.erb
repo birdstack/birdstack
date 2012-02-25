@@ -1,0 +1,15 @@
+<%# Unlike the others, we don't have to search for a public user because they're all public. %>
+
+<%- publicize_for ||= current_user -%>
+<% user ||= params[:id] %>
+<% user = User.find_by_id(user) %>
+
+<% if user %>
+	<% cache :controller => 'observations_pagination', :action => 'user_observations', :user => user.id, :id => user.id, :type => params[:type], :sort => params[:sort], :no_display_change => params[:no_display_change], :page => params[:page] || 1, :render_for => logged_in? ? current_user.id : 'public' do %>	
+		<% search = Birdstack::Search.new(user, {:observation_search_type => {:type => 'all'}}, false, publicize_for) %>
+
+		<%= render :partial => 'shared/observations_frame', :locals => {:url => {:controller => 'observations_pagination', :action => 'user', :id => user.id}, :search => search, :per_page => 10, :publicize_for => publicize_for} %>
+	<% end %>
+<% else %>
+	Unable to find user
+<% end %>

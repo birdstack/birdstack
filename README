@@ -1,0 +1,23 @@
+Birdstack
+=========
+
+This is the code that powered birdstack.com, a site for creating and sharing
+world bird lists. The taxonomy used on the site was from
+http://worldbirdnames.org/
+
+We hope that some of the code will be useful as a starting point or source of
+examples. But the code is definitely not in a state where it could be
+immediately deployed and used. For licensing reasons, we've removed all
+third-party libraries and data, some of the operation of the code was very
+specific to our production environment, and this code spans over 4 years of
+development going back to Rails 1 days.
+
+That said, if you're curious how the site worked, have a look!
+
+Feel free to use this code in your own site if you find it useful. Just make
+sure you follow the terms in LICENSE and don't try to represent your site as
+being endorsed by Birdstack.
+
+Have fun, and good birding!
+
+Team Birdstack

@@ -1,0 +1,26 @@
+	<%- @page_title = h(@conversation.subject) -%>
+
+	<p style="text-align: center;"><%= link_to 'Inbox', :action => 'index' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'Sent items', :action => 'sent' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'Start new', :action => 'start' %></p>
+
+	<h1><%= h(@conversation.subject) %></h1>
+
+	<p>Participants: <% @conversation.users.each do |u| %><span class="whois"><% if u == current_user %><%= link_to 'You', :controller => 'people', :action => 'view', :login => u.login %><% else %><%= link_to h(u.login), :controller => 'people', :action => 'view', :login => u.login %><% end %></span><% if u != @conversation.users.last %>, <% end %><% end %></p>
+
+	<table>
+		<%- @conversation.messages.each do |m| -%>
+			<tr id="<%= h(m.id) %>">
+				<td class="profile_pic"><a href="<%= url_for :controller => 'people', :action => 'view', :login => m.user.login %>"><img src="<%= m.user.profile_pic.url(:small) %>" alt="<%= h(m.user.login) %>" /></a></td>
+				<td><p><span class="whois"><% if m.user == current_user %><%= link_to 'You', :controller => 'people', :action => 'view', :login => m.user.login %><% else %><%= link_to h(m.user.login), :controller => 'people', :action => 'view', :login => m.user.login %><% end %></span> said:</p>
+					<%= birdstack_sanitize(m.body) %>
+					<%- unless m.user.signature.blank? -%>
+						<hr />
+						<%= birdstack_sanitize(m.user.signature) %>
+					<%- end -%>
+					<p class="comment-info">Sent <%= render :partial => 'shared/timestamp_full', :locals => {:timestamp => m.created_at, :separator => ', '} %></p>
+				</td>
+			</tr>
+		<%- end -%>
+
+	</table>
+
+	<%= render :partial => 'reply', :locals => {:conversation => @conversation} %>

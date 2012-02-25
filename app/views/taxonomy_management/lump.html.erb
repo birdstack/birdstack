@@ -1,0 +1,19 @@
+	<%- @page_title = 'Lump: ' + h(@change.species.english_name) + ' into ' + h(@change.potential_species[0].english_name) -%>
+
+	<h1>Lump: <%= h(@change.species.english_name) %> into <%= h(@change.potential_species[0].english_name) %></h1>
+
+	<p><%= h(@change.description) %> (<%= h(@change.date.strftime("%d %B %Y")) %>)</p>
+
+	<p>Clicking "Perform lump" will change all your observations of <b><%= h(@change.species.english_name) %></b> to <b><%= h(@change.potential_species[0].english_name) %></b>. If you would like to append a note to each <%= h(@change.species.english_name) %> observation, enter it in the box below (see example).</p>
+
+	<% form_tag do %>
+		<fieldset style="border: 0;">
+			<label for="notes">Notes:</label><%= text_area_tag 'notes', params[:notes], :class => 'wide', :style => 'height: 35px; scrollbars: auto;' %>
+			<p class="fieldtip">Permitted <abbr>(X)HTML</abbr> tags are &lt;a&gt;, &lt;b&gt;, &lt;blockquote&gt;, &lt;em&gt;,  &lt;i&gt;, &lt;img&gt;, &lt;strong&gt;, and &lt;u&gt;</p>
+		</fieldset>
+
+		<fieldset class="actionbuttons" style="margin-bottom: 10px;"><%= submit_tag 'Perform lump' %></fieldset>
+	<% end %>
+
+	<h2 style="margin-bottom: 5px;">Your observations of <%= h(@change.species.english_name) %>:</h2>
+	<%= render :partial => 'observations_pagination/species_observations', :locals => {:species => @change.species.id} %>

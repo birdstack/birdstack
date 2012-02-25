@@ -1,0 +1,33 @@
+	<%- @page_title = 'Managing taxonomic updates' -%>
+
+	<h1 id="top">Managing taxonomic updates</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#lumps">Lumps</a> | <a href="#splits">Splits</a></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p><%= image_tag("help/taxo-notification.jpg", :alt => "notification", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Several times a year, the <a href="http://www.worldbirdnames.org/">World Bird Names</a> project (Birdstack's data source for bird names and taxonomy) publishes updates to its list. When we integrate those changes with the Birdstack database, some changes (like spelling corrections or family reassignments) happen automatically. But others (like splits and lumps) will require your input if they affect species you've observed. When you have pending taxonomic changes, you may see a taxonomic update notification flag and/or receive an email. (Email preferences can be set on your account settings page, accessible through your dashboard.)</p>
+
+	<p><%= image_tag("help/taxo-main.png", :alt => "main", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>When viewing your taxonomy update manager page, you may see a list of species that have been changed. You'll see the status (e.g., "split" in the example shown here) and a note provided by the World Bird Names editors. Simply click a species name to proceed to the update page.</p>
+
+	<p>We've prepared a <strong><%= link_to 'video tutorial', :controller => 'screencasts', :action => 'taxonomic-updates' %></strong> to show you how splits and lumps are processed, or you can read the directions below.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="lumps">Lumps</h2>
+
+	<p><%= image_tag("help/taxo-lump.png", :alt => "lump", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>If a species you've observed has been lumped, the system will find and display all your records of that species. Really, all you have to do then is click the "Perform lump" button, and all those observations will be reassigned to the other species. If you want to, you can enter a note that will be added to all of the affected observations (this might help you remember what happened later).</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="splits">Splits</h2>
+
+	<p><%= image_tag("help/taxo-split.png", :alt => "lump", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>If a species you've observed has been split, you'll need to choose which of the potential species your observations represent. The system will find and display all your records of the old species, and you can use the dropdown lists to select the correct choice for each observation.</p>
+
+	<p>You can use the "Set page default" links to prefill the dropdown boxes with one species. You might find this useful, for example, if European and African forms have been split but you know that you've never seen the African form. This should save you from having to click and select the correct choice multiple times.</p>
+
+	<p>And as with lumps, you have the opportunity to enter a note that will be attached to each observation. This can remind you later of the birds' taxonomic history.</p>
+
+	<p>Once things are set, click "Save and continue." Your records will be updated.</p>
+
+	<p><a href="#top">[top]</a></p>

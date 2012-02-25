@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+testorder1:
+  id: 1
+  sort_order: 1
+  sort_after_id: NULL
+  latin_name: blah
+testorder2:
+  id: 2
+  sort_order: 2
+  sort_after_id: 1
+  latin_name: blah2
+testorder3:
+  id: 3
+  sort_order: 3
+  sort_after_id: 2
+  latin_name: blah3
+

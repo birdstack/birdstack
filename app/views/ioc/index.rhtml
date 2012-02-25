@@ -1,0 +1,15 @@
+	<%- @page_title = 'World Bird List' -%>
+
+	<%= render :partial => 'breadcrumbs' %>
+
+	<h1>World Bird List</h1>
+
+	<p>Birdstack is powered by the <abbr><a href="http://www.i-o-c.org/" title="International Ornithological Congress">IOC</a></abbr>'s world bird list. First published as <i>Birds of the World: Recommended English Names</i> in 2006, the list was published online in mid-2007. The birders and ornithologists who contribute to the <abbr>IOC</abbr> list are among the most accomplished and influential in the world.</p>
+	
+	<p>You can learn more about the project and download the checklist of bird names in Excel, CSV, or XML formats at <a href="http://www.worldbirdnames.org/">WorldBirdNames.org</a>.</p>
+
+	<ul class="taxalist">
+	<%- for order in @orders -%>
+		<li><%= link_to h(order.latin_name), :controller => :ioc, :order => order.latin_name.downcase, :action => :order %></li>
+	<%- end -%>
+	</ul>

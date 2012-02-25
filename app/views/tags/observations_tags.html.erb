@@ -1,0 +1,13 @@
+	<p class="breadcrumb"><%= link_to('People', main_url(:action => 'people')) %> > <%- if @user == current_user -%><%= link_to 'You', :controller => 'people', :action => 'view', :login => @user.login %><%- else -%><%= link_to h(@user.login), :controller => 'people', :action => 'view', :login => @user.login %><%- end -%> > Tags</p>
+
+	<% if @user == current_user %>
+		<%- @page_title = "Your tags" -%>
+		<h1>Your tags</h1>
+	<% else %>
+		<%- @page_title = h(@user.login) + '\'s tags' -%>
+		<h1><%= h(@user.login) %>'s tags</h1>
+	<% end %>
+
+	<p>You can use tags to categorize and label your observations in a variety of ways. To add tags, type keywords into the "Tags" box when you are adding or editing observations.</p>
+
+	<%= render :partial => 'tags/tag_cloud', :locals => {:tags => @tags, :user => @user} %>

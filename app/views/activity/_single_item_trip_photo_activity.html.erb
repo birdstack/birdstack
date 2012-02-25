@@ -1,0 +1,12 @@
+			<% if activity.description[:num_photos] == 1 %>a photo
+			<% elsif activity.description[:num_photos] == 2 or activity.description[:num_photos] == 3 %><%= h(pluralize(activity.description[:num_photos], "photo")) %>
+			<% else %><%= h(pluralize(activity.description[:num_photos], "photo")) %> including<% end %><br /><br />
+
+			<% activity.description[:trip_photos].collect {|s| TripPhoto.find_by_id(s) }.each do |trip_photo| %>
+                          <%- next unless trip_photo -%>
+                          <%- begin -%>
+				<%- trip_photo.publicize! -%>
+                                  <a href="<%= trip_photo_url(:user => trip_photo.user.login, :trip_id => trip_photo.trip.id, :id => trip_photo.id) %>"><img src="<%= trip_photo.photo(:thumb) %>" alt="<%= h(trip_photo.title) %>" title="<%= h(trip_photo.title) %>" /></a>
+                          <%- rescue -%>
+                          <%- end -%>
+			<% end %>

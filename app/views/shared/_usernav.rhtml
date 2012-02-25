@@ -1,0 +1,21 @@
+	<div class="birdstack">
+		<b class="corners1"></b><b class="corners2"></b><b class="corners3"></b><b class="corners4"></b>
+		<div class="usernav">
+			<% if logged_in? %>
+				<p>Hi, <span class="whois"><%= link_to h(current_user.login), :controller => 'people', :action => 'view', :login => current_user.login %></span>!</p>
+				<p class="links" style="border-bottom: 1px solid #c0c0c0; padding-bottom: 8px;"><%= link_to('Dashboard', :controller => :dashboard) %></p>
+				<p class="links"><strong><%= link_to('Export Data', :controller => 'export') %></strong></p>
+				<p class="links"><%= link_to('My Lists', lists_url(:user => current_user.login)) %></p>
+				<p class="links"><%= link_to('My Locations', locations_url(:user => current_user.login)) %></p>
+                                <p class="links"><%= link_to('My Photos', :controller => 'people', :action => 'photos', :login => current_user.login) %></p>
+				<p class="links"><%= link_to('My Tags', observations_tags_url(:user => current_user.login)) %></p>
+				<p class="links" style="border-bottom: 1px solid #c0c0c0; padding-bottom: 8px;"><%= link_to('My Trips', trips_url(:user => current_user.login)) %></p>
+				<p class="links"><%= link_to('Record an observation', :controller => :sighting, :action => :select_species) %></p>
+				<p class="links"><%= link_to('Search for observations', :controller => 'search', :action => 'observation', :id => nil) %></p>
+			<% else %>
+				<p>Do You Birdstack?</p>
+				<p class="links"><%= link_to('Sign in', :controller => :account, :action => :login) %><br />or<br /><%= link_to 'Sign up', :controller => 'account', :action => 'signup' %> (<%= link_to('Why?', main_url(:action => 'tour')) %>)</p>
+			<% end %>
+		</div>
+		<b class="corners4"></b><b class="corners3"></b><b class="corners2"></b><b class="corners1"></b>
+	</div>

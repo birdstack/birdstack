@@ -1,0 +1,68 @@
+	<%- @page_title = 'Understanding and recording observations' -%>
+
+	<h1 id="top">Understanding and recording observations</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#record">Record an observation</a> | <a href="#privacy">Privacy</a> | <a href="#fields">Fields</a></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p><%= image_tag("help/observation-view.jpg", :alt => "observation", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>In Birdstack, the basic unit of information is an <em>observation</em> -- a record of your encounter with a bird species. You can record date and time information, <%= link_to 'location information', :action => 'locations' %>, <%= link_to 'trip data', :action => 'trips' %>, number observed, age and sex, and other types of information about your observation, if you wish to do so.</p>
+
+	<p>You may be used to keeping different kinds of lists in separate notebooks or separate electronic documents. But with Birdstack, a list is simply a collection of observations defined by certain criteria. In the example at right, Red-bellied Fruit Dove would instantly show up on a life list, a Vanuatu list, a 2005 year list, and even on a list of dove species observed in Port Vila between July and December 2005. For this reason, we recommend recording as much data about each observation as possible. You might want to use it later!</p>
+
+	<p>You can make your observations public, so that you can share them with others, or you can set them to be fully private so that no one but you will have access to them.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="record">Record an observation</h2>
+
+	<p>To begin, you can click "Record an observation" in your user navigation panel (on the right side of each page). You can also add observations using the links on your trip and location pages.</p>
+	
+	<p>Of course, the first step in recording an observation is to find the English name of the bird that you observed. This may or may not be as easy as it sounds. Birdstack uses an <%= link_to 'international bird name database', :controller => 'ioc', :action => 'index' %>, so some of the names may be different from the ones you are used to seeing in regional field guides or checklists.</p>
+
+	<p><%= image_tag("help/observation-autocomplete.png", :alt => "autocomplete", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Not to worry, though, because Birdstack includes a variety of features to help you find your birds. After you type three letters in the search box, an autocomplete feature will begin suggesting names to match what you are typing. This search feature ignores capitalization, spaces, and all punctuation, including hyphens, because usage is so widely varied around the world.</p>
+	
+	<p>Results should be nearly instantaneous, but you may need to type a little more slowly than you usually do to give the site time to search a database with more than 10,000 names. If you don't find what you're looking for right away, try typing just part of the bird's name (e.g., "loon" or "golden-crowned").</p>
+
+	<p>In the search results box, you may see some results with an asterisk (*) beside them. These are alternate names suggested by the Birdstack community, and if you select one, you will see a page that tells you the bird's name in the Birdstack database.</p>
+	
+	<p>If the name you are typing returns no results, a spell checker will kick in automatically and start suggesting names that sound similar to the one you are typing. If you type "gray catbird," the program will suggest "Grey Catbird," which is the spelling used in the international list.</p>
+
+	<p><%= image_tag("help/observation-search.png", :alt => "search", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>If you type a partial name that has more than 10 results (e.g., "robin" or "turaco"), or if you wish to see further information about the results that are displayed, you can press the "Continue" button to display a search page. The search page will display as much information as it can, including results from the database alternate name results, and spelling suggestions if needed. Click on a bird's name to continue adding an observation of that species.</p>
+
+	<p>If you still can't find your bird, try searching in <a href="">Avibase</a>, or post your question in Birdstack's <%= link_to 'Bird Name and ID Help forum', :controller => 'forums', :action => 'bird-name-id-help' %>.</p>
+
+	<p><%= image_tag("help/observation-notification.png", :alt => "notification", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Once you've found your bird name, you may occasionally see a screen like the one at right: an ambiguous name notification page. This means that the name you have selected is used for more than one species, and the page will present information to help you choose which species you actually observed. If you don't want to view this page over and over, you can choose to dismiss the notification.</p>
+
+	<p>If you believe you have received the notification in error, or that it contains incorrect information, you can click the "flag" link to submit it for a Birdstack moderator's review.</p>
+
+	<p><%= image_tag("help/observation-details.png", :alt => "details", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>Once you've selected your species, you'll be taken to a page where you can enter various information about the observation (<a href="#fields">see complete list of fields</a>). None of this information is required, but we encourage you to enter as much as you can or whatever interests you. You may want to search for this information later (e.g., to create a year list or a trip list). And, if this is a public observation, other people may be interested in the information too.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="privacy">Privacy options</h2>
+
+	<p>You have the ability to make each observation either public or private. You can set the default privacy level for observations on your <%- if logged_in? -%><%= link_to 'account management page', :controller => 'people', :action => 'account', :login => current_user.login %><%- else -%>account management page<%- end -%>.</p>
+
+	<p>If you want to share your observations using any of the tools Birdstack offers, they must be set to public.</p>
+
+	<p>If you like, you can have a public observation from a private location or trip. To everyone but you, the observation will be visible but will not show any location or trip information. <%= link_to 'More about privacy.', :controller => 'help', :action => 'privacy' %></p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="fields">Observation data fields</h2>
+	
+	<ul>
+		<li><strong>Species.</strong> Each observation is tied to a unique species ID in the Birdstack database. The species' English name and binomial (scientific name) are displayed to you.</li>
+		<li><strong>Location.</strong> Choose from your predefined locations list. Whatever information you have supplied for the location (elevation, state or province, etc.) then becomes associated with your observation as well.</li>
+		<li><strong>Date.</strong> You can enter a full date, a month and a year, or just a year. Months must be in digits, not spelled out.</li>
+		<li><strong>Trip.</strong> Choose from your predefined list of trips. If the trip you choose includes dates, the date of your observation must fall within the dates of your trip.</li>
+		<li><strong>Time.</strong> You can enter time if you want to; just be sure to convert to 24-hour time before you do.</li>
+		<li><strong>Number observed.</strong> You can enter a number here, or it will be automatically calculated from whatever you enter in age and sex information.</li>
+		<li><strong>Age and sex.</strong> You can enter numbers in the age/sex table provided.</li>
+		<li><strong>Tags.</strong> You can use tags to label and categorize your observations in a variety of ways. Separate tags with commas.</li>
+		<li><strong>Link.</strong> You can include a website address (typically beginning with http:// or www) to a blog post, external website, or externally hosted image gallery.</li>
+		<li><strong>Notes.</strong> Text field. <%= render :partial => 'shared/permitted_xhtml_tags' %>.</li>
+	</ul>
+	
+	<p><a href="#top">[top]</a></p>

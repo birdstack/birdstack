@@ -1,0 +1,17 @@
+	<%- @page_title = "Manage taxonomic updates" -%>
+	
+	<h1>Manage taxonomic updates</h1>
+	
+	<p>Periodically, the <a href="http://www.worldbirdnames.org">World Bird Names</a> project updates its bird list to reflect changes in our understanding of bird populations and their relationships to each other. If any of these changes affect observations you have made, you will need to review and update your observations to keep your data current. We recommending downloading a backup of your observations before you proceed (<%= link_to('how?', :controller => 'help', :action => 'output') %>).</p>
+
+	<p>A <%= link_to 'video tutorial', :controller => 'screencasts', :action => 'taxonomic-updates' %> and a <%= link_to 'help page', :controller => 'help', :action => 'taxonomic-updates' %> are available to guide you through the update process.</p>
+
+	<p>For further information about what has changed, see the World Bird Names <a href="http://worldbirdnames.org/updates-tax.html">updates pages</a> and list of <a href="http://worldbirdnames.org/names-ref.html">literature cited</a>. If you still have questions, feel free to post in the <%= link_to('Bird Name and ID Help Forum', :controller => 'forums', :action => 'bird-name-id-help') %>.</p>
+
+	<h2>Your pending changes:</h2>
+	<ul>
+	<% for change in @changes %>
+		<li style="margin-bottom: 5px;"><%= link_to h(change.species.english_name), :controller => 'taxonomy_management', :action => change.change_type, :id => change.id %> (<%= h(change.change_type) %>): <%= birdstack_sanitize(change.description) %></li>
+	<% end %>
+		<% if !current_user.pending_taxonomy_changes %><li>No pending changes</li><% end %>
+	</ul>

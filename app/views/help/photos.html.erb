@@ -1,0 +1,34 @@
+	<%- @page_title = 'Photos in Birdstack' -%>
+
+	<h1 id="top">Photos in Birdstack</h1>
+
+	<p style="text-align: center;"><a href="#overview">Overview</a> | <a href="#create">Upload a photo</a> | <a href="#privacy">Privacy</a> | <%= link_to 'Screencast', :controller => 'screencasts', :action => 'photos' %></p>
+
+	<h2 id="overview">Overview</h2>
+
+	<p><%= image_tag("help/photos-ss.jpg", :alt => "photos", :style => "display: inline; float: right; margin: 5px; padding: 2px; border: 1px solid #888;") %>You can attach photos to your observations, trips, and locations in Birdstack. To upload photos, navigate to one of your observation, trip, or location pages and click the "Add a photo" link under the "Photos" header. (Note: Because of the way photos are currently processed, you must add photos from one of your own observation, trip, or location pages. You cannot add photos from a species overview page, your "My Photos" page, or any other page on which photos appear.)</p>
+
+	<p>Don't miss the <%= link_to 'screencast', :controller => 'screencasts', :action => 'photos' %> about photo uploads.</p>
+
+	<p>All Birdstack members can upload photos. Birdstackers with free accounts can store up to 50 photos in Birdstack. Birdstack <%= link_to 'Supporting Members', :controller => 'main', :action => 'supporting-members' %> can store up to 250 photos. We plan to increase storage capacity in the future. If you are interested in having more space, please <%= link_to 'contact us', :controller => 'main', :action => 'contact-us' %>.</p>
+
+	<p>Photos are now included in activity feeds. To see all of your photos, access "My Photos" from the right-side navigation menu. You can also access all public photos of other Birdstackers from their profile pages.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="create">Upload a photo</h2>
+
+	<p>When you upload a photo (via one of your observation, trip, or location pages), you must provide a title, and you can provide a text description or notes if you choose.</p>
+
+	<p>You can also specify a license for your photo. You can choose "All Rights Reserved," or one of any available Creative Commons licenses. To change your default license preference, visit your account settings page (accessible from your dashboard). (Note: Changing your default license will <em>not</em> relicense your existing photos. It affects only new photos and can be changed on an individual basis.)</p>
+
+	<p>You can upload images in GIF, JPG, or PNG format. Each image may be up to 10 megabytes in size.</p>
+
+	<p><a href="#top">[top]</a></p>
+
+	<h2 id="privacy">Privacy</h2>
+
+	<p>Each of your photos is attached to one of your observations, trips, or locations. The photo will have the same privacy setting as the object to which you attach it. If you attach a photo to a private trip, the photo will not be visible to anyone except you. If you attach a photo to a public observation, everyone will be able to see the photo. <%= link_to 'More about privacy.', :controller => 'help', :action => 'privacy' %></p>
+
+	<p><a href="#top">[top]</a></p>
+

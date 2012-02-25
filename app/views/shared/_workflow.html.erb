@@ -1,0 +1,7 @@
+	<%- if params[:prefill] -%>
+		<%- trip = Trip.find_by_id(params[:prefill][:trip]) -%>
+		<%- location = UserLocation.find_by_id(params[:prefill][:location]) -%>
+		<%- if trip or location -%><p class="breadcrumb">Add observations &gt; 
+		<%- if trip -%>Trip: <%= h(trip.name) %><%- end -%>
+		<%- if location -%><%- if trip -%> &gt; <%- end -%>Location: <%= h(location.name) %><%- end -%></p><%- end -%>
+	<%- end -%>

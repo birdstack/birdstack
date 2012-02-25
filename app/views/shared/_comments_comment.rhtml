@@ -1,0 +1,9 @@
+	<br style="clear: both;" /><h2 style="display: inline; margin: 0 10px 0 0;">Comments</h2><p style="display: inline;"><%- unless comment_collection.private -%><%= link_to(image_tag("feed-icon-14x14.png", :size => "14x14", :alt => "feed"), url_for(:controller => 'comments', :action => 'feed', :id => comment_collection.id)) %><%- end -%></p>
+	
+	<br /><br />
+
+	<div id="comments">
+		<%= render :partial => 'shared/comments_comment_comments', :locals => { :comment_collection => comment_collection, :goto => goto } %>
+	</div>
+
+	<p style="margin: 0;"><%= link_to 'Add a comment', :controller => 'comments', :action => 'post', :id => comment_collection.id, :goto => goto %></p>

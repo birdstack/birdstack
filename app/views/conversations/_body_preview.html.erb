@@ -1,0 +1,3 @@
+<%# Use strip_tags, not Birdstack::strip_tags because I don't need the link location to show up as text in the preview %>
+<%- tagless_body = strip_tags(body) -%>
+<span style="color: #888;"><%= h(tagless_body.length > 65 ? tagless_body.first(65) + '...' : tagless_body) %></span>
